@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "ancientgateways",
+  "version": "pre-0.1",
+  "name": "Ancient Gateways",
+  "description": "Just a better/alternative portals mod, for now...",
+  "authors": [
+    "OpenlyFay"
+  ],
+
+  "license": "MIT",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "openlyfay.ancientgateways.AncientGateways"
+    ],
+    "client": [
+      "openlyfay.ancientgateways.AncientGatewaysClient"
+    ]
+  },
+  "mixins": [
+      "openlyfay.ancientgateways.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.*"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
