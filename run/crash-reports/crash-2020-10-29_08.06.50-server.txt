@@ -1,0 +1,121 @@
+---- Minecraft Crash Report ----
+// Why did you do that?
+
+Time: 29/10/20, 8:06 am
+Description: Ticking block entity
+
+java.lang.IllegalArgumentException: Cannot get property DirectionProperty{name=facing, clazz=class net.minecraft.util.math.Direction, values=[north, south, west, east]} as it does not exist in Block{minecraft:air}
+	at net.minecraft.state.State.get(State.java:95)
+	at openlyfay.ancientgateways.blockentity.GatewayBlockEntity.tick(GatewayBlockEntity.java:216)
+	at net.minecraft.world.World.tickBlockEntities(World.java:510)
+	at net.minecraft.server.world.ServerWorld.tick(ServerWorld.java:424)
+	at net.minecraft.server.MinecraftServer.tickWorlds(MinecraftServer.java:868)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:808)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:92)
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:667)
+	at net.minecraft.server.MinecraftServer.method_29739(MinecraftServer.java:254)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at net.minecraft.state.State.get(State.java:95)
+	at openlyfay.ancientgateways.blockentity.GatewayBlockEntity.tick(GatewayBlockEntity.java:216)
+
+-- Block entity being ticked --
+Details:
+	Name: ancientgateways:gateway_block_entity // openlyfay.ancientgateways.blockentity.GatewayBlockEntity
+	Block: Block{ancientgateways:gatewayblock}[error=false,facing=east,on=true,paired=false]
+	Block location: World: (212,9,-184), Chunk: (at 4,0,8 in 13,-12; contains blocks 208,0,-192 to 223,255,-177), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,0,-512 to 511,255,-1)
+	Block: Block{ancientgateways:gatewayblock}[error=false,facing=east,on=true,paired=false]
+	Block location: World: (212,9,-184), Chunk: (at 4,0,8 in 13,-12; contains blocks 208,0,-192 to 223,255,-177), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,0,-512 to 511,255,-1)
+Stacktrace:
+	at net.minecraft.world.World.tickBlockEntities(World.java:510)
+	at net.minecraft.server.world.ServerWorld.tick(ServerWorld.java:424)
+
+-- Affected level --
+Details:
+	All players: 1 total; [ServerPlayerEntity['Player882'/101, l='ServerLevel[GatewayTest2]', x=213.08, y=4.00, z=-183.46]]
+	Chunk stats: ServerChunkCache: 2209
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (224,4,-192), Chunk: (at 0,0,0 in 14,-12; contains blocks 224,0,-192 to 239,255,-177), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,0,-512 to 511,255,-1)
+	Level time: 43945 game time, 43945 day time
+	Level name: GatewayTest2
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+	Level weather: Rain time: 41526 (now: false), thunder time: 85047 (now: false)
+	Known server brands: fabric
+	Level was modded: true
+	Level storage version: 0x04ABD - Anvil
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.tickWorlds(MinecraftServer.java:868)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:808)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:92)
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:667)
+	at net.minecraft.server.MinecraftServer.method_29739(MinecraftServer.java:254)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.16.3
+	Minecraft Version ID: 1.16.3
+	Operating System: Linux (amd64) version 5.3.0-42-generic
+	Java Version: 11.0.8, JetBrains s.r.o.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), JetBrains s.r.o.
+	Memory: 1075933696 bytes (1026 MB) / 1712324608 bytes (1633 MB) up to 4167041024 bytes (3974 MB)
+	CPUs: 8
+	JVM Flags: 0 total; 
+	Fabric Mods: 
+		ancientgateways: Ancient Gateways pre-0.1
+		cardinal-components-base: Cardinal Components API (base) 2.5.0
+		cardinal-components-chunk: Cardinal Components API (chunks) 2.5.0
+		cardinal-components-level: Cardinal Components API (world saves) 2.5.0
+		cardinal-components-world: Cardinal Components API (worlds) 2.5.0
+		fabric: Fabric API 0.21.0+build.407-1.16
+		fabric-api-base: Fabric API Base 0.1.3+12a8474c95
+		fabric-biome-api-v1: Fabric Biome API (v1) 2.0.0+c29459ab95
+		fabric-blockrenderlayer-v1: Fabric BlockRenderLayer Registration (v1) 1.1.4+c6a8ea8995
+		fabric-command-api-v1: Fabric Command API (v1) 1.0.8+5ce5339895
+		fabric-commands-v0: Fabric Commands (v0) 0.2.0+52d3083695
+		fabric-containers-v0: Fabric Containers (v0) 0.1.8+045df74f95
+		fabric-content-registries-v0: Fabric Content Registries (v0) 0.1.9+059ea86695
+		fabric-crash-report-info-v1: Fabric Crash Report Info (v1) 0.1.2+b7f9825d95
+		fabric-events-interaction-v0: Fabric Events Interaction (v0) 0.4.0+e2e6cdad95
+		fabric-events-lifecycle-v0: Fabric Events Lifecycle (v0) 0.2.0+16acbe5b95
+		fabric-game-rule-api-v1: Fabric Game Rule API (v1) 1.0.1+74685c1495
+		fabric-item-api-v1: Fabric Item API (v1) 1.1.0+29679fd695
+		fabric-item-groups-v0: Fabric Item Groups (v0) 0.2.0+438f963695
+		fabric-key-binding-api-v1: Fabric Key Binding API (v1) 1.0.1+730711c695
+		fabric-keybindings-v0: Fabric Key Bindings (v0) 0.2.0+3fa9f7c595
+		fabric-lifecycle-events-v1: Fabric Lifecycle Events (v1) 1.2.0+74cc3b2095
+		fabric-loot-tables-v1: Fabric Loot Tables (v1) 1.0.1+432ea18895
+		fabric-mining-levels-v0: Fabric Mining Levels (v0) 0.1.2+b764ce9995
+		fabric-models-v0: Fabric Models (v0) 0.1.0+dfdb52d695
+		fabric-networking-blockentity-v0: Fabric Networking Block Entity (v0) 0.2.5+b50ffc7b95
+		fabric-networking-v0: Fabric Networking (v0) 0.1.10+e00ecb5f95
+		fabric-object-builder-api-v1: Fabric Object Builder API (v1) 1.8.0+c1aa8ed895
+		fabric-object-builders-v0: Fabric Object Builders (v0) 0.7.0+432ea18895
+		fabric-particles-v1: fabric-particles-v1 0.2.2+fb0d9b0e95
+		fabric-registry-sync-v0: Fabric Registry Sync (v0) 0.5.0+c1aa8ed895
+		fabric-renderer-api-v1: Fabric Renderer API (v1) 0.3.0+8bcfced895
+		fabric-renderer-indigo: Fabric Renderer - Indigo 0.4.0+8bcfced895
+		fabric-renderer-registries-v1: Fabric Renderer Registries (v1) 2.1.0+e2862de695
+		fabric-rendering-data-attachment-v1: Fabric Rendering Data Attachment (v1) 0.1.3+b7f9825d95
+		fabric-rendering-fluids-v1: Fabric Rendering Fluids (v1) 0.1.11+fb0d9b0e95
+		fabric-rendering-v0: Fabric Rendering (v0) 1.1.0+5341049095
+		fabric-rendering-v1: Fabric Rendering (v1) 1.3.0+432ea18895
+		fabric-resource-loader-v0: Fabric Resource Loader (v0) 0.3.1+facf3bbf95
+		fabric-screen-handler-api-v1: Fabric Screen Handler API (v1) 1.1.0+8724984195
+		fabric-structure-api-v1: Fabric Structure API (v1) 1.0.1+fb0d9b0e95
+		fabric-tag-extensions-v0: Fabric Tag Extensions (v0) 1.0.3+ac8e8c5995
+		fabric-textures-v0: Fabric Textures (v0) 1.0.4+eae12eb895
+		fabric-tool-attribute-api-v1: Fabric Tool Attribute API (v1) 1.2.2+ccce563e95
+		fabricloader: Fabric Loader 0.9.3+build.207
+		minecraft: Minecraft 1.16.3
+	Player Count: 1 / 8; [ServerPlayerEntity['Player882'/101, l='ServerLevel[GatewayTest2]', x=213.08, y=4.00, z=-183.46]]
+	Data Packs: vanilla, fabric/fabric-tool-attribute-api-v1
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fabric'

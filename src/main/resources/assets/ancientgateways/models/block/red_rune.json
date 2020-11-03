@@ -1,0 +1,6 @@
+{
+  "parent": "ancientgateways:block/rune",
+  "textures": {
+    "texture": "ancientgateways:runes/red"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "minecraft:block/crying_obsidian",
+    "side": "minecraft:block/crying_obsidian",
+    "front": "ancientgateways:gatecontroller/gateactive"
+  }
+}

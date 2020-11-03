@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "ancientgateways:block/purple_rune" },
+    "facing=east":  { "model": "ancientgateways:block/purple_rune", "y":  90},
+    "facing=south": { "model": "ancientgateways:block/purple_rune", "y": 180 },
+    "facing=west":  { "model": "ancientgateways:block/purple_rune", "y": 270 }
+  }
+}

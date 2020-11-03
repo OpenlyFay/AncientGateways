@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,error=true": {
+      "model": "ancientgateways:block/gate_error"
+    },
+    "facing=east,error=true": {
+      "model": "ancientgateways:block/gate_error",
+      "y": 90
+    },
+    "facing=south,error=true": {
+      "model": "ancientgateways:block/gate_error",
+      "y": 180
+    },
+    "facing=west,error=true": {
+      "model": "ancientgateways:block/gate_error",
+      "y": 270
+    },
+    "facing=north,error=false,on=false": {
+      "model": "ancientgateways:block/gate_off"
+    },
+    "facing=east,error=false,on=false": {
+      "model": "ancientgateways:block/gate_off",
+      "y": 90
+    },
+    "facing=south,error=false,on=false": {
+      "model": "ancientgateways:block/gate_off",
+      "y": 180
+    },
+    "facing=west,error=false,on=false": {
+      "model": "ancientgateways:block/gate_off",
+      "y": 270
+    },
+    "facing=north,error=false,on=true,paired=false": {
+      "model": "ancientgateways:block/gate_active"
+    },
+    "facing=east,error=false,on=true,paired=false": {
+      "model": "ancientgateways:block/gate_active",
+      "y": 90
+    },
+    "facing=south,error=false,on=true,paired=false": {
+      "model": "ancientgateways:block/gate_active",
+      "y": 180
+    },
+    "facing=west,error=false,on=true,paired=false": {
+      "model": "ancientgateways:block/gate_active",
+      "y": 270
+    },
+    "facing=north,error=false,on=true,paired=true": {
+      "model": "ancientgateways:block/gate_paired"
+    },
+    "facing=east,error=false,on=true,paired=true": {
+      "model": "ancientgateways:block/gate_paired",
+      "y": 90
+    },
+    "facing=south,error=false,on=true,paired=true": {
+      "model": "ancientgateways:block/gate_paired",
+      "y": 180
+    },
+    "facing=west,error=false,on=true,paired=true": {
+      "model": "ancientgateways:block/gate_paired",
+      "y": 270
+    }
+  }
+}
