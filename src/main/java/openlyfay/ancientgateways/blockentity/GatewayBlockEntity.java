@@ -13,6 +13,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
@@ -24,7 +26,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import openlyfay.ancientgateways.AncientGateways;
 import openlyfay.ancientgateways.block.GatewayBlock;
-import openlyfay.ancientgateways.block.runes.blockitem.AbstractRuneItem;
+import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
 import openlyfay.ancientgateways.maths.MasterList;
 import openlyfay.ancientgateways.maths.TeleportPatch;
 
@@ -45,7 +47,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     private DefaultedList<ItemStack> inventory;
     private static MasterList masterlist;
     private boolean fresh;
-    private int indexPoint;
 
     public GatewayBlockEntity(){
         super(AncientGateways.GATEWAY_BLOCK_ENTITY);
@@ -57,7 +58,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         targetWorld = ServerWorld.OVERWORLD;
         targetPos = new BlockPos(0,0,0);
         fresh = true;
-        indexPoint = 0;
     }
 
     @Override
@@ -157,7 +157,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         int[] targetPos2 = {targetPos.getX(), targetPos.getY(), targetPos.getZ()};
         tag.putIntArray("targetPos", targetPos2);
         tag.putBoolean("facingNorth",getCachedState().get(Properties.HORIZONTAL_FACING).getAxis() == Direction.Axis.Z);
-        tag.putInt("index",indexPoint);
         return super.toTag(tag);
     }
 
@@ -180,7 +179,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         return countdown > 0;
     }
 
-    public void activationCheck(boolean remote, String remoteRuneTarget ){
+    public void activationCheck(boolean remote, String remoteRuneTarget){
         Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
         String runeDelta = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
         if (!world.isClient) {
@@ -215,6 +214,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                         ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier);
                     }
                     chunkLoaderManager(true);
+                    world.playSound(null,pos,SoundEvents.BLOCK_BEACON_ACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
                 }
                 markDirty();
             }
@@ -258,12 +258,14 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     if (payloadEntity instanceof LivingEntity){
                         payloadEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,payloadEntity.getPos().add(otherSideDirection.getOffsetX(),0,otherSideDirection.getOffsetZ()));
                     }
+                    targetWorld2.playSound(null, targetPos,SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.AMBIENT,1.0f,1.0f);
+                    payloadEntity.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,1.0f,1.0f);
 
                 }
                 if (countdown % 80 == 0) {
                     Block block = this.getCachedState().getBlock();
                     if (block instanceof GatewayBlock) {
-                        if (!((GatewayBlock) block).GatewayStructureIntact(pos, world.getBlockState(pos), world)) {
+                        if (!((GatewayBlock) block).GatewayStructureIntact(pos, world.getBlockState(pos), world,null)) {
                             countdown = 1;
                         }
                     }
@@ -292,6 +294,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                 }
                 runeTarget = "";
                 chunkLoaderManager(false);
+                world.playSound(null,pos,SoundEvents.BLOCK_BEACON_DEACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
             }
             if(!world.isClient){
                 markDirty();
@@ -319,7 +322,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         StringBuilder total = new StringBuilder();
         for (ItemStack itemStack : inventory) {
             if(!(itemStack.getItem() instanceof AbstractRuneItem)){
-                return null;
+                return "";
             }
             total.append(((AbstractRuneItem) itemStack.getItem()).getRuneID());
         }

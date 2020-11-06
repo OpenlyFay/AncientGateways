@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/orientable",
   "textures": {
+    "particle": "minecraft:block/crying_obsidian",
     "top": "minecraft:block/crying_obsidian",
     "side": "minecraft:block/crying_obsidian",
     "front": "ancientgateways:gatecontroller/gateactive"

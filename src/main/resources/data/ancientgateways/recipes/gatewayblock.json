@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CGC",
+    "OEO",
+    "CGC"
+  ],
+  "key": {
+    "C" : {
+      "item": "minecraft:chorus_fruit"
+    },
+    "G" : {
+      "item": "minecraft:gold_ingot"
+    },
+    "O" : {
+      "item": "minecraft:crying_obsidian"
+    },
+    "E" : {
+      "item": "minecraft:ender_eye"
+    }
+  },
+  "result": {
+    "item" : "ancientgateways:gatewayblock",
+    "count" : 1
+  }
+
+}

@@ -1,6 +1,7 @@
 package openlyfay.ancientgateways.block;
 
 
+import jdk.internal.jline.internal.Nullable;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -60,7 +62,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
             Inventory blockEntity = (Inventory) world.getBlockEntity(pos);
             ItemStack itemStack = player.getStackInHand(hand);
             if (player.isSneaking()) {
-                if (GatewayStructureIntact(pos, state, world)) {
+                if (GatewayStructureIntact(pos, state, world, player)) {
                     if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
                         ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
                     }
@@ -106,7 +108,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
         }
     }
 
-    public boolean GatewayStructureIntact(BlockPos pos, BlockState state, World world){
+    public boolean GatewayStructureIntact(BlockPos pos, BlockState state, World world, @Nullable PlayerEntity playerEntity){
         Direction direction = state.get(FACING);
         byte xFactor = 1;
         byte zFactor = 1;
@@ -117,37 +119,50 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
         else {
             xFactor = 0;
         }
-        for (int xz = -3; xz < 4; xz++) {
-            if (xz >= -1 && xz <= 1) {
-                for (int y = 0; y < 7; y++) {
-                    BlockPos blockPos = pos.add(xz * xFactor, -y, xz * zFactor);
-                    if(y >= 1 && y <= 5) {
-                        if (!world.getBlockState(blockPos).isAir()) {
+        for (int y = -6; y < 1; y++){
+            if (y >= -4 && y <= -2){
+                for (int xz = -3; xz < 4; xz++){
+                    BlockPos blockPos = pos.add(xz * xFactor, y, xz * zFactor);
+                    if (xz == -3 || xz == 3) {
+                        if (!(world.getBlockState(blockPos.offset(direction)).getBlock() instanceof AbstractRuneBlock)) {
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_2"), true);
+                            }
                             return false;
                         }
-                    }
-                    else {
-                        if(world.getBlockState(blockPos).isAir()){
+
+                    } else {
+                        if (!world.getBlockState(blockPos).isAir()) {
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_0"), true);
+                            }
                             return false;
                         }
                     }
                 }
             }
             else {
-                for (int y = 2; y < 5; y++) {
-                    BlockPos blockPos = pos.add(xz * xFactor, -y, xz * zFactor);
-                    if (xz == -3 || xz == 3) {
-                        if (!(world.getBlockState(blockPos.offset(direction)).getBlock() instanceof AbstractRuneBlock)) {
-                            return false;
-                        }
-
-                    } else {
-                        if (!world.getBlockState(blockPos).isAir()) {
+                for (int xz = -1; xz < 2; xz++){
+                    BlockPos blockPos = pos.add(xz * xFactor, y, xz * zFactor);
+                    if(y < -5 || y > -1) {
+                        if(world.getBlockState(blockPos).isAir()){
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_1"), true);
+                            }
                             return false;
                         }
                     }
+                    else {
+                        if (!world.getBlockState(blockPos).isAir()) {
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_0"), true);
+                            }
+                            return false;
+                        }
+                    }
+
                 }
-        }
+            }
         }
 
 

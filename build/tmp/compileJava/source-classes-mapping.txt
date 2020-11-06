@@ -1,51 +1,53 @@
-openlyfay/ancientgateways/block/runes/blockitem/RedRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.RedRuneItem
 openlyfay/ancientgateways/maths/MasterList.java
  openlyfay.ancientgateways.maths.MasterList
  openlyfay.ancientgateways.maths.MasterList$GatewayAddress
+openlyfay/ancientgateways/block/blockitem/WhiteRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.WhiteRuneItem
+openlyfay/ancientgateways/block/blockitem/MagentaRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.MagentaRuneItem
+openlyfay/ancientgateways/block/blockitem/BlueRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.BlueRuneItem
 openlyfay/ancientgateways/mixins/EntityMixin.java
  openlyfay.ancientgateways.mixins.EntityMixin
 openlyfay/ancientgateways/block/runes/BlackRuneBlock.java
  openlyfay.ancientgateways.block.runes.BlackRuneBlock
-openlyfay/ancientgateways/block/runes/blockitem/LightGreyRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.LightGreyRuneItem
+openlyfay/ancientgateways/block/blockitem/GreyRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.GreyRuneItem
+openlyfay/ancientgateways/block/blockitem/GreenRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.GreenRuneItem
 openlyfay/ancientgateways/AncientGateways.java
  openlyfay.ancientgateways.AncientGateways
 openlyfay/ancientgateways/block/runes/LightBlueRuneBlock.java
  openlyfay.ancientgateways.block.runes.LightBlueRuneBlock
-openlyfay/ancientgateways/block/runes/blockitem/PinkRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.PinkRuneItem
+openlyfay/ancientgateways/block/blockitem/OrangeRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.OrangeRuneItem
 openlyfay/ancientgateways/block/runes/LimeRuneBlock.java
  openlyfay.ancientgateways.block.runes.LimeRuneBlock
-openlyfay/ancientgateways/block/runes/blockitem/LightBlueRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.LightBlueRuneItem
-openlyfay/ancientgateways/block/runes/blockitem/WhiteRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.WhiteRuneItem
 openlyfay/ancientgateways/block/GatewayBlock.java
  openlyfay.ancientgateways.block.GatewayBlock
  openlyfay.ancientgateways.block.GatewayBlock$1
+openlyfay/ancientgateways/block/blockitem/AbstractRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.AbstractRuneItem
 openlyfay/ancientgateways/block/runes/LightGreyRuneBlock.java
  openlyfay.ancientgateways.block.runes.LightGreyRuneBlock
-openlyfay/ancientgateways/block/runes/blockitem/CyanRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.CyanRuneItem
-openlyfay/ancientgateways/block/runes/blockitem/BlackRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.BlackRuneItem
-openlyfay/ancientgateways/block/runes/blockitem/YellowRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.YellowRuneItem
+openlyfay/ancientgateways/block/blockitem/CyanRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.CyanRuneItem
 openlyfay/ancientgateways/block/runes/CyanRuneBlock.java
  openlyfay.ancientgateways.block.runes.CyanRuneBlock
-openlyfay/ancientgateways/block/runes/blockitem/AbstractRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.AbstractRuneItem
+openlyfay/ancientgateways/block/blockitem/BlackRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.BlackRuneItem
 openlyfay/ancientgateways/block/runes/YellowRuneBlock.java
  openlyfay.ancientgateways.block.runes.YellowRuneBlock
 openlyfay/ancientgateways/AncientGatewaysClient.java
  openlyfay.ancientgateways.AncientGatewaysClient
 openlyfay/ancientgateways/block/runes/WhiteRuneBlock.java
  openlyfay.ancientgateways.block.runes.WhiteRuneBlock
-openlyfay/ancientgateways/block/runes/blockitem/BlueRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.BlueRuneItem
-openlyfay/ancientgateways/block/runes/blockitem/PurpleRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.PurpleRuneItem
+openlyfay/ancientgateways/block/blockitem/BrownRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.BrownRuneItem
+openlyfay/ancientgateways/block/blockitem/LightGreyRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.LightGreyRuneItem
+openlyfay/ancientgateways/block/blockitem/RedRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.RedRuneItem
 openlyfay/ancientgateways/block/runes/BlueRuneBlock.java
  openlyfay.ancientgateways.block.runes.BlueRuneBlock
 openlyfay/ancientgateways/block/runes/GreyRuneBlock.java
@@ -55,8 +57,8 @@ openlyfay/ancientgateways/block/runes/PinkRuneBlock.java
 openlyfay/ancientgateways/block/runes/AbstractRuneBlock.java
  openlyfay.ancientgateways.block.runes.AbstractRuneBlock
  openlyfay.ancientgateways.block.runes.AbstractRuneBlock$1
-openlyfay/ancientgateways/block/runes/blockitem/BrownRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.BrownRuneItem
+openlyfay/ancientgateways/block/blockitem/LimeRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.LimeRuneItem
 openlyfay/ancientgateways/block/runes/OrangeRuneBlock.java
  openlyfay.ancientgateways.block.runes.OrangeRuneBlock
 openlyfay/ancientgateways/blockentity/GatewayBlockEntity.java
@@ -68,21 +70,21 @@ openlyfay/ancientgateways/block/runes/GreenRuneBlock.java
  openlyfay.ancientgateways.block.runes.GreenRuneBlock
 openlyfay/ancientgateways/block/runes/BrownRuneBlock.java
  openlyfay.ancientgateways.block.runes.BrownRuneBlock
+openlyfay/ancientgateways/block/blockitem/PurpleRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.PurpleRuneItem
 openlyfay/ancientgateways/block/runes/MagentaRuneBlock.java
  openlyfay.ancientgateways.block.runes.MagentaRuneBlock
-openlyfay/ancientgateways/block/runes/blockitem/OrangeRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.OrangeRuneItem
-openlyfay/ancientgateways/block/runes/blockitem/GreenRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.GreenRuneItem
+openlyfay/ancientgateways/block/blockitem/YellowRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.YellowRuneItem
 openlyfay/ancientgateways/blockentity/GatewayBlockEntityRenderer.java
  openlyfay.ancientgateways.blockentity.GatewayBlockEntityRenderer
-openlyfay/ancientgateways/block/runes/blockitem/GreyRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.GreyRuneItem
-openlyfay/ancientgateways/block/runes/blockitem/MagentaRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.MagentaRuneItem
-openlyfay/ancientgateways/block/runes/blockitem/LimeRuneItem.java
- openlyfay.ancientgateways.block.runes.blockitem.LimeRuneItem
+openlyfay/ancientgateways/block/blockitem/GatewayBlockItem.java
+ openlyfay.ancientgateways.block.blockitem.GatewayBlockItem
 openlyfay/ancientgateways/block/runes/RedRuneBlock.java
  openlyfay.ancientgateways.block.runes.RedRuneBlock
 openlyfay/ancientgateways/block/runes/PurpleRuneBlock.java
  openlyfay.ancientgateways.block.runes.PurpleRuneBlock
+openlyfay/ancientgateways/block/blockitem/PinkRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.PinkRuneItem
+openlyfay/ancientgateways/block/blockitem/LightBlueRuneItem.java
+ openlyfay.ancientgateways.block.blockitem.LightBlueRuneItem

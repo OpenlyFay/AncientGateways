@@ -23,6 +23,12 @@
     },
     "done": true
   },
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_lots_of_items": "2020-11-05 22:48:05 +1100"
+    },
+    "done": true
+  },
   "minecraft:story/enter_the_nether": {
     "criteria": {
       "entered_nether": "2020-10-31 14:45:59 +1100"
@@ -82,6 +88,12 @@
       "minecraft:nether_wastes": "2020-10-31 14:46:00 +1100"
     },
     "done": false
+  },
+  "minecraft:nether/netherite_armor": {
+    "criteria": {
+      "netherite_armor": "2020-11-05 22:46:15 +1100"
+    },
+    "done": true
   },
   "DataVersion": 2580
 }

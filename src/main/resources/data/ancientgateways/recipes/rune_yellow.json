@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Y ",
+    " C ",
+    " F "
+  ],
+  "key": {
+    "Y" : {
+      "item": "minecraft:yellow_dye"
+    },
+    "C" : {
+      "item": "minecraft:clay_ball"
+    },
+    "F" : {
+      "item": "minecraft:chorus_fruit"
+    }
+  },
+  "result": {
+    "item" : "ancientgateways:rune_yellow",
+    "count" : 4
+  }
+
+}

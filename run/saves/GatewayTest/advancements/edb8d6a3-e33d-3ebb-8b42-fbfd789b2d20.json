@@ -1,37 +1,13 @@
 {
-  "minecraft:recipes/decorations/polished_blackstone_brick_wall_from_polished_blackstone_bricks_stonecutting": {
-    "criteria": {
-      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
-    },
-    "done": true
-  },
   "minecraft:recipes/building_blocks/polished_blackstone_brick_stairs": {
     "criteria": {
       "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
     },
     "done": true
   },
-  "minecraft:recipes/building_blocks/cracked_polished_blackstone_bricks": {
+  "minecraft:recipes/building_blocks/snow_block": {
     "criteria": {
-      "has_blackstone_bricks": "2020-11-02 07:27:59 +1100"
-    },
-    "done": true
-  },
-  "minecraft:nether/root": {
-    "criteria": {
-      "entered_nether": "2020-11-02 07:28:06 +1100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/polished_blackstone_brick_wall": {
-    "criteria": {
-      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/building_blocks/polished_blackstone_brick_slab": {
-    "criteria": {
-      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
+      "has_snowball": "2020-11-05 09:16:50 +1100"
     },
     "done": true
   },
@@ -41,17 +17,53 @@
     },
     "done": true
   },
-  "minecraft:recipes/building_blocks/polished_blackstone_brick_slab_from_polished_blackstone_bricks_stonecutting": {
+  "minecraft:recipes/building_blocks/polished_blackstone_brick_stairs_from_polished_blackstone_bricks_stonecutting": {
     "criteria": {
       "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
     },
     "done": true
   },
-  "minecraft:nether/explore_nether": {
+  "minecraft:recipes/decorations/polished_blackstone_brick_wall_from_polished_blackstone_bricks_stonecutting": {
     "criteria": {
-      "minecraft:nether_wastes": "2020-11-02 07:28:07 +1100"
+      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
     },
-    "done": false
+    "done": true
+  },
+  "minecraft:recipes/decorations/snow": {
+    "criteria": {
+      "has_snowball": "2020-11-05 09:16:50 +1100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/cracked_polished_blackstone_bricks": {
+    "criteria": {
+      "has_blackstone_bricks": "2020-11-02 07:27:59 +1100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/polished_blackstone_brick_wall": {
+    "criteria": {
+      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
+    },
+    "done": true
+  },
+  "minecraft:nether/root": {
+    "criteria": {
+      "entered_nether": "2020-11-02 07:28:06 +1100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/polished_blackstone_brick_slab": {
+    "criteria": {
+      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/polished_blackstone_brick_slab_from_polished_blackstone_bricks_stonecutting": {
+    "criteria": {
+      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
+    },
+    "done": true
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
@@ -59,11 +71,11 @@
     },
     "done": false
   },
-  "minecraft:recipes/building_blocks/polished_blackstone_brick_stairs_from_polished_blackstone_bricks_stonecutting": {
+  "minecraft:nether/explore_nether": {
     "criteria": {
-      "has_polished_blackstone_bricks": "2020-11-02 07:27:59 +1100"
+      "minecraft:nether_wastes": "2020-11-02 07:28:07 +1100"
     },
-    "done": true
+    "done": false
   },
   "DataVersion": 2580
 }
