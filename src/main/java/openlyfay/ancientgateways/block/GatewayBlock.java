@@ -1,7 +1,6 @@
 package openlyfay.ancientgateways.block;
 
 
-import jdk.internal.jline.internal.Nullable;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -108,7 +107,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
         }
     }
 
-    public boolean GatewayStructureIntact(BlockPos pos, BlockState state, World world, @Nullable PlayerEntity playerEntity){
+    public boolean GatewayStructureIntact(BlockPos pos, BlockState state, World world, PlayerEntity playerEntity){
         Direction direction = state.get(FACING);
         byte xFactor = 1;
         byte zFactor = 1;

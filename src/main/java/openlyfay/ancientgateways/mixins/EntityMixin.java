@@ -11,7 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.TeleportTarget;
 
 /**
- * Mostly from Applied Energistics 2, used with permission
+ * From Applied Energistics 2, used with permission
  */
 @Mixin(Entity.class)
 public class EntityMixin {
@@ -19,13 +19,10 @@ public class EntityMixin {
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true, allow = 1)
     public void getTeleportTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cri) {
         // Check if a destination has been set for the entity currently being teleported
-        //if (destination.getRegistryKey() == SpatialStorageDimensionIds.WORLD_ID) {
-            TeleportTarget target = TeleportPatch.getInstance().getTeleportTarget();
-            //remember to check for NBT tags on entities
-            if (target != null) {
-                cri.setReturnValue(target);
-            }
-        //}
+        TeleportTarget target = TeleportPatch.getInstance().getTeleportTarget();
+        if (target != null) {
+            cri.setReturnValue(target);
+        }
     }
 
 }
