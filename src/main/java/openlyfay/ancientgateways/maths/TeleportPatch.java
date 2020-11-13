@@ -5,10 +5,12 @@
 package openlyfay.ancientgateways.maths;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.TeleportTarget;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkStatus;
 
 import java.util.ArrayList;
@@ -87,13 +89,21 @@ public class TeleportPatch {
         newWorld.getChunkManager().getChunk(MathHelper.floor(link.x) >> 4, MathHelper.floor(link.z) >> 4,
                 ChunkStatus.FULL, true);
 
+        //had to use an alternate method to prevent players from landing at their spawn when returning from the End
+        if (entity instanceof ServerPlayerEntity && oldWorld.getRegistryKey() == World.END && newWorld.getRegistryKey() == World.OVERWORLD){
+            ((ServerPlayerEntity) entity).teleport(newWorld,link.x,link.y,link.z,entity.yaw,entity.pitch);
+        }
+
         // Store in a threadlocal so that EntityMixin can return it for the Vanilla
         // logic to use
-        teleportTarget.set(new TeleportTarget(new Vec3d(link.x, link.y, link.z), Vec3d.ZERO, entity.yaw, entity.pitch));
-        try {
-            entity = entity.moveToWorld(link.dim);
-        } finally {
-            teleportTarget.remove();
+        else {
+            teleportTarget.set(new TeleportTarget(new Vec3d(link.x, link.y, link.z), Vec3d.ZERO, entity.yaw, entity.pitch));
+            try {
+                entity = entity.moveToWorld(link.dim);
+            } finally {
+                teleportTarget.remove();
+            }
+
         }
 
         if (!passengersOnOtherSide.isEmpty()) {

@@ -26,6 +26,8 @@ openlyfay/ancientgateways/block/runes/LimeRuneBlock.java
 openlyfay/ancientgateways/block/GatewayBlock.java
  openlyfay.ancientgateways.block.GatewayBlock
  openlyfay.ancientgateways.block.GatewayBlock$1
+openlyfay/ancientgateways/mixins/ServerWorldMixin.java
+ openlyfay.ancientgateways.mixins.ServerWorldMixin
 openlyfay/ancientgateways/block/blockitem/AbstractRuneItem.java
  openlyfay.ancientgateways.block.blockitem.AbstractRuneItem
 openlyfay/ancientgateways/block/runes/LightGreyRuneBlock.java
@@ -46,6 +48,8 @@ openlyfay/ancientgateways/block/blockitem/BrownRuneItem.java
  openlyfay.ancientgateways.block.blockitem.BrownRuneItem
 openlyfay/ancientgateways/block/blockitem/LightGreyRuneItem.java
  openlyfay.ancientgateways.block.blockitem.LightGreyRuneItem
+openlyfay/ancientgateways/mixins/ServerPlayerEntityMixin.java
+ openlyfay.ancientgateways.mixins.ServerPlayerEntityMixin
 openlyfay/ancientgateways/block/blockitem/RedRuneItem.java
  openlyfay.ancientgateways.block.blockitem.RedRuneItem
 openlyfay/ancientgateways/block/runes/BlueRuneBlock.java

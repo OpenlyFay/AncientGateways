@@ -4,7 +4,8 @@
   "package": "openlyfay.ancientgateways.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityMixin"
+    "EntityMixin",
+    "ServerPlayerEntityMixin"
   ],
   "client": [
   ],

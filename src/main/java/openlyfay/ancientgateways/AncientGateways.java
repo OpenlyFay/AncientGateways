@@ -23,7 +23,7 @@ public class AncientGateways implements ModInitializer {
 
     public static final String MOD_ID = "ancientgateways";
     
-    public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).breakByTool(FabricToolTags.PICKAXES,3).lightLevel(10).hardness(50).resistance(1200));
+    public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES,3).lightLevel(10).hardness(50).resistance(1200));
     public static BlockEntityType<GatewayBlockEntity> GATEWAY_BLOCK_ENTITY;
     public static final Block black_rune_block = new BlackRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block red_rune_block = new RedRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());

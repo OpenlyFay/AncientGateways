@@ -10,12 +10,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.TeleportTarget;
 
-/**
- * From Applied Energistics 2, used with permission
- */
 @Mixin(Entity.class)
 public class EntityMixin {
 
+    /**
+     * From Applied Energistics 2, used with permission
+     */
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true, allow = 1)
     public void getTeleportTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cri) {
         // Check if a destination has been set for the entity currently being teleported
@@ -24,5 +24,6 @@ public class EntityMixin {
             cri.setReturnValue(target);
         }
     }
+
 
 }
