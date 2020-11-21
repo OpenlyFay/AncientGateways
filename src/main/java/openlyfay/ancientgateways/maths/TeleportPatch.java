@@ -67,6 +67,7 @@ public class TeleportPatch {
         if (newWorld == null) {
             return entity;
         }
+
         if (newWorld == oldWorld) {
             return entity;
         }

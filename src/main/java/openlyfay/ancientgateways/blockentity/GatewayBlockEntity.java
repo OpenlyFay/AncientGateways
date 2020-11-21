@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -12,6 +13,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,6 +31,7 @@ import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
 import openlyfay.ancientgateways.maths.MasterList;
 import openlyfay.ancientgateways.maths.TeleportPatch;
+import openlyfay.ancientgateways.maths.Teleportable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -58,6 +61,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         targetWorld = ServerWorld.OVERWORLD;
         targetPos = new BlockPos(0,0,0);
         fresh = true;
+        
     }
 
     @Override
@@ -237,30 +241,47 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                 Iterator payloadIterator = payloadList.iterator();
                 Entity payloadEntity;
                 while (payloadIterator.hasNext()) {
+                    List<Entity> riders = null;
                     payloadEntity = (Entity) payloadIterator.next();
-                    TeleportPatch tpHack = TeleportPatch.getInstance();
-                    ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
-                    Vec3d oldVelocity = payloadEntity.getVelocity();
-                    float angleDelta;
-                    BlockState otherSide = targetWorld2.getBlockState(targetPos);
-                    Direction otherSideDirection = otherSide.get(Properties.HORIZONTAL_FACING);
-                    angleDelta = otherSideDirection.asRotation();
-                    Vec3d posDelta = new Vec3d(0,pos.getY(),0)
-                            .subtract(0,payloadEntity.getPos().y,0)
-                            .subtract(otherSideDirection.getOffsetX()*1.5+0.5, 0 ,otherSideDirection.getOffsetZ()*1.5+0.5);
-                    if (targetWorld != world.getRegistryKey()) {
-                        tpHack.interdimensionalTeleport(payloadEntity, targetWorld2, targetPos.getX() - posDelta.getX(),targetPos.getY() - posDelta.getY(),targetPos.getZ() - posDelta.getZ());
+                    if (payloadEntity instanceof Teleportable && ((Teleportable) payloadEntity).getPortalCoolDown() < 1){
+                        ((Teleportable) payloadEntity).setPortalCoolDown(100);
+                        TeleportPatch tpHack = TeleportPatch.getInstance();
+                        ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
+                        double oldVelocityFlat = Math.sqrt(payloadEntity.getVelocity().x * payloadEntity.getVelocity().x + payloadEntity.getVelocity().z*payloadEntity.getVelocity().z);
+                        double oldVelocityY = payloadEntity.getVelocity().y;
+                        BlockState otherSide = targetWorld2.getBlockState(targetPos);
+                        Direction otherSideDirection = otherSide.get(Properties.HORIZONTAL_FACING);
+                        Vec3d posDelta = new Vec3d(0,pos.getY(),0)
+                                .subtract(0,payloadEntity.getPos().y,0)
+                                .subtract(otherSideDirection.getOffsetX()*1.5+0.5, 0 ,otherSideDirection.getOffsetZ()*1.5+0.5);
+                        if (targetWorld != world.getRegistryKey()) {
+                            tpHack.interdimensionalTeleport(payloadEntity, targetWorld2, targetPos.getX() - posDelta.getX(),targetPos.getY() - posDelta.getY(),targetPos.getZ() - posDelta.getZ());
+                        }
+                        else {
+                            if (payloadEntity.hasPlayerRider()){
+                                riders = payloadEntity.getPassengerList();
+                                for (Entity rider : riders){
+                                    rider.method_29239();
+                                    if (rider instanceof PlayerEntity){
+                                        rider.setSneaking(true);
+                                    }
+                                }
+                            }
+                            payloadEntity.teleport(targetPos.getX() - posDelta.getX(), targetPos.getY() - posDelta.getY(), targetPos.getZ() - posDelta.getZ());
+                            if (riders != null){
+                                for (Entity rider : riders){
+                                    rider.teleport(payloadEntity.getX(),payloadEntity.getY(),payloadEntity.getZ());
+                                    rider.startRiding(payloadEntity, false);
+                                }
+                            }
+                        }
+                        payloadEntity.setVelocity(oldVelocityFlat*otherSideDirection.getOffsetX(),oldVelocityY,oldVelocityFlat*otherSideDirection.getOffsetZ());
+                        if (payloadEntity instanceof LivingEntity){
+                            payloadEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,payloadEntity.getPos().add(otherSideDirection.getOffsetX(),0,otherSideDirection.getOffsetZ()));
+                        }
+                        targetWorld2.playSound(null, targetPos,SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.AMBIENT,1.0f,1.0f);
+                        payloadEntity.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,1.0f,1.0f);
                     }
-                    else {
-                        payloadEntity.teleport(targetPos.getX() - posDelta.getX(),targetPos.getY() - posDelta.getY(),targetPos.getZ() - posDelta.getZ());
-                    }
-                    payloadEntity.setVelocity(oldVelocity.rotateY(angleDelta));
-                    if (payloadEntity instanceof LivingEntity){
-                        payloadEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,payloadEntity.getPos().add(otherSideDirection.getOffsetX(),0,otherSideDirection.getOffsetZ()));
-                    }
-                    targetWorld2.playSound(null, targetPos,SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.AMBIENT,1.0f,1.0f);
-                    payloadEntity.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,1.0f,1.0f);
-
                 }
                 if (countdown % 80 == 0) {
                     Block block = this.getCachedState().getBlock();

@@ -1,9 +1,11 @@
 package openlyfay.ancientgateways.mixins;
 
 import openlyfay.ancientgateways.maths.TeleportPatch;
+import openlyfay.ancientgateways.maths.Teleportable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.Entity;
@@ -11,7 +13,26 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.TeleportTarget;
 
 @Mixin(Entity.class)
-public class EntityMixin {
+public class EntityMixin implements Teleportable {
+    private int portalCoolDown = 0;
+
+    @Override
+    public void setPortalCoolDown(int portalCD){
+        portalCoolDown = portalCD;
+    }
+
+    @Override
+    public int getPortalCoolDown(){
+        return portalCoolDown;
+    }
+
+
+    @Inject(method = "baseTick", at = @At("TAIL"))
+    public void teleportCoolDownTick(CallbackInfo ci){
+        if (portalCoolDown > 0){
+            portalCoolDown--;
+        }
+    }
 
     /**
      * From Applied Energistics 2, used with permission

@@ -8,9 +8,7 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
@@ -18,6 +16,7 @@ import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.runes.*;
 import openlyfay.ancientgateways.block.blockitem.*;
 import openlyfay.ancientgateways.blockentity.GatewayBlockEntity;
+
 
 public class AncientGateways implements ModInitializer {
 
@@ -41,6 +40,7 @@ public class AncientGateways implements ModInitializer {
     public static final Block magenta_rune_block = new MagentaRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+
 
     @Override
     public void onInitialize(){
@@ -79,10 +79,11 @@ public class AncientGateways implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "rune_orange"), new OrangeRuneItem(orange_rune_block, new  Item.Settings().maxCount(16).group(ANCIENT_GATEWAYS_MAIN)));
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "rune_white"),white_rune_block);
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "rune_white"), new WhiteRuneItem(white_rune_block, new  Item.Settings().maxCount(16).group(ANCIENT_GATEWAYS_MAIN)));
+
+
     }
 
     public static final ItemGroup ANCIENT_GATEWAYS_MAIN = FabricItemGroupBuilder.create(
             new Identifier(MOD_ID, "general")).icon(() -> new ItemStack(gateway_block))
             .build();
-
 }
