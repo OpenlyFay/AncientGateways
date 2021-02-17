@@ -252,8 +252,6 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
     }
 
 }
-// TODO: Make portal stay open if remains redstone powered
-// TODO: Figure out how to only connect to COMPLETED gatways
 // Completed Gateways can dial and connect to a gate that is incomplete, (contains only the GatewayCore, and the three glyphs on either side)
 
 	
