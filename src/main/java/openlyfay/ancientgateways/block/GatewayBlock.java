@@ -222,4 +222,22 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     }
 
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+		System.out.println("[PATCHEDPORTALS] BLOCKUPDATE");
+		if (!world.isClient) {
+            if (world.isReceivingRedstonePower(pos)) {
+				if (GatewayStructureIntact(pos, state, world, null)) {
+                    if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
+                        ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
+                    }
+                }
+            }
+        }
+    }
 }
+// TODO: Make portal stay open if remains redstone powered
+// TODO: Figure out how to only connect to COMPLETED gatways
+// Completed Gateways can dial and connect to a gate that is incomplete, (contains only the GatewayCore, and the three glyphs on either side)
+
+	
+

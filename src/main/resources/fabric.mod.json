@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "ancientgateways",
-  "version": "1.0.1",
-  "name": "Ancient Gateways",
-  "description": "Just a better/alternative portals mod, for now...",
+  "version": "1.1.1",
+  "name": "Ancient Gateways: RedstonePatched",
+  "description": "A fork of the Ancient Gateways mod that fixes some things",
   "authors": [
-    "OpenlyFay"
+    "OpenlyFay", "Merith-TK"
   ],
 
   "license": "MIT",
