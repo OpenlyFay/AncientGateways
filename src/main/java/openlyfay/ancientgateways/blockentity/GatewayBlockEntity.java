@@ -43,9 +43,9 @@ import static net.minecraft.util.math.Direction.SOUTH;
 public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickable, BlockEntityClientSerializable {
     private String runeIdentifier = "";
     private String runeTarget = "";
-    private BlockPos targetPos;
+    public BlockPos targetPos;
     private RegistryKey<World> targetWorld;
-    private int countdown;
+    public int countdown;
     private Box box = new Box(pos.add(1,-1,2), pos.add(0,-5,-2));
     private DefaultedList<ItemStack> inventory;
     private static MasterList masterlist;
@@ -206,7 +206,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     } else {
                         box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
                     }
-                    world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));
                     targetPos = new BlockPos(MasterList.getPosition(runeTarget));
                     targetWorld = MasterList.getWorld(runeTarget);
                     ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
@@ -215,10 +214,18 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                         masterlist.removeElement(runeTarget);
                     }
                     else {
-                        ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier);
+                        if(((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).GatewayStructureIntact(targetPos, targetWorld2.getBlockState(targetPos), targetWorld2, null )){
+                            System.out.println("GatewayStructureIntact check for targetPos " + targetPos.toShortString() + " success");
+                            ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier);
+                            chunkLoaderManager(true);
+                            world.playSound(null,pos,SoundEvents.BLOCK_BEACON_ACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
+                        } else {
+                            System.out.println("GatewayStructureIntact check for targetPos " + targetPos.toShortString() + " fail");
+                            this.countdown = 0;
+                            return;
+                        }
+                        world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));
                     }
-                    chunkLoaderManager(true);
-                    world.playSound(null,pos,SoundEvents.BLOCK_BEACON_ACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
                 }
                 markDirty();
             }
@@ -227,6 +234,10 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             }
         }
 
+    }
+
+    public void setCountdown(int cd){
+        this.countdown = cd;
     }
 
     @Override
