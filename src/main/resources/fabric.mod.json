@@ -5,7 +5,8 @@
   "name": "Ancient Gateways: Patched",
   "description": "A fork of the Ancient Gateways mod that fixes some things",
   "authors": [
-    "OpenlyFay", "Merith-TK"
+    "OpenlyFay", "Merith-TK",
+    "Kwright02"
   ],
 
   "license": "MIT",

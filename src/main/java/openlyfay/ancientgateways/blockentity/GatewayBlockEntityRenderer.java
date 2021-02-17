@@ -30,6 +30,8 @@ public class GatewayBlockEntityRenderer extends BlockEntityRenderer<GatewayBlock
 
 
 
+
+
     @Override
     public void render(GatewayBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         Direction direction = blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING);

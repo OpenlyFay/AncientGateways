@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import openlyfay.ancientgateways.StateConfig;
 import openlyfay.ancientgateways.block.runes.AbstractRuneBlock;
 import openlyfay.ancientgateways.blockentity.GatewayBlockEntity;
 
@@ -242,8 +244,9 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
                 GatewayBlockEntity originBlockEntity = ((GatewayBlockEntity) world.getBlockEntity(pos));
                 GatewayBlockEntity targetBlockEntity = ((GatewayBlockEntity) ((ServerWorld) world).getServer().getWorld(originBlockEntity.targetWorld).getBlockEntity(originBlockEntity.targetPos));
                 if(originBlockEntity.countdown > 0 || targetBlockEntity.countdown > 0) {
-                    originBlockEntity.setCountdown(80);
-                    targetBlockEntity.setCountdown(80);
+                    int delay = StateConfig.get(world).getDelay();
+                    originBlockEntity.setCountdown(delay);
+                    targetBlockEntity.setCountdown(delay);
                     originBlockEntity.tick();
                     targetBlockEntity.tick();
                 }
