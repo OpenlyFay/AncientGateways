@@ -44,7 +44,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     private String runeIdentifier = "";
     private String runeTarget = "";
     public BlockPos targetPos;
-    private RegistryKey<World> targetWorld;
+    public RegistryKey<World> targetWorld;
     public int countdown;
     private Box box = new Box(pos.add(1,-1,2), pos.add(0,-5,-2));
     private DefaultedList<ItemStack> inventory;
@@ -310,10 +310,11 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                             countdown = 1;
                         }
                     }
-
                 }
             }
-            countdown--;
+            if(world.isClient || !(world.isReceivingRedstonePower(this.getPos())) && !((ServerWorld) world).getServer().getWorld(targetWorld).isReceivingRedstonePower(targetPos)) {
+                countdown--;
+            }
             if(countdown == 0){
                 if (getCachedState().get(GatewayBlock.ON)){
                     world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));

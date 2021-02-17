@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -230,51 +231,22 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
     }
 
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-		System.out.println("[PATCHEDPORTALS] BLOCKUPDATE");
 		if (!world.isClient) {
             if (world.isReceivingRedstonePower(pos)) {
-//                BlockPos targetPos = targetBlockEntity.targetPos;
-//
-////                world.setBlockState(targetPos, Blocks.RED_WOOL.getDefaultState());
-//                proximityLog("Checking if target block is a gatewayblock", world, pos, false);
-//
-//                if(world.getBlockState(targetPos).getBlock() instanceof GatewayBlock){
-//                    GatewayBlock targetGateway = (GatewayBlock) world.getBlockState(targetPos).getBlock();
-
-//                    proximityLog("Target block IS a GatewayBlock", world, pos,false);
-
                     if (GatewayStructureIntact(pos, state, world, null)) {
-//                        proximityLog("Got through origin structure intact check", world, pos, false);
-//                        if(targetGateway.GatewayStructureIntact(targetPos, targetGateway.getDefaultState(), world, null)){
-//                            proximityLog("Got through destination structure intact check", world, pos, false);
-                            if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
-                                ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
-//                            }
-//                        } else {
-//                            proximityLog("Did not get through target gateway check!!!!!", world, pos, false);
-//                        }
+                        if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
+                            ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
+                        }
                     }
-                } else {
-                    proximityLog("Gateway not intact", world, pos, false);
-                }
             } else {
-                System.out.println("Powering down portal");
                 GatewayBlockEntity originBlockEntity = ((GatewayBlockEntity) world.getBlockEntity(pos));
-                GatewayBlockEntity targetBlockEntity = ((GatewayBlockEntity) world.getBlockEntity(originBlockEntity.targetPos));
-                originBlockEntity.setCountdown(0);
-                targetBlockEntity.setCountdown(0);
-                originBlockEntity.tick();
-                targetBlockEntity.tick();
-            }
-        }
-    }
-
-    public static void proximityLog(String text, World world, BlockPos pos, boolean actionBar){
-        System.out.println(text);
-        List<Entity> entities = world.getOtherEntities(null, new Box(pos.getX()-16, pos.getY()-16, pos.getZ()-16, 16,16,16));
-        for(Entity e : entities){
-            if(e instanceof PlayerEntity){
-                ((PlayerEntity) e).sendMessage(new LiteralText(text), actionBar);
+                GatewayBlockEntity targetBlockEntity = ((GatewayBlockEntity) ((ServerWorld) world).getServer().getWorld(originBlockEntity.targetWorld).getBlockEntity(originBlockEntity.targetPos));
+                if(originBlockEntity.countdown > 0 || targetBlockEntity.countdown > 0) {
+                    originBlockEntity.setCountdown(1);
+                    targetBlockEntity.setCountdown(1);
+                    originBlockEntity.tick();
+                    targetBlockEntity.tick();
+                }
             }
         }
     }
