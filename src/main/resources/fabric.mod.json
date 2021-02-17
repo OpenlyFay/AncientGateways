@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "ancientgateways",
-  "version": "1.1.1",
-  "name": "Ancient Gateways: RedstonePatched",
+  "version": "1.1.2",
+  "name": "Ancient Gateways: Patched",
   "description": "A fork of the Ancient Gateways mod that fixes some things",
   "authors": [
     "OpenlyFay", "Merith-TK"
