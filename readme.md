@@ -6,13 +6,11 @@ This fork seeks to fix a few bugs, and add a few Quality of life features
 ## Fixes and Features Added
 * Redstone can now activate the gateway
 	![gif](.readme/redstone-activation.gif)
-
-## TODO
-### BUGS
-* Fix the gateway being able to be activated in an incomplete state
-	![img](https://i.imgur.com/qWb6zV9.png)
-* Fix gateway randomly stop functioning until both ends are rebuilt
-
-### Quality of Life
-* Make Gateway remain active aslong as there is a redstone signal, 
-	* Currently A redstone signal only triggers the same event as when a player activates it, leaving it on only for a certain amount of time
+* You can now configure how long the gateway remains open!
+	![gif](.readme/delayed-deactivation.gif)
+* Gateways no longer open when the receiving end was obstructed
+	* Old behavior
+	![img](https://i.imgur.com/gpsLmGv.png)
+	* New behavior
+		* Cant show by image, however, basically we fixed the issue where the receiving gate, did not run a Integrety Check, so matter how the receving gate was physically set. So the receving gate could receive players despite being obstructed, this is clearly not something i think the developer of the original mod had intended at all.
+		* So we made it run the check on the receiving gate, and if it is obstructed, simply do not activate at all
