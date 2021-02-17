@@ -2,3 +2,6 @@ bin
 build
 run
 .gradle
+.classpath
+.project
+.settings
