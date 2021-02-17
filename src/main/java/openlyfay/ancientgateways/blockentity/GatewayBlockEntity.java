@@ -18,6 +18,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
@@ -183,7 +184,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         return countdown > 0;
     }
 
-    public void activationCheck(boolean remote, String remoteRuneTarget){
+    public void activationCheck(boolean remote, String remoteRuneTarget, PlayerEntity playerEntity){
         Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
         String runeDelta = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
         if (!world.isClient) {
@@ -215,12 +216,13 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     }
                     else {
                         if(((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).GatewayStructureIntact(targetPos, targetWorld2.getBlockState(targetPos), targetWorld2, null )){
-                            System.out.println("GatewayStructureIntact check for targetPos " + targetPos.toShortString() + " success");
-                            ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier);
+                            ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier,playerEntity);
                             chunkLoaderManager(true);
                             world.playSound(null,pos,SoundEvents.BLOCK_BEACON_ACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
                         } else {
-                            System.out.println("GatewayStructureIntact check for targetPos " + targetPos.toShortString() + " fail");
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_1"), true);
+                            }
                             this.countdown = 0;
                             return;
                         }

@@ -72,7 +72,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
             if (player.isSneaking()) {
                 if (GatewayStructureIntact(pos, state, world, player)) {
                     if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
-                        ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
+                        ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null,player);
                     }
                 }
             } else {
@@ -134,7 +134,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
                     if (xz == -3 || xz == 3) {
                         if (!(world.getBlockState(blockPos.offset(direction)).getBlock() instanceof AbstractRuneBlock)) {
                             if (playerEntity != null){
-                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_2"), true);
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_3"), true);
                             }
 
                             return false;
@@ -156,7 +156,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
                     if(y < -5 || y > -1) {
                         if(world.getBlockState(blockPos).isAir()){
                             if (playerEntity != null){
-                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_1"), true);
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_2"), true);
                             }
                             return false;
                         }
@@ -237,7 +237,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
             if (world.isReceivingRedstonePower(pos)) {
                     if (GatewayStructureIntact(pos, state, world, null)) {
                         if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
-                            ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
+                            ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null,null);
                         }
                     }
             } else {

@@ -101,9 +101,9 @@ public class AncientGateways implements ModInitializer {
                 StateConfig.get(ctx.getSource().getWorld()).setDelay(Math.abs(getInteger(ctx, "delay")));
                 int delay = StateConfig.get(ctx.getSource().getWorld()).getDelay();
                 if(delay == 0 || delay == 400){
-                    ctx.getSource().sendFeedback(new LiteralText("You set the portal delay to default which is 400 ticks or 20 seconds"), true);
+                    ctx.getSource().sendFeedback(new LiteralText("Gateway delay set to default (400 ticks or 20 seconds)"), true);
                 } else {
-                    ctx.getSource().sendFeedback(new LiteralText("You set the portal delay to " + delay + " ticks or " + delay/20 + " seconds"), true);
+                    ctx.getSource().sendFeedback(new LiteralText("Gateway delay set to " + delay + " ticks or " + delay/20 + " seconds"), true);
                 }
                 return 1;
             })));
