@@ -242,8 +242,8 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
                 GatewayBlockEntity originBlockEntity = ((GatewayBlockEntity) world.getBlockEntity(pos));
                 GatewayBlockEntity targetBlockEntity = ((GatewayBlockEntity) ((ServerWorld) world).getServer().getWorld(originBlockEntity.targetWorld).getBlockEntity(originBlockEntity.targetPos));
                 if(originBlockEntity.countdown > 0 || targetBlockEntity.countdown > 0) {
-                    originBlockEntity.setCountdown(1);
-                    targetBlockEntity.setCountdown(1);
+                    originBlockEntity.setCountdown(80);
+                    targetBlockEntity.setCountdown(80);
                     originBlockEntity.tick();
                     targetBlockEntity.tick();
                 }
