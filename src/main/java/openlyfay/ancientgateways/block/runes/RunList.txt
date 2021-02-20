@@ -1,0 +1,18 @@
+List of Glyphs and their Address code
+
+Black:      0
+Red:        1
+Green:      2
+Brown:      3
+Blue:       4
+Purple:     5
+Cyan:       6
+LightGrey:  7
+Grey:       8
+Pink:       9
+Lime:       A
+Yellow:     B
+LightBlue:  C
+Magenta:    D
+Orange:     E
+White:      F
