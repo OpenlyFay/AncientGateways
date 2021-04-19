@@ -1,4 +1,4 @@
-package openlyfay.ancientgateways.maths;
+package openlyfay.ancientgateways.util;
 
 public interface Teleportable {
 

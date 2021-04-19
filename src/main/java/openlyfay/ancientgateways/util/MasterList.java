@@ -1,4 +1,4 @@
-package openlyfay.ancientgateways.maths;
+package openlyfay.ancientgateways.util;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

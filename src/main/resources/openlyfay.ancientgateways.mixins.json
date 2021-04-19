@@ -4,9 +4,11 @@
   "package": "openlyfay.ancientgateways.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ClientPlayNetworkHandlerMixin",
     "EntityMixin",
-    "ServerPlayerEntityMixin",
-    "PlayerEntityMixin"
+    "LootableContainerBlockEntityMixin",
+    "PlayerEntityMixin",
+    "ServerPlayerEntityMixin"
   ],
   "client": [
   ],

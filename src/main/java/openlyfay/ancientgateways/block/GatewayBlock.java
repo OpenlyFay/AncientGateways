@@ -20,7 +20,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import openlyfay.ancientgateways.block.runes.AbstractRuneBlock;
-import openlyfay.ancientgateways.blockentity.GatewayBlockEntity;
+import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntity;
 
 import static net.minecraft.util.math.Direction.NORTH;
 import static net.minecraft.util.math.Direction.SOUTH;

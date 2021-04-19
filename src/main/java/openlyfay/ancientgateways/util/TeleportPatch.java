@@ -2,7 +2,7 @@
  * Mostly from Applied Energistics 2, used with permission
  * */
 
-package openlyfay.ancientgateways.maths;
+package openlyfay.ancientgateways.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;

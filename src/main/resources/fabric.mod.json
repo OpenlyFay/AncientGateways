@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "ancientgateways",
-  "version": "1.0.1",
+  "version": "1.1.0-beta-1",
   "name": "Ancient Gateways",
   "description": "Just a better/alternative portals mod, for now...",
   "authors": [
     "OpenlyFay"
   ],
 
-  "license": "MIT",
+  "license": "GNU LGPL",
   "icon": "assets/modid/icon.png",
 
   "environment": "*",
@@ -27,7 +27,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.16.*"
+    "minecraft": "1.16.5"
   },
   "suggests": {
     "flamingo": "*"

@@ -1,7 +1,7 @@
 package openlyfay.ancientgateways.mixins;
 
-import openlyfay.ancientgateways.maths.TeleportPatch;
-import openlyfay.ancientgateways.maths.Teleportable;
+import openlyfay.ancientgateways.util.TeleportPatch;
+import openlyfay.ancientgateways.util.Teleportable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,7 +27,7 @@ public class EntityMixin implements Teleportable {
     }
 
 
-    @Inject(method = "baseTick", at = @At("TAIL"))
+    @Inject(method = "tick", at = @At("TAIL"))
     public void teleportCoolDownTick(CallbackInfo ci){
         if (portalCoolDown > 0){
             portalCoolDown--;

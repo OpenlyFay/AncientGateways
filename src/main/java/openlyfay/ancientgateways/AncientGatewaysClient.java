@@ -3,32 +3,38 @@ package openlyfay.ancientgateways;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
-import openlyfay.ancientgateways.blockentity.GatewayBlockEntityRenderer;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntityRenderer;
+
+import static openlyfay.ancientgateways.AncientGateways.*;
 
 
 public class  AncientGatewaysClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        BlockEntityRendererRegistry.INSTANCE.register(AncientGateways.GATEWAY_BLOCK_ENTITY, GatewayBlockEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(CHORUS_INK_ENTITY, ((dispatcher, context) -> new FlyingItemEntityRenderer<>(dispatcher,context.getItemRenderer())));
+        EntityRendererRegistry.INSTANCE.register(CHORUS_PEARL_ENTITY, ((dispatcher, context) -> new FlyingItemEntityRenderer<>(dispatcher,context.getItemRenderer())));
+        BlockEntityRendererRegistry.INSTANCE.register(GATEWAY_BLOCK_ENTITY, GatewayBlockEntityRenderer::new);
 
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.black_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.blue_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.brown_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.cyan_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.green_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.grey_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.light_blue_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.light_grey_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.lime_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.magenta_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.orange_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.pink_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.purple_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.red_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.white_rune_block, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AncientGateways.yellow_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(black_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(blue_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(brown_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(cyan_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(green_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(grey_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(light_blue_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(light_grey_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(lime_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(magenta_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(orange_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(pink_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(purple_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(red_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(white_rune_block, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(yellow_rune_block, RenderLayer.getCutout());
     }
 
 }

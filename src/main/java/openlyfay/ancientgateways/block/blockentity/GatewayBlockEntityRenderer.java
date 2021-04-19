@@ -1,4 +1,4 @@
-package openlyfay.ancientgateways.blockentity;
+package openlyfay.ancientgateways.block.blockentity;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;

@@ -1,10 +1,9 @@
-package openlyfay.ancientgateways.blockentity;
+package openlyfay.ancientgateways.block.blockentity;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -13,7 +12,6 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,9 +27,9 @@ import net.minecraft.world.chunk.Chunk;
 import openlyfay.ancientgateways.AncientGateways;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
-import openlyfay.ancientgateways.maths.MasterList;
-import openlyfay.ancientgateways.maths.TeleportPatch;
-import openlyfay.ancientgateways.maths.Teleportable;
+import openlyfay.ancientgateways.util.MasterList;
+import openlyfay.ancientgateways.util.TeleportPatch;
+import openlyfay.ancientgateways.util.Teleportable;
 
 import java.util.Iterator;
 import java.util.List;
