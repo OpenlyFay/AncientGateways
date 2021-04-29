@@ -27,7 +27,7 @@ public class EntityMixin implements Teleportable {
     }
 
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = "baseTick", at = @At("TAIL"))
     public void teleportCoolDownTick(CallbackInfo ci){
         if (portalCoolDown > 0){
             portalCoolDown--;

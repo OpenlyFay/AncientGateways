@@ -2,6 +2,8 @@ package openlyfay.ancientgateways.entity;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -13,11 +15,14 @@ import net.minecraft.item.Item;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import openlyfay.ancientgateways.AncientGateways;
+import openlyfay.ancientgateways.block.GatewayBlock;
+import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntity;
 
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +43,18 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
     @Environment(EnvType.CLIENT)
     public ChorusInkBottleEntity(World world, double x, double y, double z){
         super(AncientGateways.CHORUS_INK_ENTITY, x, y, z, world);
+    }
+
+    @Override
+    protected void onBlockHit(BlockHitResult blockHitResult) {
+        super.onBlockHit(blockHitResult);
+        BlockEntity blockEntity = world.getBlockEntity(blockHitResult.getBlockPos());
+        BlockState blockState = world.getBlockState(blockHitResult.getBlockPos());
+        if (blockEntity instanceof GatewayBlockEntity && blockState.getBlock() instanceof GatewayBlock){
+            if(((GatewayBlock) blockState.getBlock()).GatewayStructureIntact(blockHitResult.getBlockPos(),blockState,world,null)){
+                ((GatewayBlockEntity) blockEntity).activationCheck(false,null);
+            }
+        }
     }
 
     @Override

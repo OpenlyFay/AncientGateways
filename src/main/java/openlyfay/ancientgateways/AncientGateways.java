@@ -159,4 +159,5 @@ public class AncientGateways implements ModInitializer {
             .build();
 }
 
+//todo: add sub-network connectivity, destabilisation, structures, stuff to make using destabilisation
 

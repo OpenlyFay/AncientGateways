@@ -51,6 +51,22 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
     }
 
     @Override
+    public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+        super.onBlockBreakStart(state, world, pos, player);
+        if (!world.isClient){
+            Inventory blockEntity = (Inventory) world.getBlockEntity(pos);
+            for (int i = blockEntity.size() - 1; i >= 0; i--) {
+                if (!blockEntity.getStack(i).isEmpty()) {
+                    ItemScatterer.spawn(world, pos.getX() + state.get(Properties.HORIZONTAL_FACING).getOffsetX(), pos.getY(), pos.getZ() + state.get(Properties.HORIZONTAL_FACING).getOffsetZ(), blockEntity.getStack(i));
+                    blockEntity.removeStack(i);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    @Override
     public BlockRenderType getRenderType(BlockState state){
         return BlockRenderType.MODEL;
     }
@@ -60,29 +76,15 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
         if (!world.isClient) {
             Inventory blockEntity = (Inventory) world.getBlockEntity(pos);
             ItemStack itemStack = player.getStackInHand(hand);
-            if (player.isSneaking()) {
-                if (GatewayStructureIntact(pos, state, world, player)) {
-                    if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
-                        ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
-                    }
+            for (int i = 0; i < blockEntity.size(); i++) {
+                if (blockEntity.isValid(i,itemStack.copy().split(1))) {
+                    blockEntity.setStack(i, player.getStackInHand(hand).split(1));
+                    return ActionResult.SUCCESS;
                 }
-            } else {
-                if (!itemStack.isEmpty()) {
-                    for (int i = 0; i < blockEntity.size(); i++) {
-                        if (blockEntity.isValid(i,itemStack.copy().split(1))) {
-                            blockEntity.setStack(i, player.getStackInHand(hand).split(1));
-                            return ActionResult.SUCCESS;
-                        }
-                    }
-                } else {
-                    for (int i = blockEntity.size() - 1; i >= 0; i--) {
-                        if (!blockEntity.getStack(i).isEmpty()) {
-                            ItemScatterer.spawn(world, pos.getX() + state.get(Properties.HORIZONTAL_FACING).getOffsetX(), pos.getY(), pos.getZ() + state.get(Properties.HORIZONTAL_FACING).getOffsetZ(), blockEntity.getStack(i));
-                            blockEntity.removeStack(i);
-                            return ActionResult.SUCCESS;
-
-                        }
-                    }
+            }
+            if (GatewayStructureIntact(pos, state, world, player)) {
+                if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
+                    ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
                 }
             }
             return ActionResult.SUCCESS;
@@ -100,8 +102,10 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
         if(state.getBlock() != newState.getBlock()){
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if(blockEntity instanceof GatewayBlockEntity){
-                ItemScatterer.spawn(world, pos, (GatewayBlockEntity)blockEntity);
-                ((GatewayBlockEntity) blockEntity).chunkLoaderManager(false);
+                GatewayBlockEntity gatewayBlockEntity = ((GatewayBlockEntity) blockEntity);
+                ItemScatterer.spawn(world, pos, gatewayBlockEntity);
+                gatewayBlockEntity.chunkLoaderManager(false);
+                gatewayBlockEntity.masterListRemoveAddress();
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }

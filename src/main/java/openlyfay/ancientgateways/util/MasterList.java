@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import java.util.*;
 
 public class MasterList extends PersistentState {
-    private static ArrayList<GatewayAddress> locations = new ArrayList<>();
+    private static Map<String,AddressList> locations = new HashMap<>();
     private final static String key = "ancientgateways_masterlist";
 
     public MasterList(){
@@ -26,23 +26,32 @@ public class MasterList extends PersistentState {
     }
 
     private static GatewayAddress getElement(String addressName){
-        if (locations.isEmpty()){
+        if (locations.get(addressName) != null){
+            return locations.get(addressName).getAddress(0);
+        }
+        else {
             return null;
         }
-        for (GatewayAddress gatewayAddress : locations) {
-            if (gatewayAddress.getAddress().equals(addressName)) {
-                return gatewayAddress;
-            }
-        }
-        return null;
     }
 
     public void addElement(String address, Vec3d position, RegistryKey<World> world){
         if(getElement(address) == null){
-            GatewayAddress gatewayAddress = new GatewayAddress(address, position, world);
-            locations.add(gatewayAddress);
-            markDirty();
+            locations.put(address,new AddressList(new GatewayAddress(address,position,world)));
         }
+        else {
+            locations.get(address).addAddress(new GatewayAddress(address,position,world));
+        }
+        markDirty();
+    }
+
+    private void addElement(GatewayAddress gatewayAddress){
+        if(getElement(gatewayAddress.address) == null){
+            locations.put(gatewayAddress.address, new AddressList(gatewayAddress));
+        }
+        else {
+            locations.get(gatewayAddress.address).addAddress(gatewayAddress);
+        }
+        markDirty();
     }
 
     public static boolean doesElementExist(String address){
@@ -64,8 +73,22 @@ public class MasterList extends PersistentState {
     }
 
     public void removeElement(String address){
-        locations.remove(getElement(address));
+        locations.get(address).removeAddress(0);
+        if (locations.get(address).getLength() == 0){
+            locations.remove(address);
+        }
         markDirty();
+    }
+
+    public void removeElement(String address, Vec3d pos, RegistryKey<World> world){
+        GatewayAddress address1 = new GatewayAddress(address, pos, world);
+        if (locations.get(address) != null){
+            locations.get(address).removeAddress(address1);
+            if (locations.get(address).getLength() == 0){
+                locations.remove(address);
+            }
+            markDirty();
+        }
     }
 
     @Override
@@ -74,8 +97,7 @@ public class MasterList extends PersistentState {
 
         for(int i = 0; i < listTag.size(); ++i) {
             CompoundTag compoundTag = listTag.getCompound(i);
-            locations.add(new GatewayAddress(compoundTag));
-
+            addElement(new GatewayAddress(compoundTag));
         }
     }
 
@@ -83,10 +105,13 @@ public class MasterList extends PersistentState {
     public CompoundTag toTag(CompoundTag tag) {
         ListTag listTag = new ListTag();
 
-        for (GatewayAddress location : locations) {
-            CompoundTag compoundTag = new CompoundTag();
-            location.toTag(compoundTag);
-            listTag.add(compoundTag);
+        for (String location : locations.keySet()) {
+            AddressList addressList = locations.get(location);
+            for (int i = 0; i < addressList.getLength();i++){
+                CompoundTag compoundTag = new CompoundTag();
+                addressList.getAddress(i).toTag(compoundTag);
+                listTag.add(compoundTag);
+            }
         }
 
         if (!listTag.isEmpty()) {
@@ -96,6 +121,50 @@ public class MasterList extends PersistentState {
         return tag;
     }
 
+
+    private class AddressList {
+        private ArrayList<GatewayAddress> addresses = new ArrayList<>();
+
+        public AddressList(GatewayAddress newAddress){
+            addresses.add(newAddress);
+        }
+
+        public void addAddress(GatewayAddress address){
+            if (getIndex(address) == -1){
+                addresses.add(address);
+            }
+        }
+
+        public void removeAddress(int index) {
+            addresses.remove(index);
+        }
+
+        public void removeAddress(GatewayAddress gatewayAddress){
+            int index = getIndex(gatewayAddress);
+            if (index != -1){
+                addresses.remove(index);
+            }
+        }
+
+        public GatewayAddress getAddress(int index){
+            return addresses.get(index);
+        }
+
+        public int getIndex(GatewayAddress address){
+            for (int i = 0; i < addresses.size();i++){
+                GatewayAddress address1 = addresses.get(i);
+                if (address.equals(address1)){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public int getLength(){
+            return addresses.size();
+        }
+    }
 
     private class GatewayAddress {
 
@@ -119,6 +188,13 @@ public class MasterList extends PersistentState {
 
         public RegistryKey<World> getWorld() {
             return world;
+        }
+
+        public boolean equals(GatewayAddress gatewayAddress){
+            if (world == gatewayAddress.getWorld() && position.x == gatewayAddress.getPosition().x && position.y == gatewayAddress.getPosition().y && position.z == gatewayAddress.getPosition().z && address.equals(gatewayAddress.getAddress())){
+                return true;
+            }
+            return false;
         }
 
         public String getAddress() {

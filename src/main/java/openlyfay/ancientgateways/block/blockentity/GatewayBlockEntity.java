@@ -210,7 +210,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
                     if (targetWorld2 == null || !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity)) {
                         countdown = 0;
-                        masterlist.removeElement(runeTarget);
+                        masterlist.removeElement(runeTarget,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),targetWorld);
                     }
                     else {
                         ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier);
@@ -335,6 +335,9 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     }
                 }
             }
+            else {
+                masterListRemoveAddress();
+            }
         }
     }
     private String getTargetRuneCode(){
@@ -350,18 +353,25 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
 
 
     private void masterListSetAddress(){
+        if (masterlist == null){
+            masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
+        }
         runeIdentifier = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
-        if(!runeIdentifier.isEmpty() && !MasterList.doesElementExist(runeIdentifier)){
+        if(!runeIdentifier.isEmpty()){
             masterlist.addElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey());
         }
     }
 
     private void masterListChangeAddress(){
-        if(!runeIdentifier.isEmpty()){
-            masterlist.removeElement(runeIdentifier);
-
-        }
+        masterListRemoveAddress();
         masterListSetAddress();
+    }
+
+    public void masterListRemoveAddress(){
+        if (masterlist == null){
+            masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
+        }
+        masterlist.removeElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey());
     }
 
     public void chunkLoaderManager(boolean on){

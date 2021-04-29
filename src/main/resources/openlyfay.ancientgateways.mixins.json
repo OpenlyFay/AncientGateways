@@ -6,9 +6,9 @@
   "mixins": [
     "ClientPlayNetworkHandlerMixin",
     "EntityMixin",
-    "LootableContainerBlockEntityMixin",
     "PlayerEntityMixin",
-    "ServerPlayerEntityMixin"
+    "ServerPlayerEntityMixin",
+    "LootableContainerBlockEntityMixin"
   ],
   "client": [
   ],

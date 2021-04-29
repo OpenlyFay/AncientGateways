@@ -25,25 +25,21 @@ import openlyfay.ancientgateways.AncientGateways;
 public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
 
     private final int breakChance = 20;
-    private final ItemStack payload;
     private final Hand hand;
 
     public ChorusPearlEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {
         super(entityType,world);
-        payload = ItemStack.EMPTY;
         hand = Hand.MAIN_HAND;
     }
 
     public ChorusPearlEntity(World world, LivingEntity owner, ItemStack stack, Hand hand1){
         super(AncientGateways.CHORUS_PEARL_ENTITY, owner, world);
-        payload = stack;
         hand = hand1;
     }
 
     @Environment(EnvType.CLIENT)
     public ChorusPearlEntity(World world, double x, double y, double z){
         super(AncientGateways.CHORUS_PEARL_ENTITY, x, y, z, world);
-        payload = null;
         hand = null;
     }
 
@@ -72,8 +68,8 @@ public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void baseTick() {
+        super.baseTick();
         if (!world.isClient && !removed){
             BlockPos blockPos = new BlockPos(getX(),getY(),getZ());
             BlockState block = world.getBlockState(blockPos);
