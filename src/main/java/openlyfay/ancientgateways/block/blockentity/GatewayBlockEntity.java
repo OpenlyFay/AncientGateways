@@ -181,9 +181,14 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         return countdown > 0;
     }
 
-    public void activationCheck(boolean remote, String remoteRuneTarget){
+    public void activationCheck(){
+        activationCheck(false,null,0);
+    }
+
+    public void activationCheck(boolean remote, String remoteRuneTarget, int index){
         Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
         String runeDelta = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
+        int localIndex = getIndex();
         if (!world.isClient) {
             if (masterlist == null){
                 masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
@@ -197,7 +202,22 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                 }
                 else {
                     runeTarget = getTargetRuneCode();}
+                if (runeTarget.equals("")){
+                    runeTarget = runeIdentifier;
+                }
                 if (MasterList.doesElementExist(runeTarget)) {
+                    if (runeTarget.equals(runeIdentifier) && masterlist.getAddressLength(runeIdentifier) > 1 && !remote){
+                        if (localIndex == masterlist.getAddressLength(runeIdentifier) - 1){
+                            index = 0;
+                        }
+                        else {
+                            index = localIndex + 1;
+                        }
+                        world.setBlockState(pos,getCachedState().cycle(GatewayBlock.PAIRED));
+                    }
+                    if (remote && runeTarget.equals(runeIdentifier)){
+                        world.setBlockState(pos,getCachedState().cycle(GatewayBlock.PAIRED));
+                    }
                     countdown = 400;
                     if (facing == NORTH || facing == SOUTH) {
                         box = new Box(pos.add(2, -1, 1), pos.add(-2, -5, 0));
@@ -205,15 +225,15 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                         box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
                     }
                     world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));
-                    targetPos = new BlockPos(MasterList.getPosition(runeTarget));
-                    targetWorld = MasterList.getWorld(runeTarget);
+                    targetPos = new BlockPos(MasterList.getPosition(runeTarget, index));
+                    targetWorld = MasterList.getWorld(runeTarget, index);
                     ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
                     if (targetWorld2 == null || !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity)) {
                         countdown = 0;
-                        masterlist.removeElement(runeTarget,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),targetWorld);
+                        masterlist.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld);
                     }
                     else {
-                        ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier);
+                        ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier,localIndex);
                     }
                     chunkLoaderManager(true);
                     world.playSound(null,pos,SoundEvents.BLOCK_BEACON_ACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
@@ -340,6 +360,14 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             }
         }
     }
+
+    private int getIndex(){
+        if (masterlist == null){
+            masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
+        }
+        return masterlist.getIndex(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey());
+    }
+
     private String getTargetRuneCode(){
         StringBuilder total = new StringBuilder();
         for (ItemStack itemStack : inventory) {

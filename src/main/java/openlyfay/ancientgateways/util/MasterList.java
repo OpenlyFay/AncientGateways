@@ -26,8 +26,12 @@ public class MasterList extends PersistentState {
     }
 
     private static GatewayAddress getElement(String addressName){
+        return getElement(addressName,0);
+    }
+
+    private static GatewayAddress getElement(String addressName, int index){
         if (locations.get(addressName) != null){
-            return locations.get(addressName).getAddress(0);
+            return locations.get(addressName).getAddress(index);
         }
         else {
             return null;
@@ -58,16 +62,33 @@ public class MasterList extends PersistentState {
         return getElement(address) != null;
     }
 
-    public static Vec3d getPosition(String address){
+    public int getIndex(String address, Vec3d position, RegistryKey<World> world){
+        GatewayAddress gatewayAddress = new GatewayAddress(address,position,world);
+        return locations.get(address).getIndex(gatewayAddress);
+    }
+
+    public int getAddressLength(String address){
+        return locations.get(address).getLength();
+    }
+
+    public static Vec3d getPosition(String address,int index){
         if(getElement(address) != null){
-            return getElement(address).getPosition();
+            return getElement(address, index).getPosition();
         }
         else return null;
     }
 
+    public static Vec3d getPosition(String address){
+        return getPosition(address,0);
+    }
+
     public static RegistryKey<World> getWorld(String address){
+        return getWorld(address,0);
+    }
+
+    public static RegistryKey<World> getWorld(String address, int index){
         if(getElement(address) != null){
-            return getElement(address).getWorld();
+            return getElement(address, index).getWorld();
         }
         else return null;
     }

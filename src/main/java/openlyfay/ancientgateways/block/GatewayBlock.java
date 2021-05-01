@@ -84,7 +84,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
             }
             if (GatewayStructureIntact(pos, state, world, player)) {
                 if (world.getBlockEntity(pos) instanceof GatewayBlockEntity) {
-                    ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck(false,null);
+                    ((GatewayBlockEntity) world.getBlockEntity(pos)).activationCheck();
                 }
             }
             return ActionResult.SUCCESS;

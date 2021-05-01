@@ -52,7 +52,7 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
         BlockState blockState = world.getBlockState(blockHitResult.getBlockPos());
         if (blockEntity instanceof GatewayBlockEntity && blockState.getBlock() instanceof GatewayBlock){
             if(((GatewayBlock) blockState.getBlock()).GatewayStructureIntact(blockHitResult.getBlockPos(),blockState,world,null)){
-                ((GatewayBlockEntity) blockEntity).activationCheck(false,null);
+                ((GatewayBlockEntity) blockEntity).activationCheck();
             }
         }
     }
