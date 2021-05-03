@@ -4,7 +4,7 @@
   "block.ancientgateways.gatewayblock.error_obstructed_1":"Gateway needs a 7x7 hollow frame, with the core at the top of the centre",
   "block.ancientgateways.gatewayblock.error_obstructed_2":"Gateway frame needs 3 glyphs down the front of the vertical sides to connect to the network",
   "item.ancientgateways.gatewayblock.tooltip0": "Cross-dimensional teleporter.",
-  "item.ancientgateways.gatewayblock.tooltip1": "Holds up to 6 glyphs, shift-use to activate",
+  "item.ancientgateways.gatewayblock.tooltip1": "Holds up to 6 glyphs, shift-use to activate.",
   "block.ancientgateways.gatewayblock": "Gateway Core",
   "block.ancientgateways.rune_black": "Black Glyph",
   "block.ancientgateways.rune_red": "Red Glyph",

@@ -41,22 +41,22 @@ public class AncientGateways implements ModInitializer {
     public static Identifier PEARL_ID = new Identifier(MOD_ID,"chorus_pearl_entity");
     public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES,3).luminance(10).hardness(50).resistance(1200));
     public static BlockEntityType<GatewayBlockEntity> GATEWAY_BLOCK_ENTITY;
-    public static final Block black_rune_block = new BlackRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block red_rune_block = new RedRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block green_rune_block = new GreenRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block brown_rune_block = new BrownRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block blue_rune_block = new BlueRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block purple_rune_block = new PurpleRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block cyan_rune_block = new CyanRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block light_grey_rune_block = new LightGreyRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block grey_rune_block = new GreyRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block pink_rune_block = new PinkRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block lime_rune_block = new LimeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block yellow_rune_block = new YellowRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block light_blue_rune_block = new LightBlueRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block magenta_rune_block = new MagentaRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
-    public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block black_rune_block = new BlackRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block red_rune_block = new RedRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block green_rune_block = new GreenRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block brown_rune_block = new BrownRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block blue_rune_block = new BlueRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block purple_rune_block = new PurpleRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block cyan_rune_block = new CyanRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block light_grey_rune_block = new LightGreyRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block grey_rune_block = new GreyRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block pink_rune_block = new PinkRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block lime_rune_block = new LimeRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block yellow_rune_block = new YellowRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block light_blue_rune_block = new LightBlueRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block magenta_rune_block = new MagentaRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
 
 
     @Override
@@ -159,5 +159,5 @@ public class AncientGateways implements ModInitializer {
             .build();
 }
 
-//todo: add sub-network connectivity, destabilisation, structures, stuff to make using destabilisation
+
 

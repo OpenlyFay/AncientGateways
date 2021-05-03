@@ -123,6 +123,75 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
             xFactor = 0;
         }
         for (int y = -6; y < 1; y++){
+            /*
+            for (int xz = - 2; xz < 3; xz++){
+                BlockPos blockPos = pos.add(xz*xFactor,y,xz*zFactor);
+                int ySign = -1;
+                if (y > -3){ySign = 1;}
+                int xzSign = -1;
+                if (xz > 0){xzSign = 1;}
+                if (y == -5 || y == -1){
+
+                    if (xz == -2 || xz == 2){
+                        if (!world.getBlockState(blockPos).isSolidBlock(world,blockPos)){
+                            if (world.getFluidState(blockPos).isEmpty() && !world.isAir(blockPos)){
+                                if (playerEntity != null){
+                                    playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_0"),true);
+                                }
+                                return false;
+                            }
+                            if (!(world.getBlockState(blockPos.add(xzSign * xFactor,0,xzSign * zFactor)).isSolidBlock(world,blockPos.add(xzSign * xFactor,0,xzSign * zFactor)) && world.getBlockState(blockPos).isSolidBlock(world,blockPos.add(0,ySign,0)))){
+                                if (playerEntity != null){
+                                    playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_1"),true);
+                                }
+                                return false;
+                            }
+                        }
+                    }
+
+                    else {
+                        if (!world.getBlockState(blockPos).isSolidBlock(world,blockPos)){
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_0"),true);
+                            }
+                            return false;
+                        }
+                        if (!world.getBlockState(blockPos.add(0,ySign,0)).isSolidBlock(world,blockPos.add(0,ySign,0))){
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_1"),true);
+                            }
+                            return false;
+                        }
+                    }
+
+
+                }
+                else {
+                    if (!world.getBlockState(blockPos).isSolidBlock(world,blockPos)){
+                        if (playerEntity != null){
+                            playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_0"),true);
+                        }
+                    return false;
+                    }
+                    if (xz == -2 || xz == 2){
+                        if (!world.getBlockState(blockPos.add(xzSign * xFactor,0,xzSign * zFactor)).isSolidBlock(world,blockPos.add(xzSign * xFactor,0,xz * zFactor))){
+                            if (playerEntity != null){
+                                playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_1"),true);
+                            }
+                            return false;
+                        }
+                        else {
+                            if (!(world.getBlockState(blockPos.add(xzSign * xFactor,0,xz * zFactor).offset(direction)).getBlock() instanceof AbstractRuneBlock)){
+                                if (playerEntity != null){
+                                    playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_2"),true);
+                                }
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            */
             if (y >= -4 && y <= -2){
                 for (int xz = -3; xz < 4; xz++){
                     BlockPos blockPos = pos.add(xz * xFactor, y, xz * zFactor);
@@ -135,7 +204,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
                         }
 
                     } else {
-                        if (!world.getBlockState(blockPos).isAir()) {
+                        if (!(world.getBlockState(blockPos).isAir() || (world.getBlockState(blockPos).getBlock() instanceof FluidBlock))) {
                             if (playerEntity != null){
                                 playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_0"), true);
                             }
@@ -148,7 +217,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
                 for (int xz = -1; xz < 2; xz++){
                     BlockPos blockPos = pos.add(xz * xFactor, y, xz * zFactor);
                     if(y < -5 || y > -1) {
-                        if(world.getBlockState(blockPos).isAir()){
+                        if(!world.getBlockState(blockPos).isSolidBlock(world,blockPos)){
                             if (playerEntity != null){
                                 playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_1"), true);
                             }
@@ -156,7 +225,7 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
                         }
                     }
                     else {
-                        if (!world.getBlockState(blockPos).isAir()) {
+                        if (!(world.getBlockState(blockPos).isAir() || (world.getBlockState(blockPos).getBlock() instanceof FluidBlock))) {
                             if (playerEntity != null){
                                 playerEntity.sendMessage(new TranslatableText("block.ancientgateways.gatewayblock.error_obstructed_0"), true);
                             }
