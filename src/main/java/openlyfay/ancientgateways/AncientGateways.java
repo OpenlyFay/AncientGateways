@@ -1,6 +1,8 @@
 package openlyfay.ancientgateways;
 
 
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -33,6 +35,9 @@ import openlyfay.ancientgateways.util.RegHandler;
 public class AncientGateways implements ModInitializer {
 
     public static final String MOD_ID = "ancientgateways";
+
+    public static AncientGatewaysConfig agConfig;
+
     public static Item CHORUS_INK_ITEM;
     public static EntityType<ChorusInkBottleEntity> CHORUS_INK_ENTITY;
     public static Identifier BOTTLE_ID = new Identifier(MOD_ID,"chorus_ink_entity");
@@ -41,26 +46,29 @@ public class AncientGateways implements ModInitializer {
     public static Identifier PEARL_ID = new Identifier(MOD_ID,"chorus_pearl_entity");
     public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES,3).luminance(10).hardness(50).resistance(1200));
     public static BlockEntityType<GatewayBlockEntity> GATEWAY_BLOCK_ENTITY;
-    public static final Block black_rune_block = new BlackRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block red_rune_block = new RedRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block green_rune_block = new GreenRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block brown_rune_block = new BrownRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block blue_rune_block = new BlueRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block purple_rune_block = new PurpleRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block cyan_rune_block = new CyanRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block light_grey_rune_block = new LightGreyRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block grey_rune_block = new GreyRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block pink_rune_block = new PinkRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block lime_rune_block = new LimeRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block yellow_rune_block = new YellowRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block light_blue_rune_block = new LightBlueRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block magenta_rune_block = new MagentaRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
-    public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.PORTAL).nonOpaque());
+    public static final Block black_rune_block = new BlackRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block red_rune_block = new RedRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block green_rune_block = new GreenRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block brown_rune_block = new BrownRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block blue_rune_block = new BlueRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block purple_rune_block = new PurpleRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block cyan_rune_block = new CyanRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block light_grey_rune_block = new LightGreyRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block grey_rune_block = new GreyRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block pink_rune_block = new PinkRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block lime_rune_block = new LimeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block yellow_rune_block = new YellowRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block light_blue_rune_block = new LightBlueRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block magenta_rune_block = new MagentaRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
+    public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
 
 
     @Override
     public void onInitialize(){
+        AutoConfig.register(AncientGatewaysConfig.class, GsonConfigSerializer::new);
+        agConfig = AutoConfig.getConfigHolder(AncientGatewaysConfig.class).getConfig();
+
         CHORUS_INK_ENTITY = RegHandler.entity(BOTTLE_ID,EntityType.Builder.<ChorusInkBottleEntity>create(ChorusInkBottleEntity::new, SpawnGroup.MISC).maxTrackingRange(4).trackingTickInterval(10).setDimensions(0.25f,0.25f).build(BOTTLE_ID.getPath()));
         CHORUS_INK_ITEM = RegHandler.item(new Identifier(MOD_ID,"chorus_ink_item"),new ChorusInkBottleItem(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(16)));
         DispenserBlock.registerBehavior(AncientGateways.CHORUS_INK_ITEM, new ProjectileDispenserBehavior() {

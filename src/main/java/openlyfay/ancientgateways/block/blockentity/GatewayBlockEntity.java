@@ -48,6 +48,8 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     private DefaultedList<ItemStack> inventory;
     private static MasterList masterlist;
     private boolean fresh;
+    private final static int cooldownDuration = AncientGateways.agConfig.gatewayCooldown;
+    private final static int gatewayDuration = AncientGateways.agConfig.gatewayActivationTime;
 
     public GatewayBlockEntity(){
         super(AncientGateways.GATEWAY_BLOCK_ENTITY);
@@ -59,7 +61,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         targetWorld = ServerWorld.OVERWORLD;
         targetPos = new BlockPos(0,0,0);
         fresh = true;
-        
     }
 
     @Override
@@ -188,11 +189,9 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     public void activationCheck(boolean remote, String remoteRuneTarget, int index){
         Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
         String runeDelta = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
-        int localIndex = getIndex();
         if (!world.isClient) {
-            if (masterlist == null){
-                masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
-            }
+            masterListSetAddress();
+            int localIndex = getIndex();
             if (countdown <= 0 && !runeDelta.isEmpty()) {
                 if (!runeDelta.equals(runeIdentifier)) {
                     masterListChangeAddress();
@@ -218,7 +217,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     if (remote && runeTarget.equals(runeIdentifier)){
                         world.setBlockState(pos,getCachedState().cycle(GatewayBlock.PAIRED));
                     }
-                    countdown = 400;
+                    countdown = gatewayDuration;
                     if (facing == NORTH || facing == SOUTH) {
                         box = new Box(pos.add(2, -1, 1), pos.add(-2, -5, 0));
                     } else {
@@ -232,7 +231,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                         countdown = 0;
                         masterlist.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld);
                     }
-                    else {
+                    if (!remote) {
                         ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier,localIndex);
                     }
                     chunkLoaderManager(true);
@@ -262,7 +261,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     List<Entity> riders = null;
                     payloadEntity = (Entity) payloadIterator.next();
                     if (payloadEntity instanceof Teleportable && ((Teleportable) payloadEntity).getPortalCoolDown() < 1){
-                        ((Teleportable) payloadEntity).setPortalCoolDown(100);
+                        ((Teleportable) payloadEntity).setPortalCoolDown(cooldownDuration);
                         TeleportPatch tpHack = TeleportPatch.getInstance();
                         ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
                         double oldVelocityFlat = Math.sqrt(payloadEntity.getVelocity().x * payloadEntity.getVelocity().x + payloadEntity.getVelocity().z*payloadEntity.getVelocity().z);

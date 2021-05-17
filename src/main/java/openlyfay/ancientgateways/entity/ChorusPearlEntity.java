@@ -24,7 +24,7 @@ import openlyfay.ancientgateways.AncientGateways;
 
 public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
 
-    private final int breakChance = 20;
+    private final static int breakChance = AncientGateways.agConfig.chorusPearlBreakChance;
     private final Hand hand;
 
     public ChorusPearlEntity(EntityType<? extends ThrownItemEntity> entityType, World world) {

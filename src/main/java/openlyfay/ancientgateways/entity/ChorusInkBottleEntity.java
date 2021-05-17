@@ -30,7 +30,8 @@ import java.util.List;
 
 public class ChorusInkBottleEntity extends ThrownItemEntity {
 
-    private final int searchRange = 24;
+    private final static int searchRange = AncientGateways.agConfig.chorusInkRadius;
+    private final static boolean activatesGateways = AncientGateways.agConfig.chorusInkActivatesGateways;
 
     public ChorusInkBottleEntity(EntityType<? extends ChorusInkBottleEntity> entityType, World world) {
         super(entityType, world);
@@ -50,7 +51,7 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
         super.onBlockHit(blockHitResult);
         BlockEntity blockEntity = world.getBlockEntity(blockHitResult.getBlockPos());
         BlockState blockState = world.getBlockState(blockHitResult.getBlockPos());
-        if (blockEntity instanceof GatewayBlockEntity && blockState.getBlock() instanceof GatewayBlock){
+        if (activatesGateways && blockEntity instanceof GatewayBlockEntity && blockState.getBlock() instanceof GatewayBlock){
             if(((GatewayBlock) blockState.getBlock()).GatewayStructureIntact(blockHitResult.getBlockPos(),blockState,world,null)){
                 ((GatewayBlockEntity) blockEntity).activationCheck();
             }
