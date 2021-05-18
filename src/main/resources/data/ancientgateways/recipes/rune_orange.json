@@ -1,21 +1,10 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " O ",
-    " C ",
-    " F "
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "minecraft:orange_dye"},
+    {"item": "minecraft:clay_ball"},
+    {"item": "ancientgateways:chorus_ink_item"}
   ],
-  "key": {
-    "O" : {
-      "item": "minecraft:orange_dye"
-    },
-    "C" : {
-      "item": "minecraft:clay_ball"
-    },
-    "F" : {
-      "item": "minecraft:chorus_fruit"
-    }
-  },
   "result": {
     "item" : "ancientgateways:rune_orange",
     "count" : 4

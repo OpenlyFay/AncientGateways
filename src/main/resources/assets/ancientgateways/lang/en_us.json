@@ -2,9 +2,9 @@
   "itemGroup.ancientgateways.general" : "Ancient Gateways",
   "block.ancientgateways.gatewayblock.error_obstructed_0":"Gateway core needs a 5x5 area of empty space beneath it (corners optional)",
   "block.ancientgateways.gatewayblock.error_obstructed_1":"Gateway needs a 7x7 hollow frame, with the core at the top of the centre",
-  "block.ancientgateways.gatewayblock.error_obstructed_2":"Gateway frame needs 3 glyphs down the front of the vertical sides to connect to the network",
+  "block.ancientgateways.gatewayblock.error_obstructed_2":"Gateway frame needs 3 glyphs down the front of each vertical side to connect to the network",
   "item.ancientgateways.gatewayblock.tooltip0": "Cross-dimensional teleporter.",
-  "item.ancientgateways.gatewayblock.tooltip1": "Holds up to 6 glyphs, shift-use to activate.",
+  "item.ancientgateways.gatewayblock.tooltip1": "Holds 6 glyphs, glyphs determine target, use to activate.",
   "block.ancientgateways.gatewayblock": "Gateway Core",
   "block.ancientgateways.rune_black": "Black Glyph",
   "block.ancientgateways.rune_red": "Red Glyph",
@@ -21,5 +21,9 @@
   "block.ancientgateways.rune_magenta": "Magenta Glyph",
   "block.ancientgateways.rune_orange": "Orange Glyph",
   "block.ancientgateways.rune_white": "White Glyph",
-  "block.ancientgateways.rune_grey": "Gray Glyph"
+  "block.ancientgateways.rune_grey": "Gray Glyph",
+  "item.ancientgateways.chorus_ink_item": "Bottle of Chorus Ink",
+  "item.ancientgateways.chorus_pearl_item": "Chorus Pearl",
+  "item.ancientgateways.chorus_pearl_item.tooltip0": "An Ender Pearl modified with Chorus Ink.",
+  "item.ancientgateways.chorus_pearl_item.tooltip1": "Briefly extends the user's reach on impact."
 }

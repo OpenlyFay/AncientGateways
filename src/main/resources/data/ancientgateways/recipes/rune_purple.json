@@ -1,21 +1,10 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " P ",
-    " C ",
-    " F "
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "minecraft:purple_dye"},
+    {"item": "minecraft:clay_ball"},
+    {"item": "ancientgateways:chorus_ink_item"}
   ],
-  "key": {
-    "P" : {
-      "item": "minecraft:purple_dye"
-    },
-    "C" : {
-      "item": "minecraft:clay_ball"
-    },
-    "F" : {
-      "item": "minecraft:chorus_fruit"
-    }
-  },
   "result": {
     "item" : "ancientgateways:rune_purple",
     "count" : 4

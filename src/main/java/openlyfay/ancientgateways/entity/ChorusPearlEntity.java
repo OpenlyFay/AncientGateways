@@ -58,7 +58,7 @@ public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        if (!world.isClient && !removed){
+        if (!world.isClient && !removed && getOwner() != null){
             entityHitResult.getEntity().interact((PlayerEntity) getOwner(),hand);
         }
     }
@@ -96,7 +96,7 @@ public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
     }
 
     private void activateBlock (BlockPos pos, BlockHitResult hitResult){
-        if (!world.isClient && !removed){
+        if (!world.isClient && !removed && getOwner() != null){
             world.getBlockState(pos).onUse(world,(PlayerEntity) getOwner(),hand,hitResult);
         }
     }
