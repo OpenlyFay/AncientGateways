@@ -227,9 +227,10 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     targetPos = new BlockPos(MasterList.getPosition(runeTarget, index));
                     targetWorld = MasterList.getWorld(runeTarget, index);
                     ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
-                    if (targetWorld2 == null || !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity)) {
+                    if (targetWorld2 == null || !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity) || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).GatewayStructureIntact(targetPos,targetWorld2.getBlockState(targetPos),targetWorld2,null)) {
                         countdown = 0;
                         masterlist.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld);
+                        gatewayShutdown();
                     }
                     if (!remote) {
                         ((GatewayBlockEntity) targetWorld2.getBlockEntity(targetPos)).activationCheck(true,runeIdentifier,localIndex);
@@ -321,18 +322,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             }
             countdown--;
             if(countdown == 0){
-                if (getCachedState().get(GatewayBlock.ON)){
-                    world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));
-                }
-                if (getCachedState().get(GatewayBlock.ERROR)){
-                    world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ERROR));
-                }
-                if (getCachedState().get(GatewayBlock.PAIRED)){
-                    world.setBlockState(pos, getCachedState().cycle(GatewayBlock.PAIRED));
-                }
-                runeTarget = "";
-                chunkLoaderManager(false);
-                world.playSound(null,pos,SoundEvents.BLOCK_BEACON_DEACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
+                gatewayShutdown();
             }
             if(!world.isClient){
                 markDirty();
@@ -410,5 +400,20 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                 ((ServerWorld) world).getChunkManager().setChunkForced(loadedChunk.getPos(),on);
             }
         }
+    }
+
+    private void gatewayShutdown(){
+        if (getCachedState().get(GatewayBlock.ON)){
+            world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));
+        }
+        if (getCachedState().get(GatewayBlock.ERROR)){
+            world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ERROR));
+        }
+        if (getCachedState().get(GatewayBlock.PAIRED)){
+            world.setBlockState(pos, getCachedState().cycle(GatewayBlock.PAIRED));
+        }
+        runeTarget = "";
+        chunkLoaderManager(false);
+        world.playSound(null,pos,SoundEvents.BLOCK_BEACON_DEACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
     }
 }
