@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "ancientgateways",
-  "version": "1.1.0-beta-1",
+  "version": "1.1.2",
   "name": "Ancient Gateways",
-  "description": "Just a better/alternative portals mod, for now...",
+  "description": "A collection of miscellaneous teleportation/space-folding themed features",
   "authors": [
     "OpenlyFay"
   ],
@@ -27,7 +27,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.16.5"
+    "minecraft": ">=1.16.2"
   },
   "suggests": {
     "flamingo": "*"
