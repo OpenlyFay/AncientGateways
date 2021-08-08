@@ -3,6 +3,8 @@ This is a fork of the Ancient Gateways Mod [[ *[curseforge](https://www.cursefor
 
 This fork seeks to fix a few bugs, and add a few Quality of life features
 
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/Merith-TK/AncientGateways)
+
 ## Fixes and Features Added
 * Redstone can now activate the gateway
 	![gif](.readme/redstone-activation.gif)
