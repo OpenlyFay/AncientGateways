@@ -6,10 +6,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
@@ -22,17 +24,17 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
 import openlyfay.ancientgateways.AncientGateways;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
+import openlyfay.ancientgateways.item.RecallTablet;
 import openlyfay.ancientgateways.util.MasterList;
 import openlyfay.ancientgateways.util.TeleportPatch;
 import openlyfay.ancientgateways.util.Teleportable;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static net.minecraft.util.math.Direction.NORTH;
 import static net.minecraft.util.math.Direction.SOUTH;
@@ -48,6 +50,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     private DefaultedList<ItemStack> inventory;
     private static MasterList masterlist;
     private boolean fresh;
+    private boolean craftingMode;
     private final static int cooldownDuration = AncientGateways.agConfig.gatewayCooldown;
     private final static int gatewayDuration = AncientGateways.agConfig.gatewayActivationTime;
 
@@ -61,6 +64,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         targetWorld = ServerWorld.OVERWORLD;
         targetPos = new BlockPos(0,0,0);
         fresh = true;
+        craftingMode = false;
     }
 
     @Override
@@ -147,6 +151,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
 
         }
+        craftingMode = tag.getBoolean("crafting");
         fresh = true;
     }
 
@@ -160,6 +165,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         int[] targetPos2 = {targetPos.getX(), targetPos.getY(), targetPos.getZ()};
         tag.putIntArray("targetPos", targetPos2);
         tag.putBoolean("facingNorth",getCachedState().get(Properties.HORIZONTAL_FACING).getAxis() == Direction.Axis.Z);
+        tag.putBoolean("crafting", craftingMode);
         return super.toTag(tag);
     }
 
@@ -205,14 +211,20 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     runeTarget = runeIdentifier;
                 }
                 if (MasterList.doesElementExist(runeTarget)) {
-                    if (runeTarget.equals(runeIdentifier) && masterlist.getAddressLength(runeIdentifier) > 1 && !remote){
-                        if (localIndex == masterlist.getAddressLength(runeIdentifier) - 1){
-                            index = 0;
+                    if (runeTarget.equals(runeIdentifier) && !remote){
+                        if (masterlist.getAddressLength(runeIdentifier) > 1){
+                            if (localIndex == masterlist.getAddressLength(runeIdentifier) - 1){
+                                index = 0;
+                            }
+                            else {
+                                index = localIndex + 1;
+                            }
+                            world.setBlockState(pos,getCachedState().cycle(GatewayBlock.PAIRED));
                         }
                         else {
-                            index = localIndex + 1;
+                            craftingMode = true;
+                            world.setBlockState(pos,getCachedState().cycle(GatewayBlock.ERROR));
                         }
-                        world.setBlockState(pos,getCachedState().cycle(GatewayBlock.PAIRED));
                     }
                     if (remote && runeTarget.equals(runeIdentifier)){
                         world.setBlockState(pos,getCachedState().cycle(GatewayBlock.PAIRED));
@@ -227,7 +239,10 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     targetPos = new BlockPos(MasterList.getPosition(runeTarget, index));
                     targetWorld = MasterList.getWorld(runeTarget, index);
                     ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
-                    if (targetWorld2 == null || !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity) || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).GatewayStructureIntact(targetPos,targetWorld2.getBlockState(targetPos),targetWorld2,null)) {
+                    if (targetWorld2 == null ||
+                            !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity)
+                            || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).GatewayStructureIntact(targetPos,targetWorld2.getBlockState(targetPos),targetWorld2,null)
+                            || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).getGatewayRuneCode(targetWorld2.getBlockState(targetPos), targetPos, targetWorld2).equals(runeTarget)) {
                         countdown = 0;
                         masterlist.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld);
                         gatewayShutdown();
@@ -272,6 +287,10 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                         Vec3d posDelta = new Vec3d(0,pos.getY(),0)
                                 .subtract(0,payloadEntity.getPos().y,0)
                                 .subtract(otherSideDirection.getOffsetX()*1.5+0.5, 0 ,otherSideDirection.getOffsetZ()*1.5+0.5);
+                        if (payloadEntity instanceof ItemEntity && craftingMode){
+                            ItemStack itemStack = gatewayCrafting((ItemEntity)payloadEntity);
+                            payloadEntity = new ItemEntity(world, targetPos.getX() - posDelta.getX(), targetPos.getY() - posDelta.getY(), targetPos.getZ() - posDelta.getZ(), itemStack);
+                        }
                         if (targetWorld != world.getRegistryKey()) {
                             tpHack.interdimensionalTeleport(payloadEntity, targetWorld2, targetPos.getX() - posDelta.getX(),targetPos.getY() - posDelta.getY(),targetPos.getZ() - posDelta.getZ());
                         }
@@ -414,6 +433,19 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         }
         runeTarget = "";
         chunkLoaderManager(false);
+        craftingMode = false;
         world.playSound(null,pos,SoundEvents.BLOCK_BEACON_DEACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
     }
+
+    private ItemStack gatewayCrafting(ItemEntity entity){
+        Item item = entity.getStack().getItem();
+        if (item == AncientGateways.WORLD_EGG){
+            ServerWorld pocketDim = world.getServer().getWorld(RegistryKey.of(Registry.DIMENSION,AncientGateways.DIM_ID));
+            pocketDim.getPointOfInterestStorage();
+        }
+        else{
+        }
+        return entity.getStack();
+    }
+
 }

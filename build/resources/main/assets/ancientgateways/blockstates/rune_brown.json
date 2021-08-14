@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "ancientgateways:block/brown_rune" },
-    "facing=east":  { "model": "ancientgateways:block/brown_rune", "y":  90},
-    "facing=south": { "model": "ancientgateways:block/brown_rune", "y": 180 },
-    "facing=west":  { "model": "ancientgateways:block/brown_rune", "y": 270 }
-  }
-}

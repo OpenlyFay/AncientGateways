@@ -15,6 +15,7 @@ import java.util.*;
 public class MasterList extends PersistentState {
     private static Map<String,AddressList> locations = new HashMap<>();
     private final static String key = "ancientgateways_masterlist";
+    private int pocketNum = 0;
 
     public MasterList(){
         super(key);
@@ -120,6 +121,9 @@ public class MasterList extends PersistentState {
             CompoundTag compoundTag = listTag.getCompound(i);
             addElement(new GatewayAddress(compoundTag));
         }
+
+        pocketNum = tag.getInt("pockets");
+
     }
 
     @Override
@@ -139,7 +143,15 @@ public class MasterList extends PersistentState {
             tag.put("gateways", listTag);
         }
 
+        tag.putInt("pockets",pocketNum);
+
         return tag;
+    }
+
+    public int incrementPockets(){
+        int pocket = pocketNum;
+        pocketNum++;
+        return pocket;
     }
 
 
