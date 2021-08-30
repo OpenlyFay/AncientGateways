@@ -6,7 +6,9 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
+import net.fabricmc.fabric.mixin.object.builder.PointOfInterestTypeAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.Material;
@@ -24,6 +26,7 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestType;
 import openlyfay.ancientgateways.block.AnchorMonolith;
 import openlyfay.ancientgateways.block.Barrier;
@@ -37,6 +40,8 @@ import openlyfay.ancientgateways.entity.ChorusPearlEntity;
 import openlyfay.ancientgateways.item.*;
 import openlyfay.ancientgateways.util.RegHandler;
 import openlyfay.ancientgateways.world.EmptySpaceChunkGenerator;
+
+import java.util.function.Predicate;
 
 
 public class AncientGateways implements ModInitializer {
@@ -55,6 +60,7 @@ public class AncientGateways implements ModInitializer {
     public static Item WORLD_EGG;
     public static Item RECALL_TABLET;
     public static Item KEYSTONE;
+    public static Identifier ANCHOR = new Identifier(MOD_ID,"poi_anchor");
     public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES,3).luminance(10).hardness(50).resistance(1200));
     public static BlockEntityType<GatewayBlockEntity> GATEWAY_BLOCK_ENTITY;
     public static final Block ANCHOR_BLOCK = new AnchorMonolith(FabricBlockSettings.of(Material.STONE).luminance(15).resistance(3600000).hardness(-1));
@@ -76,6 +82,17 @@ public class AncientGateways implements ModInitializer {
     public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block BARRIER = new Barrier(FabricBlockSettings.of(Material.AIR).resistance(3600000).hardness(-1).nonOpaque());
+
+    public static PointOfInterestType ANCHOR_TYPE;
+
+    public static final Predicate<PointOfInterestType> isAnchor = (pointOfInterestType) -> {
+      if (pointOfInterestType == ANCHOR_TYPE){
+         return true;
+      }
+      else {
+          return false;
+      }
+    };
 
     private static final RegistryKey<DimensionOptions> DIMENSION_KEY = RegistryKey.of(Registry.DIMENSION_OPTIONS,DIM_ID);
 
@@ -187,7 +204,7 @@ public class AncientGateways implements ModInitializer {
 
         Registry.register(Registry.CHUNK_GENERATOR, DIM_ID, EmptySpaceChunkGenerator.CODEC);
 
-        Registry.register(Registry.POINT_OF_INTEREST_TYPE, new Identifier(MOD_ID,"anchor"), new PointOfInterestType(new Identifier(MOD_ID,"anchor"),));
+        ANCHOR_TYPE = PointOfInterestHelper.register(ANCHOR,1, isAnchor,4096,ANCHOR_BLOCK);
 
         WORLD_KEY = RegistryKey.of(Registry.DIMENSION, DIM_ID);
     }
