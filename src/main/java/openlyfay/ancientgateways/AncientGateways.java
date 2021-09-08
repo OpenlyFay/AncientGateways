@@ -39,6 +39,7 @@ import openlyfay.ancientgateways.entity.ChorusInkBottleEntity;
 import openlyfay.ancientgateways.entity.ChorusPearlEntity;
 import openlyfay.ancientgateways.item.*;
 import openlyfay.ancientgateways.util.RegHandler;
+import openlyfay.ancientgateways.util.SpiralHelper;
 import openlyfay.ancientgateways.world.EmptySpaceChunkGenerator;
 
 import java.util.function.Predicate;
@@ -59,6 +60,9 @@ public class AncientGateways implements ModInitializer {
     public static Identifier PEARL_ID = new Identifier(MOD_ID,"chorus_pearl_entity");
     public static Item WORLD_EGG;
     public static Item RECALL_TABLET;
+    public static Item HARDENED_RECALL_TABLET;
+    public static Item WISE_TABLET;
+    public static Item HARDENED_WISE_TABLET;
     public static Item KEYSTONE;
     public static Identifier ANCHOR = new Identifier(MOD_ID,"poi_anchor");
     public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES,3).luminance(10).hardness(50).resistance(1200));
@@ -82,6 +86,7 @@ public class AncientGateways implements ModInitializer {
     public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block BARRIER = new Barrier(FabricBlockSettings.of(Material.AIR).resistance(3600000).hardness(-1).nonOpaque());
+    public static int pocketMaxSize;
 
     public static PointOfInterestType ANCHOR_TYPE;
 
@@ -126,6 +131,9 @@ public class AncientGateways implements ModInitializer {
         CHORUS_PEARL_ITEM = RegHandler.item(new Identifier(MOD_ID,"chorus_pearl_item"),new ChorusPearlItem(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(16)));
         WORLD_EGG = RegHandler.item(new Identifier(MOD_ID,"world_egg"), new Item(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(16)));
         RECALL_TABLET = RegHandler.item(new Identifier(MOD_ID,"recall_tablet"), new RecallTablet(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(1).rarity(Rarity.UNCOMMON)));
+        HARDENED_RECALL_TABLET = RegHandler.item(new Identifier(MOD_ID,"hardened_recall_tablet"), new RecallTablet(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(1).rarity(Rarity.RARE).fireproof()));
+        WISE_TABLET = RegHandler.item(new Identifier(MOD_ID,"wise_tablet"), new WiseTablet(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(1).rarity(Rarity.UNCOMMON)));
+        HARDENED_WISE_TABLET = RegHandler.item(new Identifier(MOD_ID,"hardened_wise_tablet"), new WiseTablet(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(1).rarity(Rarity.RARE).fireproof()));
         KEYSTONE = RegHandler.item(new Identifier(MOD_ID,"keystone"), new Item(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(16)));
         RegHandler.block(new Identifier(MOD_ID, "gatewayblock"), gateway_block);
         RegHandler.item(new Identifier(MOD_ID, "gatewayblock"),new GatewayBlockItem(gateway_block, new Item.Settings()
@@ -204,7 +212,9 @@ public class AncientGateways implements ModInitializer {
 
         Registry.register(Registry.CHUNK_GENERATOR, DIM_ID, EmptySpaceChunkGenerator.CODEC);
 
-        ANCHOR_TYPE = PointOfInterestHelper.register(ANCHOR,1, isAnchor,4096,ANCHOR_BLOCK);
+        pocketMaxSize = agConfig.maxPocketExpansions * agConfig.pocketDimensionInitRadius * 2;
+
+        ANCHOR_TYPE = PointOfInterestHelper.register(ANCHOR,1, isAnchor,pocketMaxSize,ANCHOR_BLOCK);
 
         WORLD_KEY = RegistryKey.of(Registry.DIMENSION, DIM_ID);
     }

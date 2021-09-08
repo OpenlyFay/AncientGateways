@@ -1,8 +1,11 @@
 package openlyfay.ancientgateways.block.blockentity;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.GrassBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
@@ -18,6 +21,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.structure.Structure;
+import net.minecraft.structure.StructureManager;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
@@ -27,13 +34,16 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
 import openlyfay.ancientgateways.AncientGateways;
+import openlyfay.ancientgateways.block.AnchorMonolith;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
 import openlyfay.ancientgateways.item.RecallTablet;
 import openlyfay.ancientgateways.util.MasterList;
+import openlyfay.ancientgateways.util.SpiralHelper;
 import openlyfay.ancientgateways.util.TeleportPatch;
 import openlyfay.ancientgateways.util.Teleportable;
 
+import java.io.ObjectStreamException;
 import java.util.*;
 
 import static net.minecraft.util.math.Direction.NORTH;
@@ -145,12 +155,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         int[] targetPos2 = tag.getIntArray("targetPos");
         targetPos = new BlockPos(targetPos2[0],targetPos2[1],targetPos2[2]);
         Inventories.fromTag(tag, this.inventory);
-        if (tag.getBoolean("facingNorth")){
-            box = new Box(pos.add(2, -1, 1), pos.add(-2, -5, 0));
-        } else {
-            box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
-
-        }
         craftingMode = tag.getBoolean("crafting");
         fresh = true;
     }
@@ -164,7 +168,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         tag.putString("targetWorld", targetWorld.getValue().toString());
         int[] targetPos2 = {targetPos.getX(), targetPos.getY(), targetPos.getZ()};
         tag.putIntArray("targetPos", targetPos2);
-        tag.putBoolean("facingNorth",getCachedState().get(Properties.HORIZONTAL_FACING).getAxis() == Direction.Axis.Z);
         tag.putBoolean("crafting", craftingMode);
         return super.toTag(tag);
     }
@@ -268,6 +271,12 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             if (world != null && !world.isClient) {
                 if (fresh){
                     chunkLoaderManager(true);
+                    Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
+                    if (facing == NORTH || facing == SOUTH) {
+                        box = new Box(pos.add(2, -1, 1), pos.add(-2, -5, 0));
+                    } else {
+                        box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
+                    }
                     fresh = false;
                 }
                 List<Entity> payloadList = world.getNonSpectatingEntities(Entity.class, box);
@@ -289,7 +298,8 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                                 .subtract(otherSideDirection.getOffsetX()*1.5+0.5, 0 ,otherSideDirection.getOffsetZ()*1.5+0.5);
                         if (payloadEntity instanceof ItemEntity && craftingMode){
                             ItemStack itemStack = gatewayCrafting((ItemEntity)payloadEntity);
-                            payloadEntity = new ItemEntity(world, targetPos.getX() - posDelta.getX(), targetPos.getY() - posDelta.getY(), targetPos.getZ() - posDelta.getZ(), itemStack);
+                            payloadEntity.kill();
+                            world.spawnEntity(new ItemEntity(world,targetPos.getX(),targetPos.getY(),targetPos.getZ(),itemStack));
                         }
                         if (targetWorld != world.getRegistryKey()) {
                             tpHack.interdimensionalTeleport(payloadEntity, targetWorld2, targetPos.getX() - posDelta.getX(),targetPos.getY() - posDelta.getY(),targetPos.getZ() - posDelta.getZ());
@@ -439,9 +449,116 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
 
     private ItemStack gatewayCrafting(ItemEntity entity){
         Item item = entity.getStack().getItem();
-        if (item == AncientGateways.WORLD_EGG){
+        if (item == AncientGateways.WORLD_EGG && AncientGateways.agConfig.pocketDimensionsEnabled){
+
+            //do pocket dimension setup
             ServerWorld pocketDim = world.getServer().getWorld(RegistryKey.of(Registry.DIMENSION,AncientGateways.DIM_ID));
-            pocketDim.getPointOfInterestStorage();
+            int iter = masterlist.incrementPockets();
+            BlockPos pocketPos = SpiralHelper.findSpiral(iter);
+            pocketDim.setBlockState(pocketPos, AncientGateways.ANCHOR_BLOCK.getDefaultState());
+
+            //generate island
+            Structure island = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"island"));
+            StructurePlacementData islandPlacementData = new StructurePlacementData();
+            island.place(pocketDim,pocketPos.add(-7,-3,-7),islandPlacementData,pocketDim.getRandom());
+            /*
+            for (int i = -4;i < 5;i++){
+                for (int j = -4;j < 5;j++){
+                    if ((i < 3 && i > -3) || (j < 3 && j > -3) || ( (i == 3 || i == -3) && (j == 3 || j == -3) ) ){
+                        BlockPos blockPos = new BlockPos(pocketPos.getX() + i,pocketPos.getY() - 1,pocketPos.getZ() + j);
+                        pocketDim.setBlockState(blockPos, Blocks.GRASS_BLOCK.getDefaultState());
+                    }
+                }
+            }
+            for (int i = -2;i < 3;i++){
+                for (int j = -2;j < 3;j++){
+                    if (!( (i == 2 || i == -2) && (j == 2 || j == -2) )){
+                        BlockPos blockPos = new BlockPos(pocketPos.getX() + i,pocketPos.getY() - 2,pocketPos.getZ() + j);
+                        pocketDim.setBlockState(blockPos, Blocks.DIRT.getDefaultState());
+                    }
+                }
+            }
+
+             */
+
+
+            //generate initial barrier
+            int barrierSize = AncientGateways.agConfig.pocketDimensionInitRadius;
+            for (int i = -barrierSize; i <= barrierSize; i++){
+                for (int j = Math.max(-barrierSize, -128); j <= Math.min(barrierSize,127); j++){
+                    for (int k = -barrierSize; k <= barrierSize; k++){
+                        BlockPos blockPos = new BlockPos(pocketPos.getX() + i, pocketPos.getY() + j,pocketPos.getZ() + k);
+                        if (i == -barrierSize || i == barrierSize || j == Math.max(-barrierSize, -128)  || j == Math.min(barrierSize,127) || k == -barrierSize || k == barrierSize){
+                            pocketDim.setBlockState(blockPos, AncientGateways.BARRIER.getDefaultState());
+                        }
+                    }
+                }
+            }
+            //copy existing gateway ID
+            Identifier gateID = new Identifier(AncientGateways.MOD_ID,((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(getCachedState(),pos,world).toLowerCase());
+            StructureManager homeStructureManager = world.getServer().getStructureManager();
+            Structure gatewayID;
+            gatewayID = homeStructureManager.getStructureOrBlank(gateID);
+            BlockPos gateIDOrigin = pos.add(-3,-4,-1);
+            BlockPos gateIDEnd = new BlockPos(7,3,1);
+
+            switch (getCachedState().get(Properties.HORIZONTAL_FACING)){
+                case SOUTH:
+                    gateIDOrigin = pos.add(-3,-4,1);
+                    gateIDEnd = new BlockPos(7,3,1);
+                    break;
+
+                case EAST:
+                    gateIDOrigin = pos.add(1,-4,-3);
+                    gateIDEnd = new BlockPos(1,3,7);
+                    break;
+
+                case WEST:
+                    gateIDOrigin = pos.add(-1,-4,-3);
+                    gateIDEnd = new BlockPos(1,3,7);
+                    break;
+            }
+            gatewayID.saveFromWorld(world,gateIDOrigin,gateIDEnd,false,null);
+            homeStructureManager.saveStructure(gateID);
+
+            //place return gateway
+            Structure gateway = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"gateway_template"));
+            StructurePlacementData gatewayPlacementData = new StructurePlacementData();
+
+
+            gateway.place(pocketDim,pocketPos.add(-3,0,-5),gatewayPlacementData,pocketDim.getRandom());
+            pocketDim.setBlockState(pocketPos.add(0,6,-5),AncientGateways.gateway_block.getDefaultState().with(Properties.HORIZONTAL_FACING,SOUTH));
+            pocketDim.setBlockEntity(pocketPos.add(0,6,-5), new GatewayBlockEntity());
+
+            Structure gateIDStruct = pocketDim.getStructureManager().getStructure(gateID);
+            StructurePlacementData idPlacementData = new StructurePlacementData().setRotation(BlockRotation.CLOCKWISE_180);
+            BlockPos placementPos = pocketPos.add(3,2,-4);
+
+            switch (getCachedState().get(Properties.HORIZONTAL_FACING)){
+                case SOUTH: idPlacementData.setRotation(BlockRotation.NONE);
+                placementPos = pocketPos.add(-3,2,-4);
+                break;
+
+                case EAST: idPlacementData.setRotation(BlockRotation.CLOCKWISE_90);
+                break;
+
+                case WEST: idPlacementData.setRotation(BlockRotation.COUNTERCLOCKWISE_90);
+                placementPos = pocketPos.add(-3,2,-4);
+                break;
+            }
+
+            gateIDStruct.place(pocketDim,placementPos,idPlacementData,pocketDim.getRandom());
+
+            //create return tablet
+            ItemStack stack = new ItemStack(AncientGateways.WISE_TABLET,1);
+            CompoundTag tabletTag = stack.getOrCreateTag();
+            tabletTag.putDouble("CoordinateX",pocketPos.getX());
+            tabletTag.putDouble("CoordinateY",pocketPos.getY());
+            tabletTag.putDouble("CoordinateZ",pocketPos.getZ() + 1);
+            tabletTag.putString("World",pocketDim.getRegistryKey().getValue().toString());
+            tabletTag.putBoolean("HasHome", true);
+            return stack;
+
         }
         else{
         }

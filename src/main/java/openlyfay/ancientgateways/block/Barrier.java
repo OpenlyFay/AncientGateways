@@ -22,11 +22,11 @@ public class Barrier extends Block {
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         super.onEntityCollision(state, world, pos, entity);
-        Optional<BlockPos> shroedinger = world.getServer().getWorld(
-                RegistryKey.of(Registry.DIMENSION, AncientGateways.DIM_ID)).getPointOfInterestStorage().getNearestPosition(AncientGateways.isAnchor,pos,2048, PointOfInterestStorage.OccupationStatus.ANY
+        Optional<BlockPos> schrodinger = world.getServer().getWorld(
+                RegistryKey.of(Registry.DIMENSION, AncientGateways.DIM_ID)).getPointOfInterestStorage().getNearestPosition(AncientGateways.isAnchor,pos,AncientGateways.pocketMaxSize * 2, PointOfInterestStorage.OccupationStatus.ANY
         );
-        if (shroedinger.isPresent()){
-            BlockPos fulcrum = shroedinger.get();
+        if (schrodinger.isPresent()){
+            BlockPos fulcrum = schrodinger.get();
             entity.teleport(fulcrum.getX(),fulcrum.getY(),fulcrum.getZ());
         }
     }

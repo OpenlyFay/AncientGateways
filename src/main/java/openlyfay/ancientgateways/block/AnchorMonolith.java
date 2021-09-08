@@ -17,14 +17,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class AnchorMonolith extends BlockWithEntity {
 
-    public final static BooleanProperty WATER = BooleanProperty.of("water");
-    public final static BooleanProperty GRASS = BooleanProperty.of("grass");
-    public final static BooleanProperty SKY = BooleanProperty.of("sky");
-    public final static BooleanProperty RULES = BooleanProperty.of("rules");
-
     public AnchorMonolith(Settings settings) {
         super(settings);
-        setDefaultState(this.stateManager.getDefaultState().with(WATER,false).with(GRASS,false).with(SKY, false).with(RULES,false));
+        //setDefaultState(this.stateManager.getDefaultState().with(WATER,false).with(GRASS,false).with(SKY, false).with(RULES,false));
     }
 
     @Override
@@ -33,12 +28,16 @@ public class AnchorMonolith extends BlockWithEntity {
     }
 
 
-    @Override
+    /*@Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(WATER);
         stateManager.add(GRASS);
         stateManager.add(SKY);
         stateManager.add(RULES);
     }
+
+     */
+
+    //TODO: make this 4 blocks tall, make onUse() function that takes which segment it interacts with and pass that to attached entity
 
 }

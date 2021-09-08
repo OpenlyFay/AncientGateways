@@ -12,4 +12,8 @@ public class AncientGatewaysConfig implements ConfigData {
 
     public int gatewayActivationTime = 400;
     public int gatewayCooldown = 100;
+
+    public boolean pocketDimensionsEnabled = true;
+    public int pocketDimensionInitRadius = 64;
+    public int maxPocketExpansions = 16;
 }

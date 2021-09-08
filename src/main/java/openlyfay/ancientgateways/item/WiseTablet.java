@@ -15,25 +15,40 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import openlyfay.ancientgateways.util.TeleportPatch;
 
-public class RecallTablet extends Item {
-    public RecallTablet(Settings settings) {
-        super(settings);
-    }
+public class WiseTablet extends Item {
+    public WiseTablet(Settings settings){super(settings);}
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient){
             ItemStack stack = user.getStackInHand(hand);
             CompoundTag compoundTag = stack.getOrCreateTag();
-            if (compoundTag.contains("HasTarget")){
-                Vec3d targetPos = new Vec3d(compoundTag.getDouble("CoordinateX"),compoundTag.getDouble("CoordinateY"),compoundTag.getDouble("CoordinateZ"));
-                if(compoundTag.getString("World").equals(world.getRegistryKey().getValue().toString())){
+            if (compoundTag.contains("HasHome")){
+                Vec3d targetPos;
+                String worldID;
+                if (compoundTag.getBoolean("HasReturn") && !user.isSneaking()){
+                    targetPos = new Vec3d(compoundTag.getDouble("ReturnX"), compoundTag.getDouble("ReturnY"), compoundTag.getDouble("ReturnZ"));
+                    worldID = compoundTag.getString("ReturnWorld");
+                    compoundTag.putBoolean("HasReturn", false);
+                }
+                else{
+                    targetPos = new Vec3d(compoundTag.getDouble("CoordinateX"),compoundTag.getDouble("CoordinateY"),compoundTag.getDouble("CoordinateZ"));
+                    worldID = compoundTag.getString("World");
+
+                    compoundTag.putDouble("ReturnX",user.getX());
+                    compoundTag.putDouble("ReturnY",user.getY());
+                    compoundTag.putDouble("ReturnZ",user.getZ());
+                    compoundTag.putString("ReturnWorld",world.getRegistryKey().getValue().toString());
+                    compoundTag.putBoolean("HasReturn", true);
+                }
+
+                if(worldID.equals(world.getRegistryKey().getValue().toString())){
                     user.teleport(targetPos.x,targetPos.y,targetPos.z);
                 }
                 else {
                     TeleportPatch tpHack = TeleportPatch.getInstance();
                     ServerWorld targetWorld;
-                    targetWorld = world.getServer().getWorld(RegistryKey.of(Registry.DIMENSION, new Identifier(compoundTag.getString("World"))));
+                    targetWorld = world.getServer().getWorld(RegistryKey.of(Registry.DIMENSION, new Identifier(worldID)));
                     tpHack.interdimensionalTeleport(user,targetWorld,targetPos.x,targetPos.y,targetPos.z);
                 }
             }
@@ -42,7 +57,7 @@ public class RecallTablet extends Item {
                 compoundTag.putDouble("CoordinateY",user.getY());
                 compoundTag.putDouble("CoordinateZ",user.getZ());
                 compoundTag.putString("World",world.getRegistryKey().getValue().toString());
-                compoundTag.putBoolean("HasTarget", true);
+                compoundTag.putBoolean("HasHome", true);
             }
         }
 
