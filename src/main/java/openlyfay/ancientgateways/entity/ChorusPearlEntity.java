@@ -21,6 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import openlyfay.ancientgateways.AncientGateways;
+import openlyfay.ancientgateways.item.RegisterItem;
+
+import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_PEARL_ENTITY;
 
 public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
 
@@ -33,13 +36,13 @@ public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
     }
 
     public ChorusPearlEntity(World world, LivingEntity owner, ItemStack stack, Hand hand1){
-        super(AncientGateways.CHORUS_PEARL_ENTITY, owner, world);
+        super(CHORUS_PEARL_ENTITY, owner, world);
         hand = hand1;
     }
 
     @Environment(EnvType.CLIENT)
     public ChorusPearlEntity(World world, double x, double y, double z){
-        super(AncientGateways.CHORUS_PEARL_ENTITY, x, y, z, world);
+        super(CHORUS_PEARL_ENTITY, x, y, z, world);
         hand = null;
     }
 
@@ -64,7 +67,7 @@ public class ChorusPearlEntity extends ThrownItemEntity implements Tickable {
     }
 
     protected Item getDefaultItem() {
-        return AncientGateways.CHORUS_PEARL_ITEM;
+        return RegisterItem.CHORUS_PEARL_ITEM;
     }
 
     @Override

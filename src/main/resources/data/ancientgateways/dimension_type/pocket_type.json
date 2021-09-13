@@ -10,5 +10,6 @@
   "has_raids" : false,
   "respawn_anchor_works" : false,
   "bed_works" : true,
-  "piglin_safe" : true
+  "piglin_safe" : true,
+  "effects": "minecraft:overworld"
 }

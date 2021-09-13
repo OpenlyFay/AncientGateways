@@ -7,8 +7,12 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntityRenderer;
+import openlyfay.ancientgateways.entity.RegisterEntity;
 
 import static openlyfay.ancientgateways.AncientGateways.*;
+import static openlyfay.ancientgateways.block.RegisterBlocks.*;
+import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_INK_ENTITY;
+import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_PEARL_ENTITY;
 
 
 public class  AncientGatewaysClient implements ClientModInitializer {

@@ -20,6 +20,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_INK_ENTITY;
+import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_PEARL_ENTITY;
+
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {
@@ -34,10 +37,10 @@ public class ClientPlayNetworkHandlerMixin {
     )
     private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci, double x, double y, double z, EntityType<?> type) {
         Entity entity = null;
-        if (type == AncientGateways.CHORUS_INK_ENTITY) {
+        if (type == CHORUS_INK_ENTITY) {
             entity = new ChorusInkBottleEntity(this.world, x, y, z);
         }
-        if (type == AncientGateways.CHORUS_PEARL_ENTITY){
+        if (type == CHORUS_PEARL_ENTITY){
             entity = new ChorusPearlEntity(this.world, x, y, z);
         }
         if (entity != null) {

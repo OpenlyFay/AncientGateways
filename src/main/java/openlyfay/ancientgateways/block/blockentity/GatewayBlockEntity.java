@@ -38,6 +38,7 @@ import openlyfay.ancientgateways.block.AnchorMonolith;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
 import openlyfay.ancientgateways.item.RecallTablet;
+import openlyfay.ancientgateways.item.RegisterItem;
 import openlyfay.ancientgateways.util.MasterList;
 import openlyfay.ancientgateways.util.SpiralHelper;
 import openlyfay.ancientgateways.util.TeleportPatch;
@@ -48,6 +49,7 @@ import java.util.*;
 
 import static net.minecraft.util.math.Direction.NORTH;
 import static net.minecraft.util.math.Direction.SOUTH;
+import static openlyfay.ancientgateways.block.RegisterBlocks.*;
 
 
 public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickable, BlockEntityClientSerializable {
@@ -65,7 +67,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     private final static int gatewayDuration = AncientGateways.agConfig.gatewayActivationTime;
 
     public GatewayBlockEntity(){
-        super(AncientGateways.GATEWAY_BLOCK_ENTITY);
+        super(GATEWAY_BLOCK_ENTITY);
         countdown = 0;
         inventory = DefaultedList.ofSize(6,ItemStack.EMPTY);
         if(world != null && !world.isClient){
@@ -449,13 +451,13 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
 
     private ItemStack gatewayCrafting(ItemEntity entity){
         Item item = entity.getStack().getItem();
-        if (item == AncientGateways.WORLD_EGG && AncientGateways.agConfig.pocketDimensionsEnabled){
+        if (item == RegisterItem.WORLD_EGG && AncientGateways.agConfig.pocketDimensionsEnabled){
 
             //do pocket dimension setup
             ServerWorld pocketDim = world.getServer().getWorld(RegistryKey.of(Registry.DIMENSION,AncientGateways.DIM_ID));
             int iter = masterlist.incrementPockets();
             BlockPos pocketPos = SpiralHelper.findSpiral(iter);
-            pocketDim.setBlockState(pocketPos, AncientGateways.ANCHOR_BLOCK.getDefaultState());
+            pocketDim.setBlockState(pocketPos, ANCHOR_BLOCK.getDefaultState());
 
             //generate island
             Structure island = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"island"));
@@ -489,7 +491,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     for (int k = -barrierSize; k <= barrierSize; k++){
                         BlockPos blockPos = new BlockPos(pocketPos.getX() + i, pocketPos.getY() + j,pocketPos.getZ() + k);
                         if (i == -barrierSize || i == barrierSize || j == Math.max(-barrierSize, -128)  || j == Math.min(barrierSize,127) || k == -barrierSize || k == barrierSize){
-                            pocketDim.setBlockState(blockPos, AncientGateways.BARRIER.getDefaultState());
+                            pocketDim.setBlockState(blockPos, BARRIER.getDefaultState());
                         }
                     }
                 }
@@ -527,7 +529,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
 
 
             gateway.place(pocketDim,pocketPos.add(-3,0,-5),gatewayPlacementData,pocketDim.getRandom());
-            pocketDim.setBlockState(pocketPos.add(0,6,-5),AncientGateways.gateway_block.getDefaultState().with(Properties.HORIZONTAL_FACING,SOUTH));
+            pocketDim.setBlockState(pocketPos.add(0,6,-5),gateway_block.getDefaultState().with(Properties.HORIZONTAL_FACING,SOUTH));
             pocketDim.setBlockEntity(pocketPos.add(0,6,-5), new GatewayBlockEntity());
 
             Structure gateIDStruct = pocketDim.getStructureManager().getStructure(gateID);
@@ -550,7 +552,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             gateIDStruct.place(pocketDim,placementPos,idPlacementData,pocketDim.getRandom());
 
             //create return tablet
-            ItemStack stack = new ItemStack(AncientGateways.WISE_TABLET,1);
+            ItemStack stack = new ItemStack(RegisterItem.WISE_TABLET,1);
             CompoundTag tabletTag = stack.getOrCreateTag();
             tabletTag.putDouble("CoordinateX",pocketPos.getX());
             tabletTag.putDouble("CoordinateY",pocketPos.getY());

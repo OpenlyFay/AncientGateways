@@ -23,9 +23,12 @@ import net.minecraft.world.World;
 import openlyfay.ancientgateways.AncientGateways;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntity;
+import openlyfay.ancientgateways.item.RegisterItem;
 
 import java.util.Iterator;
 import java.util.List;
+
+import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_INK_ENTITY;
 
 
 public class ChorusInkBottleEntity extends ThrownItemEntity {
@@ -38,12 +41,12 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
     }
 
     public ChorusInkBottleEntity(World world, LivingEntity owner){
-        super(AncientGateways.CHORUS_INK_ENTITY, owner, world);
+        super(CHORUS_INK_ENTITY, owner, world);
     }
 
     @Environment(EnvType.CLIENT)
     public ChorusInkBottleEntity(World world, double x, double y, double z){
-        super(AncientGateways.CHORUS_INK_ENTITY, x, y, z, world);
+        super(CHORUS_INK_ENTITY, x, y, z, world);
     }
 
     @Override
@@ -117,6 +120,6 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
     }
 
     protected Item getDefaultItem() {
-        return AncientGateways.CHORUS_INK_ITEM;
+        return RegisterItem.CHORUS_INK_ITEM;
     }
 }

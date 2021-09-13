@@ -2,11 +2,12 @@ package openlyfay.ancientgateways.util;
 
 import net.minecraft.util.math.BlockPos;
 import openlyfay.ancientgateways.AncientGateways;
+import openlyfay.ancientgateways.world.RegisterWorld;
 
 public class SpiralHelper {
 
     public static BlockPos findSpiral(int n){
-        int c = AncientGateways.pocketMaxSize * 2;
+        int c = RegisterWorld.getPocketMaxSize() * 2;
         double r = Math.floor((Math.sqrt(n + 1) - 1) / 2) + 1;
 
         double p = (8 * r * (r - 1)) / 2;
