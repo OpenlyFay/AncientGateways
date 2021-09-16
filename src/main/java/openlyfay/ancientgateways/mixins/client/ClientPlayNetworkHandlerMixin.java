@@ -1,6 +1,6 @@
 /* Adapted from Origins' mixin of the same name, used under MIT License */
 
-package openlyfay.ancientgateways.mixins;
+package openlyfay.ancientgateways.mixins.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

@@ -1,11 +1,8 @@
 package openlyfay.ancientgateways.block.blockentity;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.GrassBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
@@ -20,7 +17,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePlacementData;
@@ -34,17 +34,15 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
 import openlyfay.ancientgateways.AncientGateways;
-import openlyfay.ancientgateways.block.AnchorMonolith;
+import openlyfay.ancientgateways.block.AnchorBase;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
-import openlyfay.ancientgateways.item.RecallTablet;
 import openlyfay.ancientgateways.item.RegisterItem;
 import openlyfay.ancientgateways.util.MasterList;
 import openlyfay.ancientgateways.util.SpiralHelper;
 import openlyfay.ancientgateways.util.TeleportPatch;
 import openlyfay.ancientgateways.util.Teleportable;
 
-import java.io.ObjectStreamException;
 import java.util.*;
 
 import static net.minecraft.util.math.Direction.NORTH;
@@ -154,8 +152,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         runeIdentifier = tag.getString("runeID");
         runeTarget = tag.getString("targetID");
         targetWorld = RegistryKey.of(Registry.DIMENSION, new Identifier(tag.getString("targetWorld")));
-        int[] targetPos2 = tag.getIntArray("targetPos");
-        targetPos = new BlockPos(targetPos2[0],targetPos2[1],targetPos2[2]);
+        targetPos = new BlockPos(tag.getDouble("targetx"),tag.getDouble("targety"),tag.getDouble("targetz"));
         Inventories.fromTag(tag, this.inventory);
         craftingMode = tag.getBoolean("crafting");
         fresh = true;
@@ -168,8 +165,9 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         tag.putString("runeID",runeIdentifier);
         tag.putString("targetID",runeTarget);
         tag.putString("targetWorld", targetWorld.getValue().toString());
-        int[] targetPos2 = {targetPos.getX(), targetPos.getY(), targetPos.getZ()};
-        tag.putIntArray("targetPos", targetPos2);
+        tag.putDouble("targetx",targetPos.getX());
+        tag.putDouble("targety",targetPos.getY());
+        tag.putDouble("targetz",targetPos.getZ());
         tag.putBoolean("crafting", craftingMode);
         return super.toTag(tag);
     }
@@ -458,7 +456,9 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             int iter = masterlist.incrementPockets();
             BlockPos pocketPos = SpiralHelper.findSpiral(iter);
             pocketDim.setBlockState(pocketPos, ANCHOR_BLOCK.getDefaultState());
-
+            for (int i = 1;i < 4; i++){
+                pocketDim.setBlockState(pocketPos.add(0,i,0), ANCHOR_PILLAR.getDefaultState().with(IntProperty.of("type",1,3),i));
+            }
             //generate island
             Structure island = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"island"));
             StructurePlacementData islandPlacementData = new StructurePlacementData();

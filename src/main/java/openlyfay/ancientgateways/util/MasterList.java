@@ -151,6 +151,7 @@ public class MasterList extends PersistentState {
     public int incrementPockets(){
         int pocket = pocketNum;
         pocketNum++;
+        markDirty();
         return pocket;
     }
 

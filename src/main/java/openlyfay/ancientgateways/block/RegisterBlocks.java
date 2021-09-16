@@ -10,7 +10,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import openlyfay.ancientgateways.block.blockentity.AnchorMonolithEntity;
+import openlyfay.ancientgateways.block.blockentity.AnchorBaseEntity;
 import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntity;
 import openlyfay.ancientgateways.block.blockitem.*;
 import openlyfay.ancientgateways.block.runes.*;
@@ -24,8 +24,9 @@ public class RegisterBlocks {
     public static Identifier ANCHOR = new Identifier(MOD_ID,"poi_anchor");
     public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES,3).luminance(10).hardness(50).resistance(1200));
     public static BlockEntityType<GatewayBlockEntity> GATEWAY_BLOCK_ENTITY;
-    public static final Block ANCHOR_BLOCK = new AnchorMonolith(FabricBlockSettings.of(Material.STONE).luminance(15).resistance(3600000).hardness(-1));
-    public static BlockEntityType<AnchorMonolithEntity> ANCHOR_BLOCK_ENTITY;
+    public static final Block ANCHOR_PILLAR = new AnchorMain(FabricBlockSettings.of(Material.STONE).luminance(15).resistance(3600000).hardness(-1));
+    public static final Block ANCHOR_BLOCK = new AnchorBase(FabricBlockSettings.of(Material.STONE).luminance(15).resistance(3600000).hardness(-1));
+    public static BlockEntityType<AnchorBaseEntity> ANCHOR_BLOCK_ENTITY;
     public static final Block black_rune_block = new BlackRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block red_rune_block = new RedRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block green_rune_block = new GreenRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
@@ -53,9 +54,11 @@ public class RegisterBlocks {
                 .rarity(Rarity.UNCOMMON)));
         GATEWAY_BLOCK_ENTITY = RegHandler.blockEntity(new Identifier( MOD_ID, "gateway_block_entity"), BlockEntityType.Builder.create(GatewayBlockEntity::new, gateway_block).build(null));
 
+        RegHandler.block(new Identifier(MOD_ID,"anchor_pillar"),ANCHOR_PILLAR);
+
         RegHandler.block(new Identifier(MOD_ID,"anchor_block"), ANCHOR_BLOCK);
         RegHandler.item(new Identifier(MOD_ID,"anchor_block"), new BlockItem(ANCHOR_BLOCK,new Item.Settings().group(ANCIENT_GATEWAYS_MAIN)));
-        ANCHOR_BLOCK_ENTITY = RegHandler.blockEntity(new Identifier(MOD_ID, "anchor_block_entity"), BlockEntityType.Builder.create(AnchorMonolithEntity::new, ANCHOR_BLOCK).build(null));
+        ANCHOR_BLOCK_ENTITY = RegHandler.blockEntity(new Identifier(MOD_ID, "anchor_block_entity"), BlockEntityType.Builder.create(AnchorBaseEntity::new, ANCHOR_BLOCK).build(null));
 
         RegHandler.block(new Identifier(MOD_ID, "rune_black"),black_rune_block);
         RegHandler.item(new Identifier(MOD_ID, "rune_black"), new BlackRuneItem(black_rune_block, new  Item.Settings()

@@ -1,4 +1,4 @@
-package openlyfay.ancientgateways.mixins;
+package openlyfay.ancientgateways.mixins.Common;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;

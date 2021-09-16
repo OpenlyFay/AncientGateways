@@ -4,13 +4,14 @@
   "package": "openlyfay.ancientgateways.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityMixin",
-    "PlayerEntityMixin",
-    "ServerPlayerEntityMixin",
-    "LootableContainerBlockEntityMixin"
+    "Common.EntityMixin",
+    "Common.PlayerEntityMixin",
+    "Common.ServerPlayerEntityMixin",
+    "Common.LootableContainerBlockEntityMixin"
   ],
   "client": [
-    "ClientPlayNetworkHandlerMixin"
+    "client.ClientPlayNetworkHandlerMixin",
+    "client.WorldRendererMixin"
   ],
   "server": [
   ],

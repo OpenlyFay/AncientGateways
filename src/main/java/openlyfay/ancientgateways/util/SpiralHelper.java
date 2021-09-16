@@ -1,13 +1,14 @@
 package openlyfay.ancientgateways.util;
 
 import net.minecraft.util.math.BlockPos;
-import openlyfay.ancientgateways.AncientGateways;
-import openlyfay.ancientgateways.world.RegisterWorld;
+import net.minecraft.util.math.Vec3d;
+
+import static openlyfay.ancientgateways.world.RegisterWorld.POCKET_MAX_SIZE;
 
 public class SpiralHelper {
 
     public static BlockPos findSpiral(int n){
-        int c = RegisterWorld.getPocketMaxSize() * 2;
+        int c = POCKET_MAX_SIZE * 2;
         double r = Math.floor((Math.sqrt(n + 1) - 1) / 2) + 1;
 
         double p = (8 * r * (r - 1)) / 2;
@@ -36,5 +37,13 @@ public class SpiralHelper {
             }
         }
         return new BlockPos(0,128,0);
+    }
+
+    public static BlockPos findNearestAnchor(Vec3d pos){
+        return new BlockPos(
+                POCKET_MAX_SIZE * (Math.round(pos.getX()/(POCKET_MAX_SIZE * 2)) * 2),
+                128,
+                POCKET_MAX_SIZE * (Math.round(pos.getZ()/(POCKET_MAX_SIZE * 2)) * 2)
+        );
     }
 }

@@ -1,4 +1,4 @@
-package openlyfay.ancientgateways.mixins;
+package openlyfay.ancientgateways.mixins.Common;
 
 import openlyfay.ancientgateways.util.TeleportPatch;
 import openlyfay.ancientgateways.util.Teleportable;

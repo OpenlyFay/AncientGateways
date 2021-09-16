@@ -3,25 +3,22 @@ package openlyfay.ancientgateways.block.blockentity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Hand;
-import openlyfay.ancientgateways.AncientGateways;
-import org.lwjgl.system.CallbackI;
 
 import java.awt.*;
 
 import static openlyfay.ancientgateways.block.RegisterBlocks.ANCHOR_BLOCK_ENTITY;
 
-public class AnchorMonolithEntity extends BlockEntity implements BlockEntityClientSerializable {
-    private Color grassColour;
-    private Color waterColour;
+public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSerializable {
+    private Color grassColour = new Color(11272039);
+    private Color waterColour = new Color(5242667);
 
-    public AnchorMonolithEntity() {
+    public AnchorBaseEntity() {
         super(ANCHOR_BLOCK_ENTITY);
     }
 
@@ -55,12 +52,6 @@ public class AnchorMonolithEntity extends BlockEntity implements BlockEntityClie
                 break;
         }
         markDirty();
-        for (int i = 3; i > -4; i--) {
-            BlockEntity entity = world.getBlockEntity(pos.add(0,i,0));
-            if (entity instanceof AnchorMonolithEntity){
-                ((AnchorMonolithEntity) entity).syncStats(waterColour,grassColour);
-            }
-        }
 
         return consumeItem;
     }
@@ -107,12 +98,6 @@ public class AnchorMonolithEntity extends BlockEntity implements BlockEntityClie
 
     private boolean alterSky(ItemStack itemStack){
         return false;
-    }
-
-    public void syncStats(Color water,Color grass){
-        waterColour = water;
-        grassColour = grass;
-        markDirty();
     }
 
     @Override
