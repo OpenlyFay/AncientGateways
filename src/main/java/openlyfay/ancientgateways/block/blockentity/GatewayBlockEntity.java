@@ -456,8 +456,8 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             int iter = masterlist.incrementPockets();
             BlockPos pocketPos = SpiralHelper.findSpiral(iter);
             pocketDim.setBlockState(pocketPos, ANCHOR_BLOCK.getDefaultState());
-            for (int i = 1;i < 4; i++){
-                pocketDim.setBlockState(pocketPos.add(0,i,0), ANCHOR_PILLAR.getDefaultState().with(IntProperty.of("type",1,3),i));
+            for (int i = 1;i < 5; i++){
+                pocketDim.setBlockState(pocketPos.add(0,i,0), ANCHOR_PILLAR.getDefaultState().with(IntProperty.of("type",1,4),i));
             }
             //generate island
             Structure island = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"island"));

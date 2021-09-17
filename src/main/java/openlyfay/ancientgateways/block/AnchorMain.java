@@ -18,7 +18,7 @@ import openlyfay.ancientgateways.util.SpiralHelper;
 
 public class AnchorMain extends Block {
 
-    public static final IntProperty TYPE = IntProperty.of("type",1,3);
+    public static final IntProperty TYPE = IntProperty.of("type",1,4);
 
     public AnchorMain(Settings settings) {
         super(settings);
@@ -34,6 +34,7 @@ public class AnchorMain extends Block {
         switch (state.get(TYPE)){
             case 1: return "water";
             case 2: return "grass";
+            case 3: return "leaves";
             default: return "skybox";
         }
     }

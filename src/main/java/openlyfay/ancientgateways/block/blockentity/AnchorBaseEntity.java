@@ -16,7 +16,8 @@ import static openlyfay.ancientgateways.block.RegisterBlocks.ANCHOR_BLOCK_ENTITY
 
 public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSerializable {
     private Color grassColour = new Color(11272039);
-    private Color waterColour = new Color(5242667);
+    private Color waterColour = new Color(3625215);
+    private Color leafColour = new Color(5242667);
 
     public AnchorBaseEntity() {
         super(ANCHOR_BLOCK_ENTITY);
@@ -48,6 +49,15 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
                 }
                 break;
             case 3:
+                if (stack.getItem() instanceof DyeItem){
+                    consumeItem = true;
+                    alterLeaves((DyeItem) stack.getItem(), player, hand);
+                }
+                else {
+                    consumeItem = false;
+                }
+                break;
+            case 4:
                 consumeItem = alterSky(stack);
                 break;
         }
@@ -96,6 +106,24 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         }
     }
 
+    private void alterLeaves(DyeItem item, PlayerEntity player, Hand hand){
+        float[] colour = item.getColor().getColorComponents();
+        Hand hand1;
+        if (hand == Hand.MAIN_HAND){
+            hand1 = Hand.OFF_HAND;
+        }
+        else {
+            hand1 = Hand.MAIN_HAND;
+        }
+        if (player.getStackInHand(hand1).getItem() == Items.MILK_BUCKET){
+            grassColour = new Color(colour[0],colour[1],colour[2]);
+            player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
+        }
+        else {
+            grassColour = new Color((colour[0] + grassColour.getRed()) / 2,(colour[1] + grassColour.getGreen()) / 2,(colour[2] + grassColour.getBlue()) / 2);
+        }
+    }
+
     private boolean alterSky(ItemStack itemStack){
         return false;
     }
@@ -104,6 +132,7 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     public CompoundTag toTag(CompoundTag tag) {
         tag.putInt("water",waterColour.getRGB());
         tag.putInt("grass",grassColour.getRGB());
+        tag.putInt("leaves",leafColour.getRGB());
         return super.toTag(tag);
     }
 
@@ -111,6 +140,7 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     public void fromTag(BlockState state, CompoundTag tag) {
         waterColour = new Color(tag.getInt("water"));
         grassColour = new Color(tag.getInt("grass"));
+        leafColour = new Color(tag.getInt("leaves"));
         super.fromTag(state, tag);
     }
 
