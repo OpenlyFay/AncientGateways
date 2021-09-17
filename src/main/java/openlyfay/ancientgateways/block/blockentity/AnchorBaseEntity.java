@@ -23,6 +23,18 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         super(ANCHOR_BLOCK_ENTITY);
     }
 
+    public Color getGrassColour() {
+        return grassColour;
+    }
+
+    public Color getWaterColour() {
+        return waterColour;
+    }
+
+    public Color getLeafColour() {
+        return leafColour;
+    }
+
     public boolean onInteract(int type, PlayerEntity player, Hand hand){
         ItemStack stack = player.getStackInHand(hand);
         boolean consumeItem = false;

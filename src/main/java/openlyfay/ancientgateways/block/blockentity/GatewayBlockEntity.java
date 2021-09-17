@@ -314,7 +314,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                                     }
                                 }
                             }
-                            payloadEntity.teleport(targetPos.getX() - posDelta.getX(), targetPos.getY() - posDelta.getY(), targetPos.getZ() - posDelta.getZ());
+                            payloadEntity.refreshPositionAfterTeleport(targetPos.getX() - posDelta.getX(), targetPos.getY() - posDelta.getY(), targetPos.getZ() - posDelta.getZ());
                             if (riders != null){
                                 for (Entity rider : riders){
                                     rider.teleport(payloadEntity.getX(),payloadEntity.getY(),payloadEntity.getZ());
@@ -463,26 +463,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
             Structure island = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"island"));
             StructurePlacementData islandPlacementData = new StructurePlacementData();
             island.place(pocketDim,pocketPos.add(-7,-3,-7),islandPlacementData,pocketDim.getRandom());
-            /*
-            for (int i = -4;i < 5;i++){
-                for (int j = -4;j < 5;j++){
-                    if ((i < 3 && i > -3) || (j < 3 && j > -3) || ( (i == 3 || i == -3) && (j == 3 || j == -3) ) ){
-                        BlockPos blockPos = new BlockPos(pocketPos.getX() + i,pocketPos.getY() - 1,pocketPos.getZ() + j);
-                        pocketDim.setBlockState(blockPos, Blocks.GRASS_BLOCK.getDefaultState());
-                    }
-                }
-            }
-            for (int i = -2;i < 3;i++){
-                for (int j = -2;j < 3;j++){
-                    if (!( (i == 2 || i == -2) && (j == 2 || j == -2) )){
-                        BlockPos blockPos = new BlockPos(pocketPos.getX() + i,pocketPos.getY() - 2,pocketPos.getZ() + j);
-                        pocketDim.setBlockState(blockPos, Blocks.DIRT.getDefaultState());
-                    }
-                }
-            }
-
-             */
-
 
             //generate initial barrier
             int barrierSize = AncientGateways.agConfig.pocketDimensionInitRadius;

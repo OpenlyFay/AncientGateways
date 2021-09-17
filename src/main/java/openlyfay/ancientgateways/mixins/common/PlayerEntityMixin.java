@@ -1,4 +1,4 @@
-package openlyfay.ancientgateways.mixins.Common;
+package openlyfay.ancientgateways.mixins.common;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
