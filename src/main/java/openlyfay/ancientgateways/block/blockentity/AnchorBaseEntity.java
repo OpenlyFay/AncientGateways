@@ -3,14 +3,22 @@ package openlyfay.ancientgateways.block.blockentity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Hand;
+import net.minecraft.world.GameRules;
+import openlyfay.ancientgateways.util.SpiralHelper;
+import openlyfay.ancientgateways.util.WorldRendererAccessHelper;
+import org.lwjgl.system.CallbackI;
 
 import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.util.ListIterator;
 
 import static openlyfay.ancientgateways.block.RegisterBlocks.ANCHOR_BLOCK_ENTITY;
 
@@ -47,26 +55,17 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
                     consumeItem = true;
                     alterWater((DyeItem) stack.getItem(), player, hand);
                 }
-                else {
-                    consumeItem = false;
-                }
                 break;
             case 2:
                 if (stack.getItem() instanceof DyeItem){
                     consumeItem = true;
                     alterGrass((DyeItem) stack.getItem(), player, hand);
                 }
-                else {
-                    consumeItem = false;
-                }
                 break;
             case 3:
                 if (stack.getItem() instanceof DyeItem){
                     consumeItem = true;
                     alterLeaves((DyeItem) stack.getItem(), player, hand);
-                }
-                else {
-                    consumeItem = false;
                 }
                 break;
             case 4:
@@ -96,7 +95,10 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
             player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
         }
         else {
-            waterColour = new Color((colour[0] + waterColour.getRed()) / 2,(colour[1] + waterColour.getGreen()) / 2,(colour[2] + waterColour.getBlue()) / 2);
+            double r = Math.sqrt((((colour[0] * 255)*(colour[0] * 255)) + (waterColour.getRed() * waterColour.getRed()))/2);
+            double g = Math.sqrt((((colour[1] * 255)*(colour[1] * 255)) + (waterColour.getGreen() * waterColour.getGreen()))/2);
+            double b = Math.sqrt((((colour[2] * 255)*(colour[2] * 255)) + (waterColour.getBlue() * waterColour.getBlue()))/2);
+            waterColour = new Color((int) r, (int) g, (int) b);
         }
     }
 
@@ -114,7 +116,10 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
             player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
         }
         else {
-            grassColour = new Color((colour[0] + grassColour.getRed()) / 2,(colour[1] + grassColour.getGreen()) / 2,(colour[2] + grassColour.getBlue()) / 2);
+            double r = Math.sqrt((((colour[0] * 255)*(colour[0] * 255)) + (grassColour.getRed() * grassColour.getRed()))/2);
+            double g = Math.sqrt((((colour[1] * 255)*(colour[1] * 255)) + (grassColour.getGreen() * grassColour.getGreen()))/2);
+            double b = Math.sqrt((((colour[2] * 255)*(colour[2] * 255)) + (grassColour.getBlue() * grassColour.getBlue()))/2);
+            grassColour = new Color((int) r, (int) g, (int) b);
         }
     }
 
@@ -128,11 +133,14 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
             hand1 = Hand.MAIN_HAND;
         }
         if (player.getStackInHand(hand1).getItem() == Items.MILK_BUCKET){
-            grassColour = new Color(colour[0],colour[1],colour[2]);
+            leafColour = new Color(colour[0],colour[1],colour[2]);
             player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
         }
         else {
-            grassColour = new Color((colour[0] + grassColour.getRed()) / 2,(colour[1] + grassColour.getGreen()) / 2,(colour[2] + grassColour.getBlue()) / 2);
+            double r = Math.sqrt((((colour[0] * 255)*(colour[0] * 255)) + (leafColour.getRed() * leafColour.getRed()))/2);
+            double g = Math.sqrt((((colour[1] * 255)*(colour[1] * 255)) + (leafColour.getGreen() * leafColour.getGreen()))/2);
+            double b = Math.sqrt((((colour[2] * 255)*(colour[2] * 255)) + (leafColour.getBlue() * leafColour.getBlue()))/2);
+            leafColour = new Color((int) r, (int) g, (int) b);
         }
     }
 
@@ -160,6 +168,9 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     @Override
     public void fromClientTag(CompoundTag tag) {
         fromTag(getCachedState(),tag);
+        if (world.isClient){
+            ((WorldRendererAccessHelper)world).getWorldRenderer().reload();
+        }
     }
 
     @Override
@@ -172,6 +183,5 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         sync();
         super.markDirty();
     }
-
 
 }

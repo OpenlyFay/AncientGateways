@@ -51,7 +51,6 @@ public class AnchorMain extends Block {
                 player.getStackInHand(hand).decrement(1);
             }
             return ActionResult.SUCCESS;
-
         }
         return ActionResult.CONSUME;
     }

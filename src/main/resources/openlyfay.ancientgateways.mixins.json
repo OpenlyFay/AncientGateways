@@ -10,6 +10,7 @@
     "common.ServerPlayerEntityMixin"
   ],
   "client": [
+    "client.ClientWorldMixin",
     "client.BiomeColorsMixin",
     "client.ChunkRendererRegionMixin",
     "client.ClientPlayNetworkHandlerMixin",

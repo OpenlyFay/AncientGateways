@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.chunk.ChunkRendererRegion;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockRenderView;
@@ -28,7 +29,7 @@ public class BiomeColorsMixin {
     @Inject(method = "getGrassColor",at = @At("HEAD"), cancellable = true)
     private static void onGetGrassColor(BlockRenderView world, BlockPos pos, CallbackInfoReturnable<Integer> cir){
         BlockPos pos1 = SpiralHelper.findNearestAnchor(new Vec3d(pos.getX(),pos.getY(), pos.getZ()));
-        BlockEntity anchor = ((WorldAccessHelper) ((ChunkRendererRegion) world)).getWorld().getBlockEntity(pos1);;
+        BlockEntity anchor = ((WorldAccessHelper) world).getWorld().getBlockEntity(pos1);
         if (anchor instanceof AnchorBaseEntity){
             cir.setReturnValue(((AnchorBaseEntity) anchor).getGrassColour().getRGB());
         }
@@ -37,7 +38,7 @@ public class BiomeColorsMixin {
     @Inject(method = "getWaterColor",at = @At("HEAD"), cancellable = true)
     private static void onGetWaterColor(BlockRenderView world, BlockPos pos, CallbackInfoReturnable<Integer> cir){
         BlockPos pos1 = SpiralHelper.findNearestAnchor(new Vec3d(pos.getX(),pos.getY(), pos.getZ()));
-        BlockEntity anchor = ((WorldAccessHelper) ((ChunkRendererRegion) world)).getWorld().getBlockEntity(pos1);;
+        BlockEntity anchor = ((WorldAccessHelper) world).getWorld().getBlockEntity(pos1);
         if (anchor instanceof AnchorBaseEntity){
             cir.setReturnValue(((AnchorBaseEntity) anchor).getWaterColour().getRGB());
         }
@@ -46,7 +47,13 @@ public class BiomeColorsMixin {
     @Inject(method = "getFoliageColor",at = @At("HEAD"), cancellable = true)
     private static void onGetFoliageColor(BlockRenderView world, BlockPos pos, CallbackInfoReturnable<Integer> cir){
         BlockPos pos1 = SpiralHelper.findNearestAnchor(new Vec3d(pos.getX(),pos.getY(), pos.getZ()));
-        BlockEntity anchor = ((WorldAccessHelper) ((ChunkRendererRegion) world)).getWorld().getBlockEntity(pos1);;
+        BlockEntity anchor;
+        if (world instanceof ClientWorld){
+            anchor = ((ClientWorld) world).getBlockEntity(pos1);
+        }
+        else {
+            anchor = ((WorldAccessHelper) world).getWorld().getBlockEntity(pos1);
+        }
         if (anchor instanceof AnchorBaseEntity){
             cir.setReturnValue(((AnchorBaseEntity) anchor).getLeafColour().getRGB());
         }

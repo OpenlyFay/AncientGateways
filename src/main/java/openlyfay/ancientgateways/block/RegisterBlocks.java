@@ -44,7 +44,7 @@ public class RegisterBlocks {
     public static final Block orange_rune_block = new OrangeRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
     public static final Block white_rune_block = new WhiteRuneBlock(FabricBlockSettings.of(Material.SUPPORTED).nonOpaque());
 
-    public static final Block BARRIER = new Barrier(FabricBlockSettings.of(Material.AIR).resistance(3600000).hardness(-1).nonOpaque());
+    public static final Block BARRIER = new Barrier(FabricBlockSettings.of(Material.BARRIER).resistance(3600000).hardness(-1).nonOpaque());
 
     public static void register(){
         RegHandler.block(new Identifier(MOD_ID, "gatewayblock"), gateway_block);
