@@ -1,4 +1,4 @@
-package openlyfay.ancientgateways.util;
+package openlyfay.ancientgateways.util.mixininterface;
 
 import net.minecraft.world.World;
 

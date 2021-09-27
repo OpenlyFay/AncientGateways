@@ -1,0 +1,8 @@
+{
+  "type": "ancientgateways:boolean_rule_recipe",
+  "ingredient": [
+    {"item": "minecraft:flint_and_steel"}
+  ],
+  "rule_name": "doFireTick",
+  "category" : "updates"
+}

@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import openlyfay.ancientgateways.block.RegisterBlocks;
 import openlyfay.ancientgateways.entity.RegisterEntity;
 import openlyfay.ancientgateways.item.*;
+import openlyfay.ancientgateways.recipe.RegisterRecipes;
 import openlyfay.ancientgateways.world.RegisterWorld;
 
 import static openlyfay.ancientgateways.block.RegisterBlocks.gateway_block;
@@ -31,6 +32,7 @@ public class AncientGateways implements ModInitializer {
         RegisterEntity.register();
         RegisterItem.register();
         RegisterWorld.register();
+        RegisterRecipes.register();
 
     }
 

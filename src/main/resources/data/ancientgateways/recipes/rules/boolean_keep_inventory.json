@@ -1,0 +1,8 @@
+{
+  "type": "ancientgateways:boolean_rule_recipe",
+  "ingredient": [
+    {"item": "minecraft:chest"}
+  ],
+  "rule_name": "keepInventory",
+  "category" : "player"
+}

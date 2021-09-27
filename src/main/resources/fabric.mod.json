@@ -9,7 +9,7 @@
   ],
 
   "license": "GNU LGPL",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/ancientgateways/textures/gatecontroller/gateactive.png",
 
   "environment": "*",
   "entrypoints": {

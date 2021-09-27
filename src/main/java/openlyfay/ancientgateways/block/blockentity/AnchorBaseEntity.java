@@ -3,8 +3,6 @@ package openlyfay.ancientgateways.block.blockentity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
@@ -12,13 +10,16 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Hand;
 import net.minecraft.world.GameRules;
-import openlyfay.ancientgateways.util.SpiralHelper;
-import openlyfay.ancientgateways.util.WorldRendererAccessHelper;
-import org.lwjgl.system.CallbackI;
+import openlyfay.ancientgateways.recipe.BoolRuleRecipe;
+import openlyfay.ancientgateways.recipe.IntRuleRecipe;
+import openlyfay.ancientgateways.recipe.RegisterRecipes;
+import openlyfay.ancientgateways.util.mixininterface.GameRulesNBT;
+import openlyfay.ancientgateways.util.mixininterface.RuleAccessHelper;
+import openlyfay.ancientgateways.util.mixininterface.WorldRendererAccessHelper;
 
 import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.util.ListIterator;
+import java.util.HashMap;
+import java.util.Map;
 
 import static openlyfay.ancientgateways.block.RegisterBlocks.ANCHOR_BLOCK_ENTITY;
 
@@ -26,6 +27,11 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     private Color grassColour = new Color(11272039);
     private Color waterColour = new Color(3625215);
     private Color leafColour = new Color(5242667);
+    private final GameRules rules = new GameRules();
+    private int expansions = 0;
+    private static ItemStack wrapAround;
+    private static ItemStack expand;
+    private boolean resetRender = false;
 
     public AnchorBaseEntity() {
         super(ANCHOR_BLOCK_ENTITY);
@@ -54,18 +60,21 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
                 if (stack.getItem() instanceof DyeItem){
                     consumeItem = true;
                     alterWater((DyeItem) stack.getItem(), player, hand);
+                    resetRender = true;
                 }
                 break;
             case 2:
                 if (stack.getItem() instanceof DyeItem){
                     consumeItem = true;
                     alterGrass((DyeItem) stack.getItem(), player, hand);
+                    resetRender = true;
                 }
                 break;
             case 3:
                 if (stack.getItem() instanceof DyeItem){
                     consumeItem = true;
                     alterLeaves((DyeItem) stack.getItem(), player, hand);
+                    resetRender = true;
                 }
                 break;
             case 4:
@@ -78,70 +87,37 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     private boolean alterRules(ItemStack itemStack){
+
+        BoolRuleRecipe recipe = world.getRecipeManager().listAllOfType(RegisterRecipes.BOOL_RULE_RECIPE_TYPE).stream().filter(boolRuleRecipe -> boolRuleRecipe.matches(itemStack)).findFirst().orElse(null);
+        if (recipe != null){
+            ((RuleAccessHelper) rules.get(recipe.getKey())).flipValue();
+            //return true;
+        }
+        IntRuleRecipe recipe1 = world.getRecipeManager().listAllOfType(RegisterRecipes.INT_RULE_RECIPE_TYPE).stream().filter(intRuleRecipe -> intRuleRecipe.matches(itemStack)).findFirst().orElse(null);
+        if (recipe1 != null){
+            if (recipe1.getModifier() == 0){
+                ((RuleAccessHelper) rules.get(recipe1.getKey())).setValue(Integer.toString(world.getGameRules().getInt(recipe1.getKey())));
+            }
+            else{
+                ((RuleAccessHelper) rules.get(recipe1.getKey())).setValue(Integer.toString(recipe1.getModifier()));
+            }
+            //return true;
+        }
+        //We were on the verge of greatness, we were this close.
+
         return false;
     }
 
     private void alterWater(DyeItem item, PlayerEntity player, Hand hand){
-        float[] colour = item.getColor().getColorComponents();
-        Hand hand1;
-        if (hand == Hand.MAIN_HAND){
-            hand1 = Hand.OFF_HAND;
-        }
-        else {
-            hand1 = Hand.MAIN_HAND;
-        }
-        if (player.getStackInHand(hand1).getItem() == Items.MILK_BUCKET){
-            waterColour = new Color(colour[0],colour[1],colour[2]);
-            player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
-        }
-        else {
-            double r = Math.sqrt((((colour[0] * 255)*(colour[0] * 255)) + (waterColour.getRed() * waterColour.getRed()))/2);
-            double g = Math.sqrt((((colour[1] * 255)*(colour[1] * 255)) + (waterColour.getGreen() * waterColour.getGreen()))/2);
-            double b = Math.sqrt((((colour[2] * 255)*(colour[2] * 255)) + (waterColour.getBlue() * waterColour.getBlue()))/2);
-            waterColour = new Color((int) r, (int) g, (int) b);
-        }
+        waterColour = modifyColour(item,player,hand,waterColour);
     }
 
     private void alterGrass(DyeItem item, PlayerEntity player, Hand hand){
-        float[] colour = item.getColor().getColorComponents();
-        Hand hand1;
-        if (hand == Hand.MAIN_HAND){
-            hand1 = Hand.OFF_HAND;
-        }
-        else {
-            hand1 = Hand.MAIN_HAND;
-        }
-        if (player.getStackInHand(hand1).getItem() == Items.MILK_BUCKET){
-            grassColour = new Color(colour[0],colour[1],colour[2]);
-            player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
-        }
-        else {
-            double r = Math.sqrt((((colour[0] * 255)*(colour[0] * 255)) + (grassColour.getRed() * grassColour.getRed()))/2);
-            double g = Math.sqrt((((colour[1] * 255)*(colour[1] * 255)) + (grassColour.getGreen() * grassColour.getGreen()))/2);
-            double b = Math.sqrt((((colour[2] * 255)*(colour[2] * 255)) + (grassColour.getBlue() * grassColour.getBlue()))/2);
-            grassColour = new Color((int) r, (int) g, (int) b);
-        }
+        grassColour = modifyColour(item,player,hand,grassColour);
     }
 
     private void alterLeaves(DyeItem item, PlayerEntity player, Hand hand){
-        float[] colour = item.getColor().getColorComponents();
-        Hand hand1;
-        if (hand == Hand.MAIN_HAND){
-            hand1 = Hand.OFF_HAND;
-        }
-        else {
-            hand1 = Hand.MAIN_HAND;
-        }
-        if (player.getStackInHand(hand1).getItem() == Items.MILK_BUCKET){
-            leafColour = new Color(colour[0],colour[1],colour[2]);
-            player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
-        }
-        else {
-            double r = Math.sqrt((((colour[0] * 255)*(colour[0] * 255)) + (leafColour.getRed() * leafColour.getRed()))/2);
-            double g = Math.sqrt((((colour[1] * 255)*(colour[1] * 255)) + (leafColour.getGreen() * leafColour.getGreen()))/2);
-            double b = Math.sqrt((((colour[2] * 255)*(colour[2] * 255)) + (leafColour.getBlue() * leafColour.getBlue()))/2);
-            leafColour = new Color((int) r, (int) g, (int) b);
-        }
+        leafColour = modifyColour(item,player,hand,leafColour);
     }
 
     private boolean alterSky(ItemStack itemStack){
@@ -153,6 +129,8 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         tag.putInt("water",waterColour.getRGB());
         tag.putInt("grass",grassColour.getRGB());
         tag.putInt("leaves",leafColour.getRGB());
+        tag.putInt("expansions",expansions);
+        tag.put("rules", rules.toNbt());
         return super.toTag(tag);
     }
 
@@ -161,6 +139,8 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         waterColour = new Color(tag.getInt("water"));
         grassColour = new Color(tag.getInt("grass"));
         leafColour = new Color(tag.getInt("leaves"));
+        expansions = tag.getInt("expansions");
+        ((GameRulesNBT) rules).fromNBT(tag.getCompound("rules"));
         super.fromTag(state, tag);
     }
 
@@ -168,13 +148,17 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     @Override
     public void fromClientTag(CompoundTag tag) {
         fromTag(getCachedState(),tag);
-        if (world.isClient){
+        resetRender = tag.getBoolean("reset");
+        if (world.isClient && resetRender){
             ((WorldRendererAccessHelper)world).getWorldRenderer().reload();
+            resetRender = false;
         }
     }
 
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
+        tag.putBoolean("reset",resetRender);
+        resetRender = false;
         return toTag(tag);
     }
 
@@ -182,6 +166,27 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     public void markDirty() {
         sync();
         super.markDirty();
+    }
+
+    private Color modifyColour(DyeItem item, PlayerEntity player, Hand hand, Color colour){
+        float[] colour1 = item.getColor().getColorComponents();
+        Hand hand1;
+        if (hand == Hand.MAIN_HAND){
+            hand1 = Hand.OFF_HAND;
+        }
+        else {
+            hand1 = Hand.MAIN_HAND;
+        }
+        if (player.getStackInHand(hand1).getItem() == Items.MILK_BUCKET){
+            player.setStackInHand(hand1,new ItemStack(Items.BUCKET,1));
+            return new Color(colour1[0],colour1[1],colour1[2]);
+        }
+        else {
+            double r = Math.sqrt((((colour1[0] * 255)*(colour1[0] * 255)) + (colour.getRed() * colour.getRed()))/2);
+            double g = Math.sqrt((((colour1[1] * 255)*(colour1[1] * 255)) + (colour.getGreen() * colour.getGreen()))/2);
+            double b = Math.sqrt((((colour1[2] * 255)*(colour1[2] * 255)) + (colour.getBlue() * colour.getBlue()))/2);
+            return new Color((int) r, (int) g, (int) b);
+        }
     }
 
 }

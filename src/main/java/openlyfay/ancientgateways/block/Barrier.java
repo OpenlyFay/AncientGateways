@@ -11,7 +11,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import openlyfay.ancientgateways.block.blockentity.AnchorBaseEntity;
 import openlyfay.ancientgateways.util.SpiralHelper;
-import openlyfay.ancientgateways.util.Teleportable;
+import openlyfay.ancientgateways.util.mixininterface.Teleportable;
 
 public class Barrier extends Block {
     protected static final VoxelShape SHAPE = Block.createCuboidShape(1.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D);

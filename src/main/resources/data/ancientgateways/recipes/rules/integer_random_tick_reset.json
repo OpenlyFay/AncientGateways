@@ -1,0 +1,9 @@
+{
+  "type": "ancientgateways:int_rule_recipe",
+  "ingredient": [
+    {"item": "minecraft:clock"}
+  ],
+  "rule_name": "randomTickSpeed",
+  "category" : "updates",
+  "modifier" : 0
+}

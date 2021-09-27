@@ -1,0 +1,8 @@
+{
+  "type": "ancientgateways:boolean_rule_recipe",
+  "ingredient": [
+    {"item": "minecraft:daylight_detector"}
+  ],
+  "rule_name": "doDaylightCycle",
+  "category" : "updates"
+}

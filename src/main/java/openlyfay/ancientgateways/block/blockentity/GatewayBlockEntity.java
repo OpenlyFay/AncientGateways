@@ -17,10 +17,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePlacementData;
@@ -34,14 +32,13 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
 import openlyfay.ancientgateways.AncientGateways;
-import openlyfay.ancientgateways.block.AnchorBase;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
 import openlyfay.ancientgateways.item.RegisterItem;
 import openlyfay.ancientgateways.util.MasterList;
 import openlyfay.ancientgateways.util.SpiralHelper;
 import openlyfay.ancientgateways.util.TeleportPatch;
-import openlyfay.ancientgateways.util.Teleportable;
+import openlyfay.ancientgateways.util.mixininterface.Teleportable;
 
 import java.util.*;
 

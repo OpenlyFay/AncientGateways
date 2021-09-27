@@ -1,7 +1,7 @@
 package openlyfay.ancientgateways.mixins.common;
 
 import openlyfay.ancientgateways.util.TeleportPatch;
-import openlyfay.ancientgateways.util.Teleportable;
+import openlyfay.ancientgateways.util.mixininterface.Teleportable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

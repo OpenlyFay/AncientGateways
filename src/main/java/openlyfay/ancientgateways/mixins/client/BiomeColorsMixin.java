@@ -4,23 +4,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.chunk.ChunkRendererRegion;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.World;
 import openlyfay.ancientgateways.block.blockentity.AnchorBaseEntity;
 import openlyfay.ancientgateways.util.SpiralHelper;
-import openlyfay.ancientgateways.util.WorldAccessHelper;
+import openlyfay.ancientgateways.util.mixininterface.WorldAccessHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static openlyfay.ancientgateways.AncientGateways.DIM_ID;
-import static openlyfay.ancientgateways.block.RegisterBlocks.ANCHOR_BLOCK;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BiomeColors.class)
