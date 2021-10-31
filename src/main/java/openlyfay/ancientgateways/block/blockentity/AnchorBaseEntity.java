@@ -5,14 +5,20 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
+import openlyfay.ancientgateways.item.RegisterItem;
 import openlyfay.ancientgateways.recipe.BoolRuleRecipe;
+import openlyfay.ancientgateways.recipe.CustomSkyboxRecipe;
 import openlyfay.ancientgateways.recipe.IntRuleRecipe;
 import openlyfay.ancientgateways.recipe.RegisterRecipes;
+import openlyfay.ancientgateways.util.CustomSkybox;
+import openlyfay.ancientgateways.util.RegHandler;
 import openlyfay.ancientgateways.util.mixininterface.GameRulesNBT;
 import openlyfay.ancientgateways.util.mixininterface.RuleAccessHelper;
 import openlyfay.ancientgateways.util.mixininterface.WorldRendererAccessHelper;
@@ -29,9 +35,10 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     private Color leafColour = new Color(5242667);
     private final GameRules rules = new GameRules();
     private int expansions = 0;
-    private static ItemStack wrapAround;
-    private static ItemStack expand;
+    private final static Item wrapAround = RegisterItem.CHORUS_INK_ITEM;
+    private static final Item expand = RegisterItem.WORLD_EGG;
     private boolean resetRender = false;
+    private CustomSkybox skybox;
 
     public AnchorBaseEntity() {
         super(ANCHOR_BLOCK_ENTITY);
@@ -78,12 +85,16 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
                 }
                 break;
             case 4:
-                consumeItem = alterSky(stack);
+                consumeItem = alterSky(stack, player, hand);
                 break;
         }
         markDirty();
 
         return consumeItem;
+    }
+
+    public CustomSkybox getSkybox() {
+        return skybox;
     }
 
     private boolean alterRules(ItemStack itemStack){
@@ -120,7 +131,26 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         leafColour = modifyColour(item,player,hand,leafColour);
     }
 
-    private boolean alterSky(ItemStack itemStack){
+    private boolean alterSky(ItemStack itemStack, PlayerEntity player, Hand hand){
+        CustomSkyboxRecipe skyboxRecipe = world.getRecipeManager().listAllOfType(RegisterRecipes.SKYBOX_RECIPE_TYPE).stream().filter(customSkyboxRecipe -> customSkyboxRecipe.matches(itemStack)).findFirst().orElse(null);
+        if (skyboxRecipe != null){
+            skybox = skyboxRecipe.getSkybox();
+            return true;
+        }
+        if (itemStack.getItem() == Items.MILK_BUCKET){
+            Hand hand1;
+            if (hand == Hand.MAIN_HAND){
+                hand1 = Hand.OFF_HAND;
+            }
+            else {
+                hand1 = Hand.MAIN_HAND;
+            }
+            if (player.getStackInHand(hand1).getItem() == Items.MILK_BUCKET) {
+                player.setStackInHand(hand1, new ItemStack(Items.BUCKET, 1));
+            }
+            skybox = null;
+        }
+        resetRender = true;
         return false;
     }
 
@@ -131,6 +161,10 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         tag.putInt("leaves",leafColour.getRGB());
         tag.putInt("expansions",expansions);
         tag.put("rules", rules.toNbt());
+        if (skybox != null) {
+            CompoundTag compoundTag = new CompoundTag();
+            tag.put("skybox", skybox.toNbt(compoundTag));
+        }
         return super.toTag(tag);
     }
 
@@ -141,6 +175,9 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         leafColour = new Color(tag.getInt("leaves"));
         expansions = tag.getInt("expansions");
         ((GameRulesNBT) rules).fromNBT(tag.getCompound("rules"));
+        if (tag.contains("skybox")) {
+            skybox = CustomSkybox.fromNBT(tag.getCompound("skybox"));
+        }
         super.fromTag(state, tag);
     }
 

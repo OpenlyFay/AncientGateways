@@ -34,6 +34,11 @@ public class Barrier extends Block {
     }
 
     @Override
+    public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
+        entity.handleFallDamage(distance,0.0f);
+    }
+
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }

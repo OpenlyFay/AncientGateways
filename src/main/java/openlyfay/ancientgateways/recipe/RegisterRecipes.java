@@ -20,11 +20,19 @@ public class RegisterRecipes {
         public String toString() {return "int_rule_recipe";}};
     public static final RecipeSerializer<IntRuleRecipe> INT_RULE_RECIPE_SERIALIZER = new IntRuleRecipe.Serializer();
 
+    public static final RecipeType<CustomSkyboxRecipe> SKYBOX_RECIPE_TYPE = new RecipeType<CustomSkyboxRecipe>() {
+        @Override
+        public String toString() {return "custom_skybox_recipe";}
+    };
+    public static final RecipeSerializer<CustomSkyboxRecipe> SKYBOX_RECIPE_SERIALIZER = new CustomSkyboxRecipe.Serializer();
+
     public static void register(){
         Registry.register(Registry.RECIPE_SERIALIZER,new Identifier(MOD_ID,"boolean_rule_recipe"),BOOL_RULE_RECIPE_SERIALIZER);
         Registry.register(Registry.RECIPE_SERIALIZER,new Identifier(MOD_ID,"int_rule_recipe"),INT_RULE_RECIPE_SERIALIZER);
+        Registry.register(Registry.RECIPE_SERIALIZER,new Identifier(MOD_ID,"custom_skybox_recipe"),SKYBOX_RECIPE_SERIALIZER);
 
         Registry.register(Registry.RECIPE_TYPE,new Identifier(MOD_ID,"boolean_rule_recipe"),BOOL_RULE_RECIPE_TYPE);
         Registry.register(Registry.RECIPE_TYPE,new Identifier(MOD_ID,"int_rule_recipe"),INT_RULE_RECIPE_TYPE);
+        Registry.register(Registry.RECIPE_TYPE,new Identifier(MOD_ID,"custom_skybox_recipe"),SKYBOX_RECIPE_TYPE);
     }
 }
