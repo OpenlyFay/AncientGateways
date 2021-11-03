@@ -187,7 +187,7 @@ public class CustomSkyboxRecipe implements Recipe<Inventory> {
             int sizeY = JsonHelper.getInt(json,"size_y");
             double horizontalRotation = JsonHelper.getFloat(json, "horizontal_rotation");
             double startingRotation = JsonHelper.getFloat(json,"starting_vertical_rotation");
-            double rotationPerTick = (JsonHelper.getFloat(json, "days_per_orbit")/480000);
+            double rotationPerTick = (360/JsonHelper.getFloat(json, "days_per_orbit"))/24000;
             boolean lightEmitting = JsonHelper.getBoolean(json,"emits_light");
             jsonArray = JsonHelper.getArray(json, "sunset_colour");
             Color sunsetColour = new Color(jsonArray.get(0).getAsInt(),jsonArray.get(1).getAsInt(),jsonArray.get(2).getAsInt());

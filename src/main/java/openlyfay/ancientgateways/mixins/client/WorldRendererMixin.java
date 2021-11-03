@@ -9,9 +9,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.registry.Registry;
@@ -107,7 +105,6 @@ public abstract class WorldRendererMixin {
                             }
                             else {
                                 textureManager.bindTexture(skybox.getNorthNight());
-                                System.out.println(skybox.getNorthNight());
                             }
                             matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90.0F));
                             break;
@@ -124,10 +121,10 @@ public abstract class WorldRendererMixin {
                     }
                     Matrix4f matrix4f = matrices.peek().getModel();
                     bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
-                    bufferBuilder.vertex(matrix4f, -128.0F, -128.0F, -128.0F).texture(0.0F, 0.0F).next();
-                    bufferBuilder.vertex(matrix4f, -128.0F, -128.0F, 128.0F).texture(0.0F, 1.0F).next();
-                    bufferBuilder.vertex(matrix4f, 128.0F, -128.0F, 128.0F).texture(1.0F, 1.0F).next();
-                    bufferBuilder.vertex(matrix4f, 128.0F, -128.0F, -128.0F).texture(1.0F, 0.0F).next();
+                    bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).texture(0.0F, 0.0F).next();
+                    bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).texture(0.0F, 1.0F).next();
+                    bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).texture(1.0F, 1.0F).next();
+                    bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).texture(1.0F, 0.0F).next();
                     tessellator.draw();
                     matrices.pop();
                 }
@@ -165,10 +162,10 @@ public abstract class WorldRendererMixin {
                         Matrix4f matrix4f = matrices.peek().getModel();
                         bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
                         float dawnTime = skybox.getDawnProgress(world.getTime() + tickDelta);
-                        bufferBuilder.vertex(matrix4f, -127.0F, -127.0F, -127.0F).texture(0.0F, 0.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
-                        bufferBuilder.vertex(matrix4f, -127.0F, -127.0F, 127.0F).texture(0.0F, 1.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
-                        bufferBuilder.vertex(matrix4f, 127.0F, -127.0F, 127.0F).texture(1.0F, 1.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
-                        bufferBuilder.vertex(matrix4f, 127.0F, -127.0F, -127.0F).texture(1.0F, 0.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
+                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, -99.9F).texture(0.0F, 0.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
+                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, 99.9F).texture(0.0F, 1.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
+                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, 99.9F).texture(1.0F, 1.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
+                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, -99.9F).texture(1.0F, 0.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
                         tessellator.draw();
                         matrices.pop();
                     }
@@ -207,17 +204,17 @@ public abstract class WorldRendererMixin {
                         Matrix4f matrix4f = matrices.peek().getModel();
                         bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
                         float duskTime = skybox.getDuskProgress((float) world.getTime() + tickDelta);
-                        bufferBuilder.vertex(matrix4f, -127.0F, -127.0F, -127.0F).texture(0.0F, 0.0F).color(1.0f,1.0f,1.0f,duskTime).next();
-                        bufferBuilder.vertex(matrix4f, -127.0F, -127.0F, 127.0F).texture(0.0F, 1.0F).color(1.0f,1.0f,1.0f,duskTime).next();
-                        bufferBuilder.vertex(matrix4f, 127.0F, -127.0F, 127.0F).texture(1.0F, 1.0F).color(1.0f,1.0f,1.0f,duskTime).next();
-                        bufferBuilder.vertex(matrix4f, 127.0F, -127.0F, -127.0F).texture(1.0F, 0.0F).color(1.0f,1.0f,1.0f,duskTime).next();
+                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, -99.9F).texture(0.0F, 0.0F).color(1.0f,1.0f,1.0f,duskTime).next();
+                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, 99.9F).texture(0.0F, 1.0F).color(1.0f,1.0f,1.0f,duskTime).next();
+                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, 99.9F).texture(1.0F, 1.0F).color(1.0f,1.0f,1.0f,duskTime).next();
+                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, -99.9F).texture(1.0F, 0.0F).color(1.0f,1.0f,1.0f,duskTime).next();
                         tessellator.draw();
                         matrices.pop();
                     }
                 }
-                float i = -126.0f;
+                float i = -99.9f;
                 for (CustomSkybox.DynamicSkyboxObject object : skybox.getDYN()){
-                    i++;
+                    i += 0.1;
                     matrices.push();
                     textureManager.bindTexture(object.getCurrentTexture((world.getTime() + tickDelta)));
                     matrices.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion((float) object.getEquatorAngle()));
@@ -260,6 +257,6 @@ public abstract class WorldRendererMixin {
         }
         return f;
     }
-    //TODO: skybox rotation, sunsets
+    //TODO: skybox rotation, sunsets, maybe figure out a way to trick skybox so it seems less obvious?
 
 }

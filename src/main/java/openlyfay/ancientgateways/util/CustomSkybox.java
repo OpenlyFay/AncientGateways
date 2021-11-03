@@ -204,7 +204,7 @@ public class CustomSkybox {
         float f = 0.0f;
         for (DynamicSkyboxObject dynamicSkyboxObject : horizonObjects){
             i++;
-            f += (float) dynamicSkyboxObject.getOrbitPosition(ticks) /15;
+            f += (1 - ((float) dynamicSkyboxObject.getOrbitPosition(ticks) - 90) / 15);
         }
         return f/i;
     }
@@ -373,6 +373,7 @@ public class CustomSkybox {
             tag.putDouble("equatorAngle",equatorAngle);
             tag.putDouble("elevationAngle",elevationAngle);
             tag.putDouble("motionPerTick",motionPerTick);
+            System.out.println(motionPerTick);
             tag.putBoolean("lightEmitting",lightEmitting);
             tag.putInt("sunsetColour",sunsetColour.getRGB());
             return tag;
