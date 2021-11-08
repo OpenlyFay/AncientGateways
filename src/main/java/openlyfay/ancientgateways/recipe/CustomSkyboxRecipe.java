@@ -14,9 +14,10 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import openlyfay.ancientgateways.util.CustomSkybox;
-import openlyfay.ancientgateways.util.RegHandler;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static openlyfay.ancientgateways.recipe.RegisterRecipes.SKYBOX_RECIPE_SERIALIZER;
 import static openlyfay.ancientgateways.recipe.RegisterRecipes.SKYBOX_RECIPE_TYPE;
@@ -96,7 +97,7 @@ public class CustomSkyboxRecipe implements Recipe<Inventory> {
             for (int i = 0; i < 12; i++){
                 textures.add(buf.readIdentifier());
             }
-            double rotationAngle = buf.readDouble();
+            String direction = buf.readString();
             double startingRotation = buf.readDouble();
             double rotationPerTick = buf.readDouble();
             int cloudHeight = buf.readInt();
@@ -110,7 +111,7 @@ public class CustomSkyboxRecipe implements Recipe<Inventory> {
                 }
                 dynamicObjects.add(new CustomSkybox.DynamicSkyboxObject(dynTextures,buf.readInt(), buf.readInt(), buf.readInt(), buf.readDouble(),buf.readDouble(),buf.readDouble(), buf.readBoolean(), new Color(buf.readInt())));
             }
-            CustomSkybox customSkybox = new CustomSkybox(id,textures,rotationAngle,startingRotation,rotationPerTick,cloudHeight,dynamicObjects);
+            CustomSkybox customSkybox = new CustomSkybox(id,textures,direction,startingRotation,rotationPerTick,cloudHeight,dynamicObjects);
             return new CustomSkyboxRecipe(id,ingredient,customSkybox);
         }
 
@@ -122,7 +123,7 @@ public class CustomSkyboxRecipe implements Recipe<Inventory> {
             for (Identifier texture : textures) {
                 buf.writeIdentifier(texture);
             }
-            buf.writeDouble(skybox.getHorizontalAngle());
+            buf.writeString(skybox.getDirection());
             buf.writeDouble(skybox.getStartingRotation());
             buf.writeDouble(skybox.getRotationPerTick());
 
@@ -163,7 +164,8 @@ public class CustomSkyboxRecipe implements Recipe<Inventory> {
             textures.add(new Identifier(JsonHelper.getString(json,"up_night")));
             textures.add(new Identifier(JsonHelper.getString(json,"down_night")));
 
-            double horizontalRotation = JsonHelper.getFloat(json,"horizontal_rotation");
+            ArrayList<String> validDirections = new ArrayList<String>(Arrays.asList("north-south","south-north","east-west","west-east","clockwise","counter-clockwise"));
+            String direction = validDirections.contains(JsonHelper.getString(json, "rotation_direction")) ? JsonHelper.getString(json, "rotation_direction") : "east-west";
             double startingElevation = JsonHelper.getFloat(json,"starting_vertical_rotation");
             double rotationPerTick = (JsonHelper.getFloat(json, "day_scale")/480000);
 
@@ -173,7 +175,7 @@ public class CustomSkyboxRecipe implements Recipe<Inventory> {
             for (int i = 0;i < jsonArray.size(); i++){
                 dynamicObjects.add(dynamicSkyboxObjectFromJson(jsonArray.get(i).getAsJsonObject()));
             }
-            return new CustomSkybox(id,textures,horizontalRotation,startingElevation,rotationPerTick,cloudHeight,dynamicObjects);
+            return new CustomSkybox(id,textures,direction,startingElevation,rotationPerTick,cloudHeight,dynamicObjects);
         }
 
         public static CustomSkybox.DynamicSkyboxObject dynamicSkyboxObjectFromJson(JsonObject json){

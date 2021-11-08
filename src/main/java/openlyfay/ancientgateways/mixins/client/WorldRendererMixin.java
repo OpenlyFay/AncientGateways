@@ -15,7 +15,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import openlyfay.ancientgateways.block.blockentity.AnchorBaseEntity;
-import openlyfay.ancientgateways.util.CustomSkybox;
+import openlyfay.ancientgateways.render.CustomSkyboxRenderer;
 import openlyfay.ancientgateways.util.SpiralHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,193 +49,7 @@ public abstract class WorldRendererMixin {
             BlockPos blockPos = SpiralHelper.findNearestAnchor(client.player.getPos());
             BlockEntity entity = world.getBlockEntity(blockPos);
             if (entity instanceof AnchorBaseEntity && ((AnchorBaseEntity) entity).getSkybox() != null){
-                CustomSkybox skybox = ((AnchorBaseEntity) entity).getSkybox();
-
-                boolean day = skybox.isDay(world.getTime() + tickDelta);
-
-                RenderSystem.disableAlphaTest();
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
-                RenderSystem.depthMask(false);
-                Tessellator tessellator = Tessellator.getInstance();
-                BufferBuilder bufferBuilder = tessellator.getBuffer();
-                for (int i = 0; i < 6;i++){
-                    matrices.push();
-                    switch (i){
-                        case 0:
-                            if (day){
-                                textureManager.bindTexture(skybox.getDown());
-                            }
-                            else {
-                                textureManager.bindTexture(skybox.getDownNight());
-                            }
-                            break;
-                        case 1:
-                            if (day){
-                                textureManager.bindTexture(skybox.getWest());
-                            }
-                            else {
-                                textureManager.bindTexture(skybox.getWestNight());
-                            }
-                            matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(-90.0F));
-                            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
-                            break;
-                        case 2:
-                            if (day){
-                                textureManager.bindTexture(skybox.getEast());
-                            }
-                            else {
-                                textureManager.bindTexture(skybox.getEastNight());
-                            }
-                            matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(90.0F));
-                            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(270.0F));
-                            break;
-                        case 3:
-                            if (day){
-                                textureManager.bindTexture(skybox.getUp());
-                            }
-                            else {
-                                textureManager.bindTexture(skybox.getUpNight());
-                            }
-                            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(180.0F));
-                            break;
-                        case 4:
-                            if (day){
-                                textureManager.bindTexture(skybox.getNorth());
-                            }
-                            else {
-                                textureManager.bindTexture(skybox.getNorthNight());
-                            }
-                            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90.0F));
-                            break;
-                        case 5:
-                            if (day){
-                                textureManager.bindTexture(skybox.getSouth());
-                            }
-                            else {
-                                textureManager.bindTexture(skybox.getSouthNight());
-                            }
-                            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
-                            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
-                            break;
-                    }
-                    Matrix4f matrix4f = matrices.peek().getModel();
-                    bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
-                    bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).texture(0.0F, 0.0F).next();
-                    bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).texture(0.0F, 1.0F).next();
-                    bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).texture(1.0F, 1.0F).next();
-                    bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).texture(1.0F, 0.0F).next();
-                    tessellator.draw();
-                    matrices.pop();
-                }
-                if (skybox.isDawn((float) world.getTime() + tickDelta)){
-                    for (int i = 0; i < 6;i++) {
-                        matrices.push();
-                        switch (i) {
-                            case 0:
-                                textureManager.bindTexture(skybox.getDownNight());
-                                break;
-                            case 1:
-                                textureManager.bindTexture(skybox.getWestNight());
-                                matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(-90.0F));
-                                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
-                                break;
-                            case 2:
-                                textureManager.bindTexture(skybox.getEastNight());
-                                matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(90.0F));
-                                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(270.0F));
-                                break;
-                            case 3:
-                                textureManager.bindTexture(skybox.getUpNight());
-                                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(180.0F));
-                                break;
-                            case 4:
-                                textureManager.bindTexture(skybox.getNorthNight());
-                                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90.0F));
-                                break;
-                            case 5:
-                                textureManager.bindTexture(skybox.getSouthNight());
-                                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
-                                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
-                                break;
-                        }
-                        Matrix4f matrix4f = matrices.peek().getModel();
-                        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-                        float dawnTime = skybox.getDawnProgress(world.getTime() + tickDelta);
-                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, -99.9F).texture(0.0F, 0.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
-                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, 99.9F).texture(0.0F, 1.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
-                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, 99.9F).texture(1.0F, 1.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
-                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, -99.9F).texture(1.0F, 0.0F).color(1.0f,1.0f,1.0f,dawnTime).next();
-                        tessellator.draw();
-                        matrices.pop();
-                    }
-                }
-                if (skybox.isDusk((float) world.getTime() + tickDelta)){
-                    for (int i = 0; i < 6;i++) {
-                        matrices.push();
-                        switch (i) {
-                            case 0:
-                                textureManager.bindTexture(skybox.getDown());
-                                break;
-                            case 1:
-                                textureManager.bindTexture(skybox.getWest());
-                                matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(-90.0F));
-                                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90.0F));
-                                break;
-                            case 2:
-                                textureManager.bindTexture(skybox.getEast());
-                                matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(90.0F));
-                                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(270.0F));
-                                break;
-                            case 3:
-                                textureManager.bindTexture(skybox.getUp());
-                                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(180.0F));
-                                break;
-                            case 4:
-                                textureManager.bindTexture(skybox.getNorth());
-                                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(90.0F));
-                                break;
-                            case 5:
-                                textureManager.bindTexture(skybox.getSouth());
-                                matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
-                                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
-                                break;
-                        }
-                        Matrix4f matrix4f = matrices.peek().getModel();
-                        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-                        float duskTime = skybox.getDuskProgress((float) world.getTime() + tickDelta);
-                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, -99.9F).texture(0.0F, 0.0F).color(1.0f,1.0f,1.0f,duskTime).next();
-                        bufferBuilder.vertex(matrix4f, -99.9F, -99.9F, 99.9F).texture(0.0F, 1.0F).color(1.0f,1.0f,1.0f,duskTime).next();
-                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, 99.9F).texture(1.0F, 1.0F).color(1.0f,1.0f,1.0f,duskTime).next();
-                        bufferBuilder.vertex(matrix4f, 99.9F, -99.9F, -99.9F).texture(1.0F, 0.0F).color(1.0f,1.0f,1.0f,duskTime).next();
-                        tessellator.draw();
-                        matrices.pop();
-                    }
-                }
-                float i = -99.9f;
-                for (CustomSkybox.DynamicSkyboxObject object : skybox.getDYN()){
-                    i += 0.1;
-                    matrices.push();
-                    textureManager.bindTexture(object.getCurrentTexture((world.getTime() + tickDelta)));
-                    matrices.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion((float) object.getEquatorAngle()));
-                    matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((float) object.getOrbitPosition((float) world.getTime() + tickDelta)));
-                    float x = (float) object.getSizeX()/2;
-                    float y = (float) object.getSizeY()/2;
-                    Matrix4f matrix4f = matrices.peek().getModel();
-                    bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
-                    bufferBuilder.vertex(matrix4f, -x, i, -y).texture(0.0F, 0.0F).next();
-                    bufferBuilder.vertex(matrix4f, -x, i, y).texture(0.0F, 1.0F).next();
-                    bufferBuilder.vertex(matrix4f, x, i, y).texture(1.0F, 1.0F).next();
-                    bufferBuilder.vertex(matrix4f, x, i, -y).texture(1.0F, 0.0F).next();
-                    tessellator.draw();
-                    matrices.pop();
-                }
-                RenderSystem.depthMask(true);
-                RenderSystem.enableTexture();
-                RenderSystem.disableBlend();
-                RenderSystem.enableAlphaTest();
-
-
+                CustomSkyboxRenderer.render(matrices, ticks, tickDelta, world, (AnchorBaseEntity) entity, textureManager);
                 ci.cancel();
             }
         }
@@ -257,6 +71,5 @@ public abstract class WorldRendererMixin {
         }
         return f;
     }
-    //TODO: skybox rotation, sunsets, maybe figure out a way to trick skybox so it seems less obvious?
 
 }

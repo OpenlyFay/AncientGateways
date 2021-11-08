@@ -21,7 +21,6 @@ import static openlyfay.ancientgateways.AncientGateways.MOD_ID;
 
 public class RegisterBlocks {
 
-    public static Identifier ANCHOR = new Identifier(MOD_ID,"poi_anchor");
     public static final Block gateway_block = new GatewayBlock(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES,3).luminance(10).hardness(50).resistance(1200));
     public static BlockEntityType<GatewayBlockEntity> GATEWAY_BLOCK_ENTITY;
     public static final Block ANCHOR_PILLAR = new AnchorMain(FabricBlockSettings.of(Material.STONE).luminance(15).resistance(3600000).hardness(-1));

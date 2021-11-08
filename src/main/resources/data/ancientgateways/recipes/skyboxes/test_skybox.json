@@ -16,7 +16,7 @@
     "south_night" : "minecraft:textures/entity/end_portal.png",
     "up_night" : "minecraft:textures/entity/end_portal.png",
     "down_night" : "minecraft:textures/entity/end_portal.png",
-    "horizontal_rotation" : 90,
+    "rotation_direction" : "east-west",
     "starting_vertical_rotation" : 90,
     "day_scale" : 1,
     "cloud_height" : 256,
@@ -28,7 +28,7 @@
         "ticks_per_phase" : 24000,
         "horizontal_rotation" : 90,
         "starting_vertical_rotation" : 265,
-        "days_per_orbit" : 1,
+        "days_per_orbit" : 0.1,
         "emits_light" : true,
         "sunset_colour" : [252, 148, 2]
       },

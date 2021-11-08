@@ -35,8 +35,6 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     private Color leafColour = new Color(5242667);
     private final GameRules rules = new GameRules();
     private int expansions = 0;
-    private final static Item wrapAround = RegisterItem.CHORUS_INK_ITEM;
-    private static final Item expand = RegisterItem.WORLD_EGG;
     private boolean resetRender = false;
     private CustomSkybox skybox;
 
@@ -98,11 +96,14 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     private boolean alterRules(ItemStack itemStack){
+        if (itemStack.getItem().equals(RegisterItem.WORLD_EGG)){
 
+        }
+        /*
         BoolRuleRecipe recipe = world.getRecipeManager().listAllOfType(RegisterRecipes.BOOL_RULE_RECIPE_TYPE).stream().filter(boolRuleRecipe -> boolRuleRecipe.matches(itemStack)).findFirst().orElse(null);
         if (recipe != null){
             ((RuleAccessHelper) rules.get(recipe.getKey())).flipValue();
-            //return true;
+            return true;
         }
         IntRuleRecipe recipe1 = world.getRecipeManager().listAllOfType(RegisterRecipes.INT_RULE_RECIPE_TYPE).stream().filter(intRuleRecipe -> intRuleRecipe.matches(itemStack)).findFirst().orElse(null);
         if (recipe1 != null){
@@ -112,9 +113,10 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
             else{
                 ((RuleAccessHelper) rules.get(recipe1.getKey())).setValue(Integer.toString(recipe1.getModifier()));
             }
-            //return true;
+            return true;
         }
         //We were on the verge of greatness, we were this close.
+         */
 
         return false;
     }
@@ -165,6 +167,7 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
             CompoundTag compoundTag = new CompoundTag();
             tag.put("skybox", skybox.toNbt(compoundTag));
         }
+        tag.putInt("expansions",expansions);
         return super.toTag(tag);
     }
 
@@ -178,6 +181,7 @@ public class AnchorBaseEntity extends BlockEntity implements BlockEntityClientSe
         if (tag.contains("skybox")) {
             skybox = CustomSkybox.fromNBT(tag.getCompound("skybox"));
         }
+        expansions = tag.getInt("expansions");
         super.fromTag(state, tag);
     }
 

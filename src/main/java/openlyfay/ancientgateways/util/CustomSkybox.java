@@ -1,11 +1,14 @@
 package openlyfay.ancientgateways.util;
 
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.Quaternion;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class CustomSkybox {
     private final Identifier ID;
@@ -21,14 +24,14 @@ public class CustomSkybox {
     private final Identifier SOUTH_N;
     private final Identifier UP_N;
     private final Identifier DOWN_N;
-    private final double horizontalAngle;
+    private final String direction;
     private final double startingRotation;
     private final double rotationPerTick;
     private final int cloudHeight;
 
     private final DefaultedList<DynamicSkyboxObject> DYN;
 
-    public CustomSkybox(Identifier ID, DefaultedList<Identifier> textures, double rotationAngle, double startingRotation, double rotationPerTick, int cloudHeight, DefaultedList<DynamicSkyboxObject> dynamicSkyboxObjects){
+    public CustomSkybox(Identifier ID, DefaultedList<Identifier> textures, String direction, double startingRotation, double rotationPerTick, int cloudHeight, DefaultedList<DynamicSkyboxObject> dynamicSkyboxObjects){
         this.ID = ID;
         EAST = textures.get(0);
         WEST = textures.get(1);
@@ -44,7 +47,7 @@ public class CustomSkybox {
         UP_N = textures.get(10);
         DOWN_N = textures.get(11);
 
-        this.horizontalAngle = rotationAngle;
+        this.direction = direction;
         this.startingRotation = startingRotation;
         this.rotationPerTick = rotationPerTick;
 
@@ -52,7 +55,7 @@ public class CustomSkybox {
         DYN = dynamicSkyboxObjects;
     }
 
-    public double getCurrentRotation(int ticks){
+    public double getCurrentRotation(float ticks){
         return startingRotation + rotationPerTick*ticks;
     }
 
@@ -125,8 +128,8 @@ public class CustomSkybox {
         return textures;
     }
 
-    public double getHorizontalAngle() {
-        return horizontalAngle;
+    public String getDirection() {
+        return direction;
     }
 
     public double getStartingRotation() {
@@ -209,8 +212,6 @@ public class CustomSkybox {
         return f/i;
     }
 
-
-
     public float getDuskProgress (float ticks){
         DefaultedList<DynamicSkyboxObject> horizonObjects = getHorizonObjects(ticks);
         int i = 0;
@@ -220,6 +221,63 @@ public class CustomSkybox {
             f += ((float) dynamicSkyboxObject.getOrbitPosition(ticks) - 270)/-15;
         }
         return f/i;
+    }
+
+    public ArrayList<Quaternion> getRotation(float ticks){
+        //unused for now
+        ArrayList<Quaternion> values = new ArrayList<>();
+        float degrees = (float) getCurrentRotation(ticks);
+        switch (direction){
+            case "clockwise" :
+                values.add(Vector3f.POSITIVE_Y.getDegreesQuaternion(degrees)); //down
+                values.add(Vector3f.POSITIVE_X.getDegreesQuaternion(degrees)); //west
+                values.add(Vector3f.POSITIVE_X.getDegreesQuaternion(degrees)); //east
+                values.add(Vector3f.NEGATIVE_Y.getDegreesQuaternion(degrees)); //up
+                values.add(Vector3f.POSITIVE_X.getDegreesQuaternion(degrees)); //north
+                values.add(Vector3f.POSITIVE_X.getDegreesQuaternion(degrees)); //south
+                break;
+            case "counter-clockwise" :
+                values.add(Vector3f.NEGATIVE_Y.getDegreesQuaternion(degrees)); //down
+                values.add(Vector3f.NEGATIVE_X.getDegreesQuaternion(degrees)); //west
+                values.add(Vector3f.NEGATIVE_X.getDegreesQuaternion(degrees)); //east
+                values.add(Vector3f.POSITIVE_Y.getDegreesQuaternion(degrees)); //up
+                values.add(Vector3f.NEGATIVE_X.getDegreesQuaternion(degrees)); //north
+                values.add(Vector3f.NEGATIVE_X.getDegreesQuaternion(degrees)); //south
+                break;
+            case "north-south" :
+                values.add(Vector3f.POSITIVE_Z.getDegreesQuaternion(degrees)); //down
+                values.add(Vector3f.POSITIVE_Y.getDegreesQuaternion(degrees)); //west
+                values.add(Vector3f.NEGATIVE_Y.getDegreesQuaternion(degrees)); //east
+                values.add(Vector3f.POSITIVE_Z.getDegreesQuaternion(degrees)); //up
+                values.add(Vector3f.POSITIVE_Z.getDegreesQuaternion(degrees)); //north
+                values.add(Vector3f.POSITIVE_Z.getDegreesQuaternion(degrees)); //south
+                break;
+            case "south-north" :
+                values.add(Vector3f.NEGATIVE_Z.getDegreesQuaternion(degrees)); //down
+                values.add(Vector3f.NEGATIVE_Y.getDegreesQuaternion(degrees)); //west
+                values.add(Vector3f.POSITIVE_Y.getDegreesQuaternion(degrees)); //east
+                values.add(Vector3f.NEGATIVE_Z.getDegreesQuaternion(degrees)); //up
+                values.add(Vector3f.NEGATIVE_Z.getDegreesQuaternion(degrees)); //north
+                values.add(Vector3f.NEGATIVE_Z.getDegreesQuaternion(degrees)); //south
+                break;
+            case "west-east" :
+                values.add(Vector3f.NEGATIVE_X.getDegreesQuaternion(degrees)); //down
+                values.add(Vector3f.NEGATIVE_Z.getDegreesQuaternion(degrees)); //west
+                values.add(Vector3f.NEGATIVE_Z.getDegreesQuaternion(degrees)); //east
+                values.add(Vector3f.NEGATIVE_X.getDegreesQuaternion(degrees)); //up
+                values.add(Vector3f.NEGATIVE_Y.getDegreesQuaternion(degrees)); //north
+                values.add(Vector3f.POSITIVE_Y.getDegreesQuaternion(degrees)); //south
+                break;
+            default:
+                values.add(Vector3f.POSITIVE_X.getDegreesQuaternion(degrees)); //down
+                values.add(Vector3f.POSITIVE_Z.getDegreesQuaternion(degrees)); //west
+                values.add(Vector3f.POSITIVE_Z.getDegreesQuaternion(degrees)); //east
+                values.add(Vector3f.POSITIVE_X.getDegreesQuaternion(degrees)); //up
+                values.add(Vector3f.POSITIVE_Y.getDegreesQuaternion(degrees)); //north
+                values.add(Vector3f.NEGATIVE_Y.getDegreesQuaternion(degrees)); //south
+                break;
+        }
+        return values;
     }
 
     public DefaultedList<DynamicSkyboxObject> getDYN() {
@@ -242,7 +300,7 @@ public class CustomSkybox {
         tag.putString("upNight",UP_N.toString());
         tag.putString("downNight",DOWN_N.toString());
 
-        tag.putDouble("horizontalRotation",horizontalAngle);
+        tag.putString("direction",direction);
         tag.putDouble("startingVerticalRotation", startingRotation);
         tag.putDouble("rotationPerTick",rotationPerTick);
 
@@ -283,7 +341,7 @@ public class CustomSkybox {
         return new CustomSkybox(new Identifier(
                 tag.getString("id")),
                 textures,
-                tag.getDouble("horizontalRotation"),
+                tag.getString("direction"),
                 tag.getDouble("startingVerticalRotation"),
                 tag.getDouble("rotationPerTick"),
                 tag.getInt("cloudHeight"),
@@ -373,7 +431,6 @@ public class CustomSkybox {
             tag.putDouble("equatorAngle",equatorAngle);
             tag.putDouble("elevationAngle",elevationAngle);
             tag.putDouble("motionPerTick",motionPerTick);
-            System.out.println(motionPerTick);
             tag.putBoolean("lightEmitting",lightEmitting);
             tag.putInt("sunsetColour",sunsetColour.getRGB());
             return tag;
