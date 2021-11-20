@@ -206,9 +206,9 @@ public class CustomSkyboxRenderer {
                 int j = 0;
                 for (CustomSkybox.DynamicSkyboxObject object : skybox.getHorizonObjects(ticks + tickDelta)){
                     j++;
-                    red += (float) object.getSunsetColour().getRed()/255 * (1 - ((float) object.getOrbitPosition(ticks) - 270)/-15);
-                    green += (float) object.getSunsetColour().getGreen()/255 * (1 - ((float) object.getOrbitPosition(ticks) - 270)/-15);
-                    blue += (float) object.getSunsetColour().getBlue()/255 * (1 - ((float) object.getOrbitPosition(ticks) - 270)/-15);
+                    red += (float) object.getSunsetColour().getRed()/255 * (((float) object.getOrbitPosition(ticks) - 270)/-15);
+                    green += (float) object.getSunsetColour().getGreen()/255 * (((float) object.getOrbitPosition(ticks) - 270)/-15);
+                    blue += (float) object.getSunsetColour().getBlue()/255 * (((float) object.getOrbitPosition(ticks) - 270)/-15);
                 }
                 red = red/j;
                 green = green/j;

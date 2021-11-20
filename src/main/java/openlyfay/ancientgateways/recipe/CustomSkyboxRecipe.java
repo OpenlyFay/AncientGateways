@@ -165,9 +165,9 @@ public class CustomSkyboxRecipe implements Recipe<Inventory> {
             textures.add(new Identifier(JsonHelper.getString(json,"down_night")));
 
             ArrayList<String> validDirections = new ArrayList<String>(Arrays.asList("north-south","south-north","east-west","west-east","clockwise","counter-clockwise"));
-            String direction = validDirections.contains(JsonHelper.getString(json, "rotation_direction")) ? JsonHelper.getString(json, "rotation_direction") : "east-west";
-            double startingElevation = JsonHelper.getFloat(json,"starting_vertical_rotation");
-            double rotationPerTick = (JsonHelper.getFloat(json, "day_scale")/480000);
+            String direction = /* validDirections.contains(JsonHelper.getString(json, "rotation_direction")) ? JsonHelper.getString(json, "rotation_direction") : */ "east-west";
+            double startingElevation = 0 /* JsonHelper.getFloat(json,"starting_vertical_rotation") */;
+            double rotationPerTick = 0 /* (JsonHelper.getFloat(json, "day_scale")/480000) */;
 
             int cloudHeight = JsonHelper.getInt(json,"cloud_height");
             DefaultedList<CustomSkybox.DynamicSkyboxObject> dynamicObjects = DefaultedList.of();

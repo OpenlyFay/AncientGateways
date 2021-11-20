@@ -16,9 +16,6 @@
     "south_night" : "minecraft:textures/entity/end_portal.png",
     "up_night" : "minecraft:textures/entity/end_portal.png",
     "down_night" : "minecraft:textures/entity/end_portal.png",
-    "rotation_direction" : "east-west",
-    "starting_vertical_rotation" : 90,
-    "day_scale" : 1,
     "cloud_height" : 256,
     "dynamic_objects" : [
       {
