@@ -4,20 +4,13 @@
   "package": "openlyfay.ancientgateways.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "common.BooleanRuleMixin",
     "common.EntityMixin",
-    "common.GameRulesMixin",
-    "common.IntRuleMixin",
     "common.LootableContainerBlockEntityMixin",
     "common.PlayerEntityMixin",
     "common.ServerPlayerEntityMixin"
   ],
   "client": [
-    "client.BiomeColorsMixin",
-    "client.ChunkRendererRegionMixin",
-    "client.ClientPlayNetworkHandlerMixin",
-    "client.ClientWorldMixin",
-    "client.WorldRendererMixin"
+    "client.ClientPlayNetworkHandlerMixin"
   ],
   "server": [
   ],

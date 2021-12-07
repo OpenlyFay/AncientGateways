@@ -6,25 +6,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.Registry;
@@ -34,9 +26,9 @@ import net.minecraft.world.chunk.Chunk;
 import openlyfay.ancientgateways.AncientGateways;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
-import openlyfay.ancientgateways.item.RegisterItem;
+import openlyfay.ancientgateways.util.AGComponents;
 import openlyfay.ancientgateways.util.MasterList;
-import openlyfay.ancientgateways.util.SpiralHelper;
+import openlyfay.ancientgateways.util.MasterListComponent;
 import openlyfay.ancientgateways.util.TeleportPatch;
 import openlyfay.ancientgateways.util.mixininterface.Teleportable;
 
@@ -47,7 +39,7 @@ import static net.minecraft.util.math.Direction.SOUTH;
 import static openlyfay.ancientgateways.block.RegisterBlocks.*;
 
 
-public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickable, BlockEntityClientSerializable {
+public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockEntityClientSerializable {
     private String runeIdentifier = "";
     private String runeTarget = "";
     private BlockPos targetPos;
@@ -55,23 +47,17 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     private int countdown;
     private Box box = new Box(pos.add(1,-1,2), pos.add(0,-5,-2));
     private DefaultedList<ItemStack> inventory;
-    private static MasterList masterlist;
     private boolean fresh;
-    private boolean craftingMode;
     private final static int cooldownDuration = AncientGateways.agConfig.gatewayCooldown;
     private final static int gatewayDuration = AncientGateways.agConfig.gatewayActivationTime;
 
-    public GatewayBlockEntity(){
-        super(GATEWAY_BLOCK_ENTITY);
+    public GatewayBlockEntity(BlockPos pos, BlockState state){
+        super(GATEWAY_BLOCK_ENTITY, pos, state);
         countdown = 0;
         inventory = DefaultedList.ofSize(6,ItemStack.EMPTY);
-        if(world != null && !world.isClient){
-            masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
-        }
         targetWorld = ServerWorld.OVERWORLD;
         targetPos = new BlockPos(0,0,0);
         fresh = true;
-        craftingMode = false;
     }
 
     @Override
@@ -142,42 +128,41 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     }
 
     @Override
-    public void fromTag(BlockState blockState, CompoundTag tag){
-        super.fromTag(blockState, tag);
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        countdown = tag.getInt("countdown");
-        runeIdentifier = tag.getString("runeID");
-        runeTarget = tag.getString("targetID");
-        targetWorld = RegistryKey.of(Registry.DIMENSION, new Identifier(tag.getString("targetWorld")));
-        targetPos = new BlockPos(tag.getDouble("targetx"),tag.getDouble("targety"),tag.getDouble("targetz"));
-        Inventories.fromTag(tag, this.inventory);
-        craftingMode = tag.getBoolean("crafting");
+        countdown = nbt.getInt("countdown");
+        runeIdentifier = nbt.getString("runeID");
+        runeTarget = nbt.getString("targetID");
+        targetWorld = RegistryKey.of(Registry.WORLD_KEY, new Identifier(nbt.getString("targetWorld")));
+        targetPos = new BlockPos(nbt.getDouble("targetx"),nbt.getDouble("targety"),nbt.getDouble("targetz"));
+        Inventories.readNbt(nbt, this.inventory);
         fresh = true;
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag){
-        Inventories.toTag(tag, this.inventory);
-        tag.putInt("countdown", countdown);
-        tag.putString("runeID",runeIdentifier);
-        tag.putString("targetID",runeTarget);
-        tag.putString("targetWorld", targetWorld.getValue().toString());
-        tag.putDouble("targetx",targetPos.getX());
-        tag.putDouble("targety",targetPos.getY());
-        tag.putDouble("targetz",targetPos.getZ());
-        tag.putBoolean("crafting", craftingMode);
-        return super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        Inventories.writeNbt(nbt, this.inventory);
+        nbt.putInt("countdown", countdown);
+        nbt.putString("runeID",runeIdentifier);
+        nbt.putString("targetID",runeTarget);
+        nbt.putString("targetWorld", targetWorld.getValue().toString());
+        nbt.putDouble("targetx",targetPos.getX());
+        nbt.putDouble("targety",targetPos.getY());
+        nbt.putDouble("targetz",targetPos.getZ());
+        return super.writeNbt(nbt);
     }
 
     @Override
-    public void fromClientTag(CompoundTag compoundTag) {
-        fromTag(null, compoundTag);
+    public void fromClientTag(NbtCompound tag) {
+        readNbt(tag);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag compoundTag) {
-        return toTag(compoundTag);
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return writeNbt(tag);
     }
+
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
@@ -210,20 +195,16 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                 if (runeTarget.equals("")){
                     runeTarget = runeIdentifier;
                 }
-                if (MasterList.doesElementExist(runeTarget)) {
+                if (AGComponents.doesElementExist(runeTarget,(ServerWorld) world)) {
                     if (runeTarget.equals(runeIdentifier) && !remote){
-                        if (masterlist.getAddressLength(runeIdentifier) > 1){
-                            if (localIndex == masterlist.getAddressLength(runeIdentifier) - 1){
+                        if (AGComponents.getAddressLength(runeIdentifier,(ServerWorld) world) > 1){
+                            if (localIndex == AGComponents.getAddressLength(runeIdentifier,(ServerWorld) world) - 1){
                                 index = 0;
                             }
                             else {
                                 index = localIndex + 1;
                             }
                             world.setBlockState(pos,getCachedState().cycle(GatewayBlock.PAIRED));
-                        }
-                        else {
-                            craftingMode = true;
-                            world.setBlockState(pos,getCachedState().cycle(GatewayBlock.ERROR));
                         }
                     }
                     if (remote && runeTarget.equals(runeIdentifier)){
@@ -236,15 +217,15 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                         box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
                     }
                     world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));
-                    targetPos = new BlockPos(MasterList.getPosition(runeTarget, index));
-                    targetWorld = MasterList.getWorld(runeTarget, index);
+                    targetPos = new BlockPos(AGComponents.getPosition(runeTarget, index,(ServerWorld) world));
+                    targetWorld = AGComponents.getWorld(runeTarget, index,(ServerWorld) world);
                     ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
                     if (targetWorld2 == null ||
                             !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity)
                             || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).GatewayStructureIntact(targetPos,targetWorld2.getBlockState(targetPos),targetWorld2,null)
                             || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).getGatewayRuneCode(targetWorld2.getBlockState(targetPos), targetPos, targetWorld2).equals(runeTarget)) {
                         countdown = 0;
-                        masterlist.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld);
+                        AGComponents.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld,(ServerWorld) world);
                         gatewayShutdown();
                     }
                     if (!remote) {
@@ -256,27 +237,26 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                 markDirty();
             }
             else if (runeDelta.isEmpty()){
-                masterlist.removeElement(runeIdentifier);
+                AGComponents.removeElement(runeIdentifier,(ServerWorld) world);
             }
         }
 
     }
 
-    @Override
-    public void tick(){
-        if (countdown > 0){
+    public static void tick(World world, BlockPos pos, BlockState state, GatewayBlockEntity entity){
+        if (entity.countdown > 0){
             if (world != null && !world.isClient) {
-                if (fresh){
-                    chunkLoaderManager(true);
-                    Direction facing = getCachedState().get(Properties.HORIZONTAL_FACING);
+                if (entity.fresh){
+                    entity.chunkLoaderManager(true);
+                    Direction facing = entity.getCachedState().get(Properties.HORIZONTAL_FACING);
                     if (facing == NORTH || facing == SOUTH) {
-                        box = new Box(pos.add(2, -1, 1), pos.add(-2, -5, 0));
+                        entity.box = new Box(pos.add(2, -1, 1), pos.add(-2, -5, 0));
                     } else {
-                        box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
+                        entity.box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
                     }
-                    fresh = false;
+                    entity.fresh = false;
                 }
-                List<Entity> payloadList = world.getNonSpectatingEntities(Entity.class, box);
+                List<Entity> payloadList = world.getNonSpectatingEntities(Entity.class, entity.box);
                 Iterator payloadIterator = payloadList.iterator();
                 Entity payloadEntity;
                 while (payloadIterator.hasNext()) {
@@ -285,33 +265,27 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                     if (payloadEntity instanceof Teleportable && ((Teleportable) payloadEntity).getPortalCoolDown() < 1){
                         ((Teleportable) payloadEntity).setPortalCoolDown(cooldownDuration);
                         TeleportPatch tpHack = TeleportPatch.getInstance();
-                        ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
+                        ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(entity.targetWorld);
                         double oldVelocityFlat = Math.sqrt(payloadEntity.getVelocity().x * payloadEntity.getVelocity().x + payloadEntity.getVelocity().z*payloadEntity.getVelocity().z);
                         double oldVelocityY = payloadEntity.getVelocity().y;
-                        BlockState otherSide = targetWorld2.getBlockState(targetPos);
+                        BlockState otherSide = targetWorld2.getBlockState(entity.targetPos);
                         Direction otherSideDirection = otherSide.get(Properties.HORIZONTAL_FACING);
                         Vec3d posDelta = new Vec3d(0,pos.getY(),0)
                                 .subtract(0,payloadEntity.getPos().y,0)
                                 .subtract(otherSideDirection.getOffsetX()*1.5+0.5, 0 ,otherSideDirection.getOffsetZ()*1.5+0.5);
-                        if (payloadEntity instanceof ItemEntity && craftingMode){
-                            ItemStack itemStack = gatewayCrafting((ItemEntity)payloadEntity);
-                            payloadEntity.kill();
-                            world.spawnEntity(new ItemEntity(world,targetPos.getX(),targetPos.getY(),targetPos.getZ(),itemStack));
-                        }
-                        if (targetWorld != world.getRegistryKey()) {
-                            tpHack.interdimensionalTeleport(payloadEntity, targetWorld2, targetPos.getX() - posDelta.getX(),targetPos.getY() - posDelta.getY(),targetPos.getZ() - posDelta.getZ());
+                        if (entity.targetWorld != world.getRegistryKey()) {
+                            tpHack.interdimensionalTeleport(payloadEntity, targetWorld2,  entity.targetPos.getX() - posDelta.getX(),entity.targetPos.getY() - posDelta.getY(),entity.targetPos.getZ() - posDelta.getZ());
                         }
                         else {
                             if (payloadEntity.hasPlayerRider()){
                                 riders = payloadEntity.getPassengerList();
                                 for (Entity rider : riders){
-                                    rider.method_29239();
+                                    rider.stopRiding();
                                     if (rider instanceof PlayerEntity){
                                         rider.setSneaking(true);
                                     }
                                 }
                             }
-                            payloadEntity.refreshPositionAfterTeleport(targetPos.getX() - posDelta.getX(), targetPos.getY() - posDelta.getY(), targetPos.getZ() - posDelta.getZ());
                             if (riders != null){
                                 for (Entity rider : riders){
                                     rider.teleport(payloadEntity.getX(),payloadEntity.getY(),payloadEntity.getZ());
@@ -323,64 +297,58 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
                         if (payloadEntity instanceof LivingEntity){
                             payloadEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET,payloadEntity.getPos().add(otherSideDirection.getOffsetX(),0,otherSideDirection.getOffsetZ()));
                         }
-                        targetWorld2.playSound(null, targetPos,SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.AMBIENT,1.0f,1.0f);
+                        targetWorld2.playSound(null, entity.targetPos,SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, SoundCategory.AMBIENT,1.0f,1.0f);
                         payloadEntity.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT,1.0f,1.0f);
                     }
                 }
-                if (countdown % 80 == 0) {
-                    Block block = this.getCachedState().getBlock();
+                if (entity.countdown % 80 == 0) {
+                    Block block = entity.getCachedState().getBlock();
                     if (block instanceof GatewayBlock) {
                         if (!((GatewayBlock) block).GatewayStructureIntact(pos, world.getBlockState(pos), world,null)) {
-                            countdown = 1;
+                            entity.countdown = 1;
                         }
                     }
-                    if (!MasterList.doesElementExist(runeTarget)){
-                        countdown = 1;
+                    if (!AGComponents.doesElementExist(entity.runeTarget,(ServerWorld) world)){
+                        entity.countdown = 1;
                     }
                     else{
-                        ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
-                        if (!(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity)){
-                            countdown = 1;
+                        ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(entity.targetWorld);
+                        if (!(targetWorld2.getBlockEntity(entity.targetPos) instanceof GatewayBlockEntity)){
+                            entity.countdown = 1;
                         }
                     }
 
                 }
             }
-            countdown--;
-            if(countdown == 0){
-                gatewayShutdown();
+            entity.countdown--;
+            if(entity.countdown == 0){
+                entity.gatewayShutdown();
             }
             if(!world.isClient){
-                markDirty();
+                entity.markDirty();
             }
         }
 
         if ((world.getTime() % 1200 == 0 || world.getTime() == 0) && !world.isClient){
-            String runeDelta = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
+            String runeDelta = ((GatewayBlock) entity.getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
             if (runeDelta != null){
-                if (!runeDelta.equals(runeIdentifier)){
-                    if (masterlist == null){
-                        masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
-                    }
+                if (!runeDelta.equals(entity.runeIdentifier)){
                     if(runeDelta.isEmpty()){
-                        masterlist.removeElement(runeIdentifier);
+                        AGComponents.removeElement(entity.runeIdentifier,(ServerWorld) world);
                     }
                     else {
-                        masterListChangeAddress();
+                        entity.masterListChangeAddress();
                     }
                 }
             }
             else {
-                masterListRemoveAddress();
+                entity.masterListRemoveAddress();
             }
         }
     }
 
     private int getIndex(){
-        if (masterlist == null){
-            masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
-        }
-        return masterlist.getIndex(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey());
+        return AGComponents.getIndex(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),(ServerWorld) world);
     }
 
     private String getTargetRuneCode(){
@@ -396,12 +364,9 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
 
 
     private void masterListSetAddress(){
-        if (masterlist == null){
-            masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
-        }
         runeIdentifier = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
         if(!runeIdentifier.isEmpty()){
-            masterlist.addElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey());
+            AGComponents.addElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),(ServerWorld) world);
         }
     }
 
@@ -411,10 +376,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
     }
 
     public void masterListRemoveAddress(){
-        if (masterlist == null){
-            masterlist = MasterList.get(((ServerWorld) world).getServer().getWorld(ServerWorld.OVERWORLD));
-        }
-        masterlist.removeElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey());
+        AGComponents.removeElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),(ServerWorld) world);
     }
 
     public void chunkLoaderManager(boolean on){
@@ -440,108 +402,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, Tickab
         }
         runeTarget = "";
         chunkLoaderManager(false);
-        craftingMode = false;
         world.playSound(null,pos,SoundEvents.BLOCK_BEACON_DEACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
-    }
-
-    private ItemStack gatewayCrafting(ItemEntity entity){
-        Item item = entity.getStack().getItem();
-        if (item == RegisterItem.WORLD_EGG && AncientGateways.agConfig.pocketDimensionsEnabled){
-
-            //do pocket dimension setup
-            ServerWorld pocketDim = world.getServer().getWorld(RegistryKey.of(Registry.DIMENSION,AncientGateways.DIM_ID));
-            int iter = masterlist.incrementPockets();
-            BlockPos pocketPos = SpiralHelper.findSpiral(iter);
-            pocketDim.setBlockState(pocketPos, ANCHOR_BLOCK.getDefaultState());
-            for (int i = 1;i < 5; i++){
-                pocketDim.setBlockState(pocketPos.add(0,i,0), ANCHOR_PILLAR.getDefaultState().with(IntProperty.of("type",1,4),i));
-            }
-            //generate island
-            Structure island = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"island"));
-            StructurePlacementData islandPlacementData = new StructurePlacementData();
-            island.place(pocketDim,pocketPos.add(-7,-3,-7),islandPlacementData,pocketDim.getRandom());
-
-            //generate initial barrier
-            int barrierSize = AncientGateways.agConfig.pocketDimensionInitRadius;
-            for (int i = -barrierSize; i <= barrierSize; i++){
-                for (int j = Math.max(-barrierSize, -128); j <= Math.min(barrierSize,127); j++){
-                    for (int k = -barrierSize; k <= barrierSize; k++){
-                        BlockPos blockPos = new BlockPos(pocketPos.getX() + i, pocketPos.getY() + j,pocketPos.getZ() + k);
-                        if (i == -barrierSize || i == barrierSize || j == Math.max(-barrierSize, -128)  || j == Math.min(barrierSize,127) || k == -barrierSize || k == barrierSize){
-                            pocketDim.setBlockState(blockPos, BARRIER.getDefaultState());
-                        }
-                    }
-                }
-            }
-            //copy existing gateway ID
-            Identifier gateID = new Identifier(AncientGateways.MOD_ID,((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(getCachedState(),pos,world).toLowerCase());
-            StructureManager homeStructureManager = world.getServer().getStructureManager();
-            Structure gatewayID;
-            gatewayID = homeStructureManager.getStructureOrBlank(gateID);
-            BlockPos gateIDOrigin = pos.add(-3,-4,-1);
-            BlockPos gateIDEnd = new BlockPos(7,3,1);
-
-            switch (getCachedState().get(Properties.HORIZONTAL_FACING)){
-                case SOUTH:
-                    gateIDOrigin = pos.add(-3,-4,1);
-                    gateIDEnd = new BlockPos(7,3,1);
-                    break;
-
-                case EAST:
-                    gateIDOrigin = pos.add(1,-4,-3);
-                    gateIDEnd = new BlockPos(1,3,7);
-                    break;
-
-                case WEST:
-                    gateIDOrigin = pos.add(-1,-4,-3);
-                    gateIDEnd = new BlockPos(1,3,7);
-                    break;
-            }
-            gatewayID.saveFromWorld(world,gateIDOrigin,gateIDEnd,false,null);
-            homeStructureManager.saveStructure(gateID);
-
-            //place return gateway
-            Structure gateway = pocketDim.getStructureManager().getStructure(new Identifier(AncientGateways.MOD_ID,"gateway_template"));
-            StructurePlacementData gatewayPlacementData = new StructurePlacementData();
-
-
-            gateway.place(pocketDim,pocketPos.add(-3,0,-5),gatewayPlacementData,pocketDim.getRandom());
-            pocketDim.setBlockState(pocketPos.add(0,6,-5),gateway_block.getDefaultState().with(Properties.HORIZONTAL_FACING,SOUTH));
-            pocketDim.setBlockEntity(pocketPos.add(0,6,-5), new GatewayBlockEntity());
-
-            Structure gateIDStruct = pocketDim.getStructureManager().getStructure(gateID);
-            StructurePlacementData idPlacementData = new StructurePlacementData().setRotation(BlockRotation.CLOCKWISE_180);
-            BlockPos placementPos = pocketPos.add(3,2,-4);
-
-            switch (getCachedState().get(Properties.HORIZONTAL_FACING)){
-                case SOUTH: idPlacementData.setRotation(BlockRotation.NONE);
-                placementPos = pocketPos.add(-3,2,-4);
-                break;
-
-                case EAST: idPlacementData.setRotation(BlockRotation.CLOCKWISE_90);
-                break;
-
-                case WEST: idPlacementData.setRotation(BlockRotation.COUNTERCLOCKWISE_90);
-                placementPos = pocketPos.add(-3,2,-4);
-                break;
-            }
-
-            gateIDStruct.place(pocketDim,placementPos,idPlacementData,pocketDim.getRandom());
-
-            //create return tablet
-            ItemStack stack = new ItemStack(RegisterItem.WISE_TABLET,1);
-            CompoundTag tabletTag = stack.getOrCreateTag();
-            tabletTag.putDouble("CoordinateX",pocketPos.getX());
-            tabletTag.putDouble("CoordinateY",pocketPos.getY());
-            tabletTag.putDouble("CoordinateZ",pocketPos.getZ() + 1);
-            tabletTag.putString("World",pocketDim.getRegistryKey().getValue().toString());
-            tabletTag.putBoolean("HasHome", true);
-            return stack;
-
-        }
-        else{
-        }
-        return entity.getStack();
     }
 
 }

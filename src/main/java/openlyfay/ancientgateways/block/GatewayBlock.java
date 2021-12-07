@@ -3,6 +3,8 @@ package openlyfay.ancientgateways.block;
 
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -21,6 +23,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import openlyfay.ancientgateways.block.runes.AbstractRuneBlock;
 import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.util.math.Direction.NORTH;
 import static net.minecraft.util.math.Direction.SOUTH;
@@ -37,10 +40,9 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView blockView){
-        return new GatewayBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new GatewayBlockEntity(pos, state);
     }
-
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
@@ -248,4 +250,11 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     }
 
+
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return BlockEntityProvider.super.getTicker(world, state, type);
+    }
 }

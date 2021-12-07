@@ -1,8 +1,0 @@
-{
-  "type": "ancientgateways:boolean_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:feather"}
-  ],
-  "rule_name": "fallDamage",
-  "category" : "player"
-}

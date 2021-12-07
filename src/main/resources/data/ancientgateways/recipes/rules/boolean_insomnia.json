@@ -1,8 +1,0 @@
-{
-  "type": "ancientgateways:boolean_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:phantom_membrane"}
-  ],
-  "rule_name": "doInsomnia",
-  "category" : "player"
-}

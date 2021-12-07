@@ -18,6 +18,9 @@
     ],
     "client": [
       "openlyfay.ancientgateways.AncientGatewaysClient"
+    ],
+    "cardinal-components": [
+      "openlyfay.ancientgateways.util.AGComponents"
     ]
   },
   "mixins": [
@@ -25,11 +28,17 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.7.4",
+    "fabricloader": ">=0.12",
     "fabric": "*",
-    "minecraft": ">=1.16.2"
+    "minecraft": ">=1.17.0"
   },
   "suggests": {
     "flamingo": "*"
+  },
+
+  "custom": {
+    "cardinal_components": [
+      "ancientgateways:masterlist"
+    ]
   }
 }

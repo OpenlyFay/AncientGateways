@@ -1,8 +1,0 @@
-{
-  "type": "ancientgateways:boolean_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:magma_cream"}
-  ],
-  "rule_name": "fireDamage",
-  "category" : "player"
-}

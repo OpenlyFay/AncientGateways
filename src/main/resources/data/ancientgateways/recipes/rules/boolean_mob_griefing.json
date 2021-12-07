@@ -1,8 +1,0 @@
-{
-  "type": "ancientgateways:boolean_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:gunpowder"}
-  ],
-  "rule_name": "mobGriefing",
-  "category" : "mobs"
-}

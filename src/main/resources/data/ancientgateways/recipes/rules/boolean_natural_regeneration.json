@@ -1,8 +1,0 @@
-{
-  "type": "ancientgateways:boolean_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:glistering_melon_slice"}
-  ],
-  "rule_name": "naturalRegeneration",
-  "category" : "player"
-}

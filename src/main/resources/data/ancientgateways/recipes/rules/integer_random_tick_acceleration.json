@@ -1,9 +1,0 @@
-{
-  "type": "ancientgateways:int_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:dragon_breath"}
-  ],
-  "rule_name": "randomTickSpeed",
-  "category" : "updates",
-  "modifier" : 5
-}

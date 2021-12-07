@@ -1,36 +1,25 @@
 package openlyfay.ancientgateways.util;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 
 import java.util.*;
 
-public class MasterList extends PersistentState {
-    private static Map<String,AddressList> locations = new HashMap<>();
-    private final static String key = "ancientgateways_masterlist";
-    private int pocketNum = 0;
+public class MasterList implements MasterListComponent {
+    private final Map<String,AddressList> locations = new HashMap<>();
 
-    public MasterList(){
-        super(key);
-    }
+    public MasterList(){}
 
-    public static MasterList get(World world){
-        ServerWorld serverWorld = (ServerWorld) world;
-        return serverWorld.getPersistentStateManager().getOrCreate(MasterList::new, key);
-    }
-
-    private static GatewayAddress getElement(String addressName){
+    private GatewayAddress getElement(String addressName){
         return getElement(addressName,0);
     }
 
-    private static GatewayAddress getElement(String addressName, int index){
+    private GatewayAddress getElement(String addressName, int index){
         if (locations.get(addressName) != null){
             return locations.get(addressName).getAddress(index);
         }
@@ -46,7 +35,6 @@ public class MasterList extends PersistentState {
         else {
             locations.get(address).addAddress(new GatewayAddress(address,position,world));
         }
-        markDirty();
     }
 
     private void addElement(GatewayAddress gatewayAddress){
@@ -56,52 +44,59 @@ public class MasterList extends PersistentState {
         else {
             locations.get(gatewayAddress.address).addAddress(gatewayAddress);
         }
-        markDirty();
     }
 
-    public static boolean doesElementExist(String address){
+    @Override
+    public boolean doesElementExist(String address){
         return getElement(address) != null;
     }
 
+    @Override
     public int getIndex(String address, Vec3d position, RegistryKey<World> world){
         GatewayAddress gatewayAddress = new GatewayAddress(address,position,world);
         return locations.get(address).getIndex(gatewayAddress);
     }
 
+    @Override
     public int getAddressLength(String address){
         return locations.get(address).getLength();
     }
 
-    public static Vec3d getPosition(String address,int index){
+    @Override
+    public Vec3d getPosition(String address,int index){
         if(getElement(address) != null){
             return getElement(address, index).getPosition();
         }
         else return null;
     }
 
-    public static Vec3d getPosition(String address){
+    @Override
+    public Vec3d getPosition(String address){
         return getPosition(address,0);
     }
 
-    public static RegistryKey<World> getWorld(String address){
+    @Override
+    public RegistryKey<World> getWorld(String address){
         return getWorld(address,0);
     }
 
-    public static RegistryKey<World> getWorld(String address, int index){
+    @Override
+    public RegistryKey<World> getWorld(String address, int index){
         if(getElement(address) != null){
             return getElement(address, index).getWorld();
         }
         else return null;
     }
 
+    @Override
     public void removeElement(String address){
         locations.get(address).removeAddress(0);
         if (locations.get(address).getLength() == 0){
             locations.remove(address);
         }
-        markDirty();
     }
 
+    @Override
     public void removeElement(String address, Vec3d pos, RegistryKey<World> world){
         GatewayAddress address1 = new GatewayAddress(address, pos, world);
         if (locations.get(address) != null){
@@ -109,55 +104,39 @@ public class MasterList extends PersistentState {
             if (locations.get(address).getLength() == 0){
                 locations.remove(address);
             }
-            markDirty();
         }
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        ListTag listTag = tag.getList("gateways", 10);
+    public void readFromNbt(NbtCompound nbt) {
+        NbtList list = nbt.getList("gateways", 10);
 
-        for(int i = 0; i < listTag.size(); ++i) {
-            CompoundTag compoundTag = listTag.getCompound(i);
-            addElement(new GatewayAddress(compoundTag));
+        for(int i = 0; i < list.size(); ++i) {
+            NbtCompound compound = list.getCompound(i);
+            addElement(new GatewayAddress(compound));
         }
-
-        pocketNum = tag.getInt("pockets");
-
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        ListTag listTag = new ListTag();
-
+    public void writeToNbt(NbtCompound nbt) {
+        NbtList list = new NbtList();
         for (String location : locations.keySet()) {
             AddressList addressList = locations.get(location);
             for (int i = 0; i < addressList.getLength();i++){
-                CompoundTag compoundTag = new CompoundTag();
-                addressList.getAddress(i).toTag(compoundTag);
-                listTag.add(compoundTag);
+                NbtCompound compound = new NbtCompound();
+                addressList.getAddress(i).toTag(compound);
+                list.add(compound);
             }
         }
 
-        if (!listTag.isEmpty()) {
-            tag.put("gateways", listTag);
+        if (!list.isEmpty()) {
+            nbt.put("gateways", list);
         }
-
-        tag.putInt("pockets",pocketNum);
-
-        return tag;
-    }
-
-    public int incrementPockets(){
-        int pocket = pocketNum;
-        pocketNum++;
-        markDirty();
-        return pocket;
     }
 
 
     private class AddressList {
-        private ArrayList<GatewayAddress> addresses = new ArrayList<>();
+        private final ArrayList<GatewayAddress> addresses = new ArrayList<>();
 
         public AddressList(GatewayAddress newAddress){
             addresses.add(newAddress);
@@ -212,11 +191,11 @@ public class MasterList extends PersistentState {
             world = newWorld;
         }
 
-        public GatewayAddress(CompoundTag tag){
+        public GatewayAddress(NbtCompound nbt){
 
-            this.address = tag.getString("address");
-            this.position = new Vec3d(tag.getDouble("posX"),tag.getDouble("posY"),tag.getDouble("posZ"));
-            this.world = RegistryKey.of(Registry.DIMENSION, new Identifier(tag.getString("world")));
+            this.address = nbt.getString("address");
+            this.position = new Vec3d(nbt.getDouble("posX"),nbt.getDouble("posY"),nbt.getDouble("posZ"));
+            this.world = RegistryKey.of(Registry.WORLD_KEY, new Identifier(nbt.getString("world")));
 
         }
 
@@ -239,17 +218,17 @@ public class MasterList extends PersistentState {
             return position;
         }
 
-        public GatewayAddress fromTag(CompoundTag tag){
-            return new GatewayAddress(tag);
+        public GatewayAddress fromTag(NbtCompound nbt){
+            return new GatewayAddress(nbt);
         }
 
-        public CompoundTag toTag(CompoundTag tag){
-            tag.putString("address", address);
-            tag.putDouble("posX",position.x);
-            tag.putDouble("posY",position.y);
-            tag.putDouble("posZ",position.z);
-            tag.putString("world",world.getValue().toString());
-            return tag;
+        public NbtCompound toTag(NbtCompound nbt){
+            nbt.putString("address", address);
+            nbt.putDouble("posX",position.x);
+            nbt.putDouble("posY",position.y);
+            nbt.putDouble("posZ",position.z);
+            nbt.putString("world",world.getValue().toString());
+            return nbt;
         }
 
     }

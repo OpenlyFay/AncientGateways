@@ -7,12 +7,10 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import openlyfay.ancientgateways.block.blockentity.GatewayBlockEntityRenderer;
-import openlyfay.ancientgateways.entity.RegisterEntity;
 
-import static openlyfay.ancientgateways.AncientGateways.*;
+
 import static openlyfay.ancientgateways.block.RegisterBlocks.*;
 import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_INK_ENTITY;
-import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_PEARL_ENTITY;
 
 
 public class  AncientGatewaysClient implements ClientModInitializer {
@@ -20,7 +18,6 @@ public class  AncientGatewaysClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         EntityRendererRegistry.INSTANCE.register(CHORUS_INK_ENTITY, ((dispatcher, context) -> new FlyingItemEntityRenderer<>(dispatcher,context.getItemRenderer())));
-        EntityRendererRegistry.INSTANCE.register(CHORUS_PEARL_ENTITY, ((dispatcher, context) -> new FlyingItemEntityRenderer<>(dispatcher,context.getItemRenderer())));
         BlockEntityRendererRegistry.INSTANCE.register(GATEWAY_BLOCK_ENTITY, GatewayBlockEntityRenderer::new);
 
         BlockRenderLayerMap.INSTANCE.putBlock(black_rune_block, RenderLayer.getCutout());

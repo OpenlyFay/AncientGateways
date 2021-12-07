@@ -1,8 +1,0 @@
-{
-  "type": "ancientgateways:boolean_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:pufferfish"}
-  ],
-  "rule_name": "drowningDamage",
-  "category" : "player"
-}

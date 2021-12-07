@@ -1,8 +1,0 @@
-{
-  "type": "ancientgateways:boolean_rule_recipe",
-  "ingredient": [
-    {"item": "minecraft:charcoal"}
-  ],
-  "rule_name": "doWeatherCycle",
-  "category" : "updates"
-}

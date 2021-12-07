@@ -10,9 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.math.Vec3d;
-import openlyfay.ancientgateways.AncientGateways;
 import openlyfay.ancientgateways.entity.ChorusInkBottleEntity;
-import openlyfay.ancientgateways.entity.ChorusPearlEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_INK_ENTITY;
-import static openlyfay.ancientgateways.entity.RegisterEntity.CHORUS_PEARL_ENTITY;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayNetworkHandler.class)
@@ -39,9 +36,6 @@ public class ClientPlayNetworkHandlerMixin {
         Entity entity = null;
         if (type == CHORUS_INK_ENTITY) {
             entity = new ChorusInkBottleEntity(this.world, x, y, z);
-        }
-        if (type == CHORUS_PEARL_ENTITY){
-            entity = new ChorusPearlEntity(this.world, x, y, z);
         }
         if (entity != null) {
             int i = packet.getId();
