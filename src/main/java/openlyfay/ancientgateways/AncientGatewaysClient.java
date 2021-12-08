@@ -17,8 +17,9 @@ public class  AncientGatewaysClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.INSTANCE.register(CHORUS_INK_ENTITY, ((dispatcher, context) -> new FlyingItemEntityRenderer<>(dispatcher,context.getItemRenderer())));
-        BlockEntityRendererRegistry.INSTANCE.register(GATEWAY_BLOCK_ENTITY, GatewayBlockEntityRenderer::new);
+        net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(CHORUS_INK_ENTITY, FlyingItemEntityRenderer::new);
+        net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry.register(GATEWAY_BLOCK_ENTITY, ctx -> new GatewayBlockEntityRenderer());
+
 
         BlockRenderLayerMap.INSTANCE.putBlock(black_rune_block, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(blue_rune_block, RenderLayer.getCutout());

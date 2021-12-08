@@ -26,6 +26,11 @@
   "mixins": [
       "openlyfay.ancientgateways.mixins.json"
   ],
+  "custom": {
+    "cardinal-components": [
+      "ancientgateways:masterlist"
+    ]
+  },
 
   "depends": {
     "fabricloader": ">=0.12",

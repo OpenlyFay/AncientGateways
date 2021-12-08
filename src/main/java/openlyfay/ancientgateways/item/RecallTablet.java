@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -24,7 +24,7 @@ public class RecallTablet extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient){
             ItemStack stack = user.getStackInHand(hand);
-            CompoundTag compoundTag = stack.getOrCreateTag();
+            NbtCompound compoundTag = stack.getOrCreateNbt();
             if (compoundTag.contains("HasTarget")){
                 Vec3d targetPos = new Vec3d(compoundTag.getDouble("CoordinateX"),compoundTag.getDouble("CoordinateY"),compoundTag.getDouble("CoordinateZ"));
                 if(compoundTag.getString("World").equals(world.getRegistryKey().getValue().toString())){
@@ -33,7 +33,7 @@ public class RecallTablet extends Item {
                 else {
                     TeleportPatch tpHack = TeleportPatch.getInstance();
                     ServerWorld targetWorld;
-                    targetWorld = world.getServer().getWorld(RegistryKey.of(Registry.DIMENSION, new Identifier(compoundTag.getString("World"))));
+                    targetWorld = world.getServer().getWorld(RegistryKey.of(Registry.WORLD_KEY, new Identifier(compoundTag.getString("World"))));
                     tpHack.interdimensionalTeleport(user,targetWorld,targetPos.x,targetPos.y,targetPos.z);
                 }
             }

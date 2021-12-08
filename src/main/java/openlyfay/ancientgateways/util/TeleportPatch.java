@@ -92,13 +92,13 @@ public class TeleportPatch {
 
         //had to use an alternate method to prevent players from landing at their spawn when returning from the End
         if (entity instanceof ServerPlayerEntity && oldWorld.getRegistryKey() == World.END && newWorld.getRegistryKey() == World.OVERWORLD){
-            ((ServerPlayerEntity) entity).teleport(newWorld,link.x,link.y,link.z,entity.yaw,entity.pitch);
+            ((ServerPlayerEntity) entity).teleport(newWorld,link.x,link.y,link.z,entity.getYaw(),entity.getPitch());
         }
 
         // Store in a threadlocal so that EntityMixin can return it for the Vanilla
         // logic to use
         else {
-            teleportTarget.set(new TeleportTarget(new Vec3d(link.x, link.y, link.z), Vec3d.ZERO, entity.yaw, entity.pitch));
+            teleportTarget.set(new TeleportTarget(new Vec3d(link.x, link.y, link.z), Vec3d.ZERO, entity.getYaw(), entity.getPitch()));
             try {
                 entity = entity.moveToWorld(link.dim);
             } finally {

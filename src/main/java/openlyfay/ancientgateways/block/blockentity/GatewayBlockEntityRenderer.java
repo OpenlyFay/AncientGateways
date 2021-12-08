@@ -5,11 +5,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -17,16 +16,12 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 
 
 @Environment(EnvType.CLIENT)
-public class GatewayBlockEntityRenderer extends BlockEntityRenderer<GatewayBlockEntity> {
+public class GatewayBlockEntityRenderer implements BlockEntityRenderer<GatewayBlockEntity> {
     private static final Identifier PORTAL_SPRITE_ROOT = new Identifier("ancientgateways","animations/portal_7/portal_");
-
-
-    public GatewayBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
-    }
 
 
 
@@ -38,12 +33,12 @@ public class GatewayBlockEntityRenderer extends BlockEntityRenderer<GatewayBlock
         int z = direction.getOffsetZ();
         int offset;
         int procession = 1;
-        Quaternion renderDir = Vector3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation());
+        Quaternion renderDir = Vec3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation());
         MinecraftClient client = MinecraftClient.getInstance();
 
         if (direction.getAxis() == Direction.Axis.X) {
             offset = 120;
-            renderDir = Vector3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation() - 180);
+            renderDir = Vec3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation() - 180);
         } else {
             offset = -60;
             procession = -1;
@@ -56,7 +51,7 @@ public class GatewayBlockEntityRenderer extends BlockEntityRenderer<GatewayBlock
             matrices.translate(0.5D + x * 0.75D, 0.5D, 0.5D + z * 0.75D);
             matrices.translate(Math.cos(rads) * z, Math.sin(rads), Math.cos(rads) * x);
             matrices.multiply(renderDir);
-            client.getItemRenderer().renderItem(items.get(i), ModelTransformation.Mode.GROUND, lightBelow, overlay, matrices, vertexConsumers);
+            client.getItemRenderer().renderItem(items.get(i), ModelTransformation.Mode.GROUND, lightBelow, overlay, matrices, vertexConsumers, 169);
             matrices.pop();
         }
         if(blockEntity.isActive()){
@@ -79,11 +74,10 @@ public class GatewayBlockEntityRenderer extends BlockEntityRenderer<GatewayBlock
             xFactor = 1;
         }
 
-            buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
             RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
-            RenderSystem.color4f(255,255,255,255);
             buffer.vertex(matrix4f, 0.5F - (xFactor*2.5F), 0.0F, 0.5F - (zFactor*2.5F))
                 .texture(0f, 0f)
                 .color(255, 255, 255, 255)
@@ -102,7 +96,7 @@ public class GatewayBlockEntityRenderer extends BlockEntityRenderer<GatewayBlock
                 .next();
             tessellator.draw();
 
-            buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
             RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();

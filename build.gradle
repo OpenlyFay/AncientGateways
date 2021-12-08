@@ -45,16 +45,12 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:3.1.1"
 }
 
+
 processResources {
 	inputs.property "version", project.version
 
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
+	filesMatching("fabric.mod.json") {
 		expand "version": project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
 	}
 }
 

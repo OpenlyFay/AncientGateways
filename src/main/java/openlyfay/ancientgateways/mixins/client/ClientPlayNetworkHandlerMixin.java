@@ -27,12 +27,13 @@ public class ClientPlayNetworkHandlerMixin {
     private ClientWorld world;
 
     @Inject(
-            method = "onEntitySpawn(Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;)V",
-            at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;getEntityTypeId()Lnet/minecraft/entity/EntityType;"),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
+            method = "onEntitySpawn", at = @At("TAIL")
     )
-    private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci, double x, double y, double z, EntityType<?> type) {
+    private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci) {
+        EntityType<?> type = packet.getEntityTypeId();
+        double x = packet.getX();
+        double y = packet.getY();
+        double z = packet.getZ();
         Entity entity = null;
         if (type == CHORUS_INK_ENTITY) {
             entity = new ChorusInkBottleEntity(this.world, x, y, z);
@@ -42,9 +43,9 @@ public class ClientPlayNetworkHandlerMixin {
             entity.setVelocity(Vec3d.ZERO);
             entity.updatePosition(x, y, z);
             entity.updateTrackedPosition(x, y, z);
-            entity.pitch = (float) (packet.getPitch() * 360) / 256.0F;
-            entity.yaw = (float) (packet.getYaw() * 360) / 256.0F;
-            entity.setEntityId(i);
+            entity.setPitch((float) (packet.getPitch() * 360) / 256.0F);
+            entity.setYaw((float) (packet.getYaw() * 360) / 256.0F);
+            entity.setId(i);
             entity.setUuid(packet.getUuid());
             this.world.addEntity(i, entity);
             ci.cancel();

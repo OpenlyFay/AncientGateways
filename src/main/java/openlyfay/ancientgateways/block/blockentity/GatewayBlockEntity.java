@@ -195,10 +195,10 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
                 if (runeTarget.equals("")){
                     runeTarget = runeIdentifier;
                 }
-                if (AGComponents.doesElementExist(runeTarget,(ServerWorld) world)) {
+                if (AGComponents.doesElementExist(runeTarget,world)) {
                     if (runeTarget.equals(runeIdentifier) && !remote){
-                        if (AGComponents.getAddressLength(runeIdentifier,(ServerWorld) world) > 1){
-                            if (localIndex == AGComponents.getAddressLength(runeIdentifier,(ServerWorld) world) - 1){
+                        if (AGComponents.getAddressLength(runeIdentifier,world) > 1){
+                            if (localIndex == AGComponents.getAddressLength(runeIdentifier,world) - 1){
                                 index = 0;
                             }
                             else {
@@ -217,15 +217,15 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
                         box = new Box(pos.add(1, -1, 2), pos.add(0, -5, -2));
                     }
                     world.setBlockState(pos, getCachedState().cycle(GatewayBlock.ON));
-                    targetPos = new BlockPos(AGComponents.getPosition(runeTarget, index,(ServerWorld) world));
-                    targetWorld = AGComponents.getWorld(runeTarget, index,(ServerWorld) world);
+                    targetPos = new BlockPos(AGComponents.getPosition(runeTarget, index,world));
+                    targetWorld = AGComponents.getWorld(runeTarget, index,world);
                     ServerWorld targetWorld2 = ((ServerWorld) world).getServer().getWorld(targetWorld);
                     if (targetWorld2 == null ||
                             !(targetWorld2.getBlockEntity(targetPos) instanceof GatewayBlockEntity)
                             || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).GatewayStructureIntact(targetPos,targetWorld2.getBlockState(targetPos),targetWorld2,null)
                             || !((GatewayBlock) targetWorld2.getBlockState(targetPos).getBlock()).getGatewayRuneCode(targetWorld2.getBlockState(targetPos), targetPos, targetWorld2).equals(runeTarget)) {
                         countdown = 0;
-                        AGComponents.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld,(ServerWorld) world);
+                        AGComponents.removeElement(runeTarget,new Vec3d(targetPos.getX(),targetPos.getY(),targetPos.getZ()),targetWorld,world);
                         gatewayShutdown();
                     }
                     if (!remote) {
@@ -237,7 +237,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
                 markDirty();
             }
             else if (runeDelta.isEmpty()){
-                AGComponents.removeElement(runeIdentifier,(ServerWorld) world);
+                AGComponents.removeElement(runeIdentifier,world);
             }
         }
 
@@ -308,7 +308,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
                             entity.countdown = 1;
                         }
                     }
-                    if (!AGComponents.doesElementExist(entity.runeTarget,(ServerWorld) world)){
+                    if (!AGComponents.doesElementExist(entity.runeTarget,world)){
                         entity.countdown = 1;
                     }
                     else{
@@ -334,7 +334,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
             if (runeDelta != null){
                 if (!runeDelta.equals(entity.runeIdentifier)){
                     if(runeDelta.isEmpty()){
-                        AGComponents.removeElement(entity.runeIdentifier,(ServerWorld) world);
+                        AGComponents.removeElement(entity.runeIdentifier,world);
                     }
                     else {
                         entity.masterListChangeAddress();
@@ -348,7 +348,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
     }
 
     private int getIndex(){
-        return AGComponents.getIndex(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),(ServerWorld) world);
+        return AGComponents.getIndex(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),world);
     }
 
     private String getTargetRuneCode(){
@@ -366,7 +366,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
     private void masterListSetAddress(){
         runeIdentifier = ((GatewayBlock) getCachedState().getBlock()).getGatewayRuneCode(world.getBlockState(pos),pos,world);
         if(!runeIdentifier.isEmpty()){
-            AGComponents.addElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),(ServerWorld) world);
+            AGComponents.addElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),world);
         }
     }
 
@@ -376,7 +376,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
     }
 
     public void masterListRemoveAddress(){
-        AGComponents.removeElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),(ServerWorld) world);
+        AGComponents.removeElement(runeIdentifier,new Vec3d(pos.getX(),pos.getY(),pos.getZ()),world.getRegistryKey(),world);
     }
 
     public void chunkLoaderManager(boolean on){

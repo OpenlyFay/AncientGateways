@@ -67,7 +67,7 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
         for(int i = 0; i < 128; ++i) {
             world.addParticle(ParticleTypes.PORTAL, getX() + random.nextDouble() * 5.0D - 2.5D,getY() + random.nextDouble() * 5.0D - 2.5D, getZ() + random.nextDouble() * 5.0D - 2.5D,random.nextGaussian(),random.nextGaussian(),random.nextGaussian());
         }
-        if (!world.isClient && !this.removed){
+        if (!world.isClient && !this.isRemoved()){
             world.playSound(null,getBlockPos(),SoundEvents.BLOCK_GLASS_BREAK,SoundCategory.NEUTRAL,1.0f, 1.0f);
             LivingEntity target = world.getClosestPlayer(getX(),getY(),getZ(),searchRange,false);
             List<ArmorStandEntity> standList = world.getEntitiesByClass(ArmorStandEntity.class, new Box(getPos().add(searchRange, searchRange*0.5,searchRange),getPos().subtract(searchRange,searchRange*0.5,searchRange)),null);
@@ -83,7 +83,7 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
                 if (target == null || (payloadEntity instanceof PlayerEntity && targetStand == null)){
                     for (int i = 0;i < 16;i++){
                         double d = payloadEntity.getX() + random.nextInt(searchRange*2) - searchRange;
-                        double e = Math.min(world.getDimensionHeight(), Math.max(payloadEntity.getY() + random.nextInt(searchRange) - searchRange*0.5,1));
+                        double e = Math.min(world.getHeight(), Math.max(payloadEntity.getY() + random.nextInt(searchRange) - searchRange*0.5,1));
                         double f = payloadEntity.getZ() + random.nextInt(searchRange*2) - searchRange;
                         if (!(world.getBlockState(new BlockPos(d,e,f)).isSolidBlock(world,new BlockPos(d,e,f)) || world.getBlockState(new BlockPos(d,e+1,f)).isSolidBlock(world,new BlockPos(d,e+1,f)))){
                             double g = payloadEntity.getX();
@@ -116,7 +116,7 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
                 }
             }
         }
-        this.remove();
+        this.remove(RemovalReason.DISCARDED);
     }
 
     protected Item getDefaultItem() {

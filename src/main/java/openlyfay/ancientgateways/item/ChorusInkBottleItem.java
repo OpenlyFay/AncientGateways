@@ -25,12 +25,12 @@ public class ChorusInkBottleItem extends Item {
         if (!world.isClient) {
             ChorusInkBottleEntity entity = new ChorusInkBottleEntity(world,user);
             entity.setItem(itemStack);
-            entity.setProperties(user,user.pitch,user.yaw,0,1.5F,1.0F);
+            entity.setProperties(user,user.getPitch(),user.getYaw(),0,1.5F,1.0F);
             world.spawnEntity(entity);
         }
 
 
-        if (!user.abilities.creativeMode) {
+        if (!user.isCreative()) {
             itemStack.decrement(1);
         }
 
