@@ -250,11 +250,8 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
 
     }
 
-
-
-    @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return BlockEntityProvider.super.getTicker(world, state, type);
+        return ((world1, pos, state1, blockEntity) -> GatewayBlockEntity.tick(world,pos,state, (GatewayBlockEntity) blockEntity));
     }
 }

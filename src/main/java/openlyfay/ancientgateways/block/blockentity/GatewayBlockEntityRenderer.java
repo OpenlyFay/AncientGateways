@@ -8,7 +8,6 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
@@ -59,10 +58,10 @@ public class GatewayBlockEntityRenderer implements BlockEntityRenderer<GatewayBl
             Identifier PORTAL_SPRITE = new Identifier(PORTAL_SPRITE_ROOT.getNamespace(),PORTAL_SPRITE_ROOT.getPath() + (201 + ticks) +".png" );
 
         matrices.push();
+        RenderSystem.enableTexture();
 
         Matrix4f matrix4f = matrices.peek().getModel();
 
-        client.getTextureManager().bindTexture(PORTAL_SPRITE);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         int xFactor = 0;
@@ -74,47 +73,47 @@ public class GatewayBlockEntityRenderer implements BlockEntityRenderer<GatewayBl
             xFactor = 1;
         }
 
-            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+            RenderSystem.setShaderTexture(0,PORTAL_SPRITE);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            //RenderSystem.setShaderColor(1.0f,1.0f,1.0f,1.0f);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
+
             buffer.vertex(matrix4f, 0.5F - (xFactor*2.5F), 0.0F, 0.5F - (zFactor*2.5F))
                 .texture(0f, 0f)
-                .color(255, 255, 255, 255)
                 .next();
             buffer.vertex(matrix4f, 0.5F - (xFactor*2.5F), -5.0F, 0.5F - (zFactor*2.5F))
                 .texture(0f, 1f)
-                .color(255, 255, 255, 255)
                 .next();
             buffer.vertex(matrix4f, 0.5F + (xFactor*2.5F), -5.0F, 0.5F + (zFactor*2.5F))
                 .texture(1f, 1f)
-                .color(255, 255, 255, 255)
                 .next();
             buffer.vertex(matrix4f, 0.5F + (xFactor*2.5F), 0.0F,0.5F + (zFactor*2.5F))
                 .texture(1f, 0f)
-                .color(255, 255, 255, 255)
                 .next();
             tessellator.draw();
 
-            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+            RenderSystem.setShaderTexture(0,PORTAL_SPRITE);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            //RenderSystem.setShaderColor(1.0f,1.0f,1.0f,1.0f);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             RenderSystem.enableCull();
             RenderSystem.enableDepthTest();
             RenderSystem.enableBlend();
+
             buffer.vertex(matrix4f, 0.5F + (xFactor*2.5F), 0.0F,0.5F + (zFactor*2.5F))
                     .texture(0f,0f)
-                    .color(255,255,255,255)
                     .next();
             buffer.vertex(matrix4f, 0.5F + (xFactor*2.5F), -5.0F, 0.5F + (zFactor*2.5F))
                     .texture(0f,1f)
-                    .color(255,255,255,255)
                     .next();
             buffer.vertex(matrix4f, 0.5F - (xFactor*2.5F), -5.0F, 0.5F - (zFactor*2.5F))
                     .texture(1f,1f)
-                    .color(255,255,255,255)
                     .next();
             buffer.vertex(matrix4f, 0.5F - (xFactor*2.5F), 0.0F, 0.5F - (zFactor*2.5F))
                     .texture(1f,0f)
-                    .color(255,255,255,255)
                     .next();
             tessellator.draw();
 
@@ -124,5 +123,7 @@ public class GatewayBlockEntityRenderer implements BlockEntityRenderer<GatewayBl
 
         matrices.pop();
     }
+
+    //TODO: get textures to work
 
 }

@@ -277,20 +277,17 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
                             tpHack.interdimensionalTeleport(payloadEntity, targetWorld2,  entity.targetPos.getX() - posDelta.getX(),entity.targetPos.getY() - posDelta.getY(),entity.targetPos.getZ() - posDelta.getZ());
                         }
                         else {
-                            if (payloadEntity.hasPlayerRider()){
-                                riders = payloadEntity.getPassengerList();
-                                for (Entity rider : riders){
-                                    rider.stopRiding();
-                                    if (rider instanceof PlayerEntity){
-                                        rider.setSneaking(true);
-                                    }
+                            riders = payloadEntity.getPassengerList();
+                            for (Entity rider : riders){
+                                rider.stopRiding();
+                                if (rider instanceof PlayerEntity){
+                                    rider.setSneaking(true);
                                 }
                             }
-                            if (riders != null){
-                                for (Entity rider : riders){
-                                    rider.teleport(payloadEntity.getX(),payloadEntity.getY(),payloadEntity.getZ());
-                                    rider.startRiding(payloadEntity, false);
-                                }
+                            payloadEntity.teleport(entity.targetPos.getX() - posDelta.x,entity.targetPos.getY() - posDelta.y,entity.targetPos.getZ() - posDelta.z);
+                            for (Entity rider : riders){
+                                rider.teleport(payloadEntity.getX(),payloadEntity.getY(),payloadEntity.getZ());
+                                rider.startRiding(payloadEntity, false);
                             }
                         }
                         payloadEntity.setVelocity(oldVelocityFlat*otherSideDirection.getOffsetX(),oldVelocityY,oldVelocityFlat*otherSideDirection.getOffsetZ());
