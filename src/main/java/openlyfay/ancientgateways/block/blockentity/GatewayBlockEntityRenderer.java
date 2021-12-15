@@ -124,6 +124,5 @@ public class GatewayBlockEntityRenderer implements BlockEntityRenderer<GatewayBl
         matrices.pop();
     }
 
-    //TODO: get textures to work
 
 }
