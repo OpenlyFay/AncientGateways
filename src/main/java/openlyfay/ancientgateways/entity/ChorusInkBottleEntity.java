@@ -83,7 +83,7 @@ public class ChorusInkBottleEntity extends ThrownItemEntity {
                 if (target == null || (payloadEntity instanceof PlayerEntity && targetStand == null)){
                     for (int i = 0;i < 16;i++){
                         double d = payloadEntity.getX() + random.nextInt(searchRange*2) - searchRange;
-                        double e = Math.min(world.getHeight(), Math.max(payloadEntity.getY() + random.nextInt(searchRange) - searchRange*0.5,1));
+                        double e = Math.min(world.getHeight(), Math.max(payloadEntity.getY() + random.nextInt(searchRange) - searchRange*0.5,world.getBottomY()+1));
                         double f = payloadEntity.getZ() + random.nextInt(searchRange*2) - searchRange;
                         if (!(world.getBlockState(new BlockPos(d,e,f)).isSolidBlock(world,new BlockPos(d,e,f)) || world.getBlockState(new BlockPos(d,e+1,f)).isSolidBlock(world,new BlockPos(d,e+1,f)))){
                             double g = payloadEntity.getX();

@@ -1,6 +1,6 @@
 package openlyfay.ancientgateways.block.blockentity;
 
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -12,6 +12,9 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -27,10 +30,9 @@ import openlyfay.ancientgateways.AncientGateways;
 import openlyfay.ancientgateways.block.GatewayBlock;
 import openlyfay.ancientgateways.block.blockitem.AbstractRuneItem;
 import openlyfay.ancientgateways.util.AGComponents;
-import openlyfay.ancientgateways.util.MasterList;
-import openlyfay.ancientgateways.util.MasterListComponent;
 import openlyfay.ancientgateways.util.TeleportPatch;
 import openlyfay.ancientgateways.util.mixininterface.Teleportable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -39,7 +41,7 @@ import static net.minecraft.util.math.Direction.SOUTH;
 import static openlyfay.ancientgateways.block.RegisterBlocks.*;
 
 
-public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockEntityClientSerializable {
+public class GatewayBlockEntity extends BlockEntity implements Inventory {
     private String runeIdentifier = "";
     private String runeTarget = "";
     private BlockPos targetPos;
@@ -95,32 +97,28 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
     @Override
     public ItemStack removeStack(int slot, int count) {
         ItemStack result = Inventories.splitStack(inventory, slot, count);
-        markDirty();
+        sync();
         return result;
     }
 
     @Override
     public ItemStack removeStack(int slot) {
-        markDirty();
+        sync();
         return Inventories.removeStack(inventory, slot);
     }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
         inventory.set(slot, stack);
-        markDirty();
+        sync();
     }
 
     @Override
     public void clear() {
         inventory.clear();
-        markDirty();
-    }
-
-    @Override
-    public void markDirty() {
         sync();
     }
+
 
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
@@ -129,7 +127,6 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         countdown = nbt.getInt("countdown");
         runeIdentifier = nbt.getString("runeID");
@@ -141,7 +138,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         Inventories.writeNbt(nbt, this.inventory);
         nbt.putInt("countdown", countdown);
         nbt.putString("runeID",runeIdentifier);
@@ -150,19 +147,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
         nbt.putDouble("targetx",targetPos.getX());
         nbt.putDouble("targety",targetPos.getY());
         nbt.putDouble("targetz",targetPos.getZ());
-        return super.writeNbt(nbt);
     }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
-    }
-
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
@@ -234,7 +219,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
                     chunkLoaderManager(true);
                     world.playSound(null,pos,SoundEvents.BLOCK_BEACON_ACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
                 }
-                markDirty();
+                sync();
             }
             else if (runeDelta.isEmpty()){
                 AGComponents.removeElement(runeIdentifier,world);
@@ -322,7 +307,7 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
                 entity.gatewayShutdown();
             }
             if(!world.isClient){
-                entity.markDirty();
+                entity.sync();
             }
         }
 
@@ -400,6 +385,24 @@ public class GatewayBlockEntity extends BlockEntity implements Inventory, BlockE
         runeTarget = "";
         chunkLoaderManager(false);
         world.playSound(null,pos,SoundEvents.BLOCK_BEACON_DEACTIVATE,SoundCategory.AMBIENT,1.0f,0.5f);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        writeNbt(nbt);
+        return nbt;
+    }
+
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    public void sync(){
+        if (world != null && !world.isClient){
+            world.updateListeners(pos,getCachedState(),getCachedState(), Block.NOTIFY_LISTENERS);
+        }
     }
 
 }

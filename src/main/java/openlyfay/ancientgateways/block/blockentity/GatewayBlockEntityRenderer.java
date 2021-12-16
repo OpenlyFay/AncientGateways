@@ -60,7 +60,7 @@ public class GatewayBlockEntityRenderer implements BlockEntityRenderer<GatewayBl
         matrices.push();
         RenderSystem.enableTexture();
 
-        Matrix4f matrix4f = matrices.peek().getModel();
+        Matrix4f matrix4f = matrices.peek().getPositionMatrix();
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();

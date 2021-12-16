@@ -18,8 +18,6 @@ import static openlyfay.ancientgateways.AncientGateways.MOD_ID;
 public class RegisterItem {
 
     public static Item CHORUS_INK_ITEM;
-    public static Item CHORUS_PEARL_ITEM;
-    public static Item WORLD_EGG;
     public static Item RECALL_TABLET;
     public static Item HARDENED_RECALL_TABLET;
     public static Item WISE_TABLET;
@@ -40,7 +38,6 @@ public class RegisterItem {
                 return entity;
             }
         });
-        WORLD_EGG = RegHandler.item(new Identifier(MOD_ID,"world_egg"), new Item(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(16)));
         RECALL_TABLET = RegHandler.item(new Identifier(MOD_ID,"recall_tablet"), new RecallTablet(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(1).rarity(Rarity.UNCOMMON)));
         HARDENED_RECALL_TABLET = RegHandler.item(new Identifier(MOD_ID,"hardened_recall_tablet"), new RecallTablet(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(1).rarity(Rarity.RARE).fireproof()));
         WISE_TABLET = RegHandler.item(new Identifier(MOD_ID,"wise_tablet"), new WiseTablet(new Item.Settings().group(ANCIENT_GATEWAYS_MAIN).maxCount(1).rarity(Rarity.UNCOMMON)));

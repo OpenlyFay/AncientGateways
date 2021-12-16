@@ -202,31 +202,31 @@ public class GatewayBlock extends HorizontalFacingBlock implements BlockEntityPr
         int xVal2 = 0;
         int zVal1 = 0;
         int zVal2 = 0;
-        switch (state.get(Properties.HORIZONTAL_FACING)){
-            case NORTH:
+        switch (state.get(Properties.HORIZONTAL_FACING)) {
+            case NORTH -> {
                 xVal1 = -3;
                 zVal1 = -1;
                 xVal2 = 3;
                 zVal2 = -1;
-                break;
-            case EAST:
+            }
+            case EAST -> {
                 xVal1 = 1;
                 zVal1 = -3;
                 xVal2 = 1;
                 zVal2 = 3;
-                break;
-            case SOUTH:
+            }
+            case SOUTH -> {
                 xVal1 = 3;
                 zVal1 = 1;
                 xVal2 = -3;
                 zVal2 = 1;
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 xVal1 = -1;
                 zVal1 = 3;
                 xVal2 = -1;
                 zVal2 = -3;
-                break;
+            }
         }
 
         for(int i = -2; i > -5; i--){
