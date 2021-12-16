@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "ancientgateways:recall_tablet"},
+    {"item": "minecraft:netherite_ingot"}
+  ],
+  "result": {
+    "item" : "ancientgateways:hardened_recall_tablet",
+    "count" : 1
+  }
+
+}

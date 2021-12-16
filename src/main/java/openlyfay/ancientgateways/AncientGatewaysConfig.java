@@ -8,8 +8,8 @@ public class AncientGatewaysConfig implements ConfigData {
     public int chorusInkRadius = 24;
     public boolean chorusInkActivatesGateways = true;
 
-    public int chorusPearlBreakChance = 20;
-
     public int gatewayActivationTime = 400;
     public int gatewayCooldown = 100;
+
+    public int tabletChargeTime = 100;
 }

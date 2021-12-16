@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LDL",
+    "DCD",
+    "LDL"
+  ],
+  "key": {
+    "C" : {
+      "item": "ancientgateways:chorus_ink_item"
+    },
+    "D" : {
+      "item": "minecraft:deepslate_tiles"
+    },
+    "L" : {
+      "item": "minecraft:lapis_lazuli"
+    }
+  },
+  "result": {
+    "item" : "ancientgateways:wise_tablet",
+    "count" : 1
+  }
+
+}

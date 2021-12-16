@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {"item": "ancientgateways:hardened_recall_tablet"}
+  ],
+  "result": {
+    "item" : "ancientgateways:hardened_recall_tablet",
+    "count" : 1
+  }
+
+}

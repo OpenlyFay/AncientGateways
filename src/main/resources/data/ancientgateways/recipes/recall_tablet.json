@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " D ",
+    "DCD",
+    " D "
+  ],
+  "key": {
+    "C" : {
+      "item": "ancientgateways:chorus_ink_item"
+    },
+    "D" : {
+      "item": "minecraft:deepslate_tiles"
+    }
+  },
+  "result": {
+    "item" : "ancientgateways:recall_tablet",
+    "count" : 1
+  }
+
+}
