@@ -39,11 +39,5 @@
   },
   "suggests": {
     "flamingo": "*"
-  },
-
-  "custom": {
-    "cardinal_components": [
-      "ancientgateways:masterlist"
-    ]
   }
 }

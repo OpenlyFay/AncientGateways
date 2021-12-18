@@ -35,14 +35,11 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:3.1.1"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:3.1.1"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:4.0.1"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:4.0.1"
 
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-util:3.1.1"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-util:3.1.1"
-
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:3.1.1"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:3.1.1"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:4.0.1"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:4.0.1"
 }
 
 
